@@ -127,7 +127,7 @@ public class CodeGenerator {
         return res;
     }
 
-static void genBO(TableInfo tableInfo, String folder) throws IOException {
+    static void genBO(TableInfo tableInfo, String folder) throws IOException {
         FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "BO.java");
         fileWriter.write(
                 "package com.tav.service.bo;\n\n" +
@@ -1041,7 +1041,11 @@ static void genBO(TableInfo tableInfo, String folder) throws IOException {
 
             if (columnProperty.isShow())
             {
-                fileWriter.append("\t{text: \""+columnProperty.getColDescription()+"\", datafield: '"+columnProperty.getColName()+"', res: \"data-class='phone'\"},\n");
+                fileWriter.append("\t{text: \""+columnProperty.getColDescription()+"\", datafield: '" + columnProperty.getColName());
+                if(columnProperty.getColType().equals("Date") || columnProperty.getInputType().equals("Combobox")){
+                    fileWriter.append("ST");
+                }
+                fileWriter.append("', res: \"data-class='phone'\"},\n");
 
             }
         }

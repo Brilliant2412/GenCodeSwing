@@ -76,7 +76,7 @@ public class TableInfo {
                     colProp.setComboboxName(row.getCell(16).toString());
                     colProp.setComboboxValue(row.getCell(17).toString());
                 }
-                if(row.getCell(10).equals("")){
+                if(row.getCell(10).toString().equals("")){
                     colProp.setShow(false);
                 }
                 else{
