@@ -1059,5 +1059,6 @@ public class Web {
         genJs(tableInfo, folder);
         genDialogAdd(tableInfo, dir2.getAbsolutePath());
         genDTO_Web(tableInfo, folder);
+        genView(tableInfo,folder);
     }
 }
