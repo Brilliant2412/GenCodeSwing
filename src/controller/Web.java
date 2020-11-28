@@ -63,7 +63,7 @@ public class Web {
                 "import com.tav.web.data."+ tableInfo.tableName+"Data;\n" +
                 "import com.tav.web.dto."+ tableInfo.tableName+"DTO;\n" +
                 "import com.tav.web.dto.ImportErrorMessage;\n" +
-                "import java.util.Date;" +
+                "import java.util.Date;\n" +
                 "import com.tav.web.dto.SearchCommonFinalDTO;\n" +
                 "import java.io.BufferedOutputStream;\n" +
                 "import java.io.File;\n" +
@@ -257,7 +257,7 @@ public class Web {
                 "import com.tav.web.dto."+ tableInfo.tableName +"DTO;\n" +
                 "import com.tav.web.dto.SearchCommonFinalDTO;\n" +
                 "import java.util.List;\n" +
-                "import java.util.Date;" +
+                "import java.util.Date;\n" +
                 "import org.apache.log4j.Logger;\n" +
                 "import org.springframework.beans.factory.annotation.Autowired;\n" +
                 "import org.springframework.stereotype.Component;\n\n");

@@ -304,8 +304,7 @@ public class Excel extends javax.swing.JFrame {
         try {                                           
             FileInputStream inputStream = new FileInputStream(fileText.getText());
             System.out.println(fileText.getText());
-            XSSFWorkbook workbook = null;            
-            workbook = new XSSFWorkbook(inputStream);            
+            XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
             inputStream.close();
                                    
             int c = 0;

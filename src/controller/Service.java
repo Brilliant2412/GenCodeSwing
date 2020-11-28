@@ -63,7 +63,7 @@ public class Service {
                         "import com.tav.service.dto." + tableInfo.tableName + "DTO;\n" +
                         "import com.vividsolutions.jts.geom.Geometry;\n" +
                         "import com.vividsolutions.jts.geom.Point;\n" +
-                        "import java.util.Date;" +
+                        "import java.util.Date;\n" +
                         "import javax.persistence.Column;\n" +
                         "import javax.persistence.Entity;\n" +
                         "import javax.persistence.GeneratedValue;\n" +
@@ -132,7 +132,7 @@ public class Service {
                         "import com.tav.service.bo." + tableInfo.tableName + "BO;\n" +
                         "import com.vividsolutions.jts.geom.Geometry;\n" +
                         "import com.vividsolutions.jts.geom.Point;\n" +
-                        "import java.util.Date;" +
+                        "import java.util.Date;\n" +
                         "import javax.xml.bind.annotation.XmlRootElement;\n\n" +
 
                         "@XmlRootElement(name = \"" + tableInfo.tableName + "DTO\")\n" +
@@ -214,7 +214,7 @@ public class Service {
                         "import java.math.BigInteger;\n" +
                         "import java.text.SimpleDateFormat;\n" +
                         "import java.util.List;\n" +
-                        "import java.util.Date;" +
+                        "import java.util.Date;\n" +
                         "import org.hibernate.Criteria;\n" +
                         "import org.hibernate.HibernateException;\n" +
                         "import org.hibernate.Query;\n" +
@@ -424,7 +424,7 @@ public class Service {
                 "import com.tav.service.dto.ServiceResult;\n" +
                 "import java.util.ArrayList;\n" +
                 "import java.util.List;\n" +
-                "import java.util.Date;" +
+                "import java.util.Date;\n" +
                 "import org.springframework.beans.factory.annotation.Autowired;\n" +
                 "import org.springframework.context.annotation.Scope;\n" +
                 "import org.springframework.context.annotation.ScopedProxyMode;\n" +
@@ -538,7 +538,7 @@ public class Service {
                 "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
                 "import com.tav.service.dto.ServiceResult;\n" +
                 "import java.util.List;\n" +
-                "import java.util.Date;" +
+                "import java.util.Date;\n" +
                 "import javax.ws.rs.core.Response;\n" +
                 "import org.springframework.beans.factory.annotation.Autowired;\n");
         fileWriter.append("\npublic class "+ tableInfo.tableName+"RsServiceImpl implements "+ tableInfo.tableName+"RsService{\n" +

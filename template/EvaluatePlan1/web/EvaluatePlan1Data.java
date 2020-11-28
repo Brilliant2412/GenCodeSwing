@@ -6,7 +6,8 @@ import com.tav.web.common.RestRequest;
 import com.tav.web.dto.EvaluatePlan1DTO;
 import com.tav.web.dto.SearchCommonFinalDTO;
 import java.util.List;
-import java.util.Date;import org.apache.log4j.Logger;
+import java.util.Date;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
