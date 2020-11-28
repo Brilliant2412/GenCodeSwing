@@ -19,6 +19,7 @@ public class TableInfo {
     public String title;
     public String description;
     public ArrayList<ColumnProperty> columns;
+    public int countSearch = 0;
 
     public TableInfo(String exccelFile) throws IOException {
         int n_mst = 0;
@@ -84,6 +85,15 @@ public class TableInfo {
                 }
                 colProp.setValidateMessage(row.getCell(13).toString());
                 columns.add(colProp);
+                if (row.getCell(9).equals(""))
+                {
+                    colProp.setSearch(false);
+                    countSearch++;
+                }
+                else {
+                    colProp.setSearch(true);
+                }
+
             }
             row = rowIterator.next();
         }

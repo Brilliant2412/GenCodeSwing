@@ -19,6 +19,16 @@ public class ColumnProperty {
     private boolean show;
     private String validateMessage;
 
+    private boolean search;
+
+    public boolean isSearch() {
+        return search;
+    }
+
+    public void setSearch(boolean search) {
+        this.search = search;
+    }
+
     public String getColName() {
         return colName;
     }
