@@ -759,7 +759,7 @@ public class Web {
         /*********************************************************************************************
          *                                 Viewjsp
          *********************************************************************************************/
-        fileWriter.append("\teditView: function (id) {\n" +
+        fileWriter.append("\tview: function (gid) {\n" +
                 "        if (id !== null) {\n" +
                 "            vt_form.reset($('#"+uncapitalize(tableInfo.tableName)+"Form'));\n" +
                 "            vt_form.clearError();\n" +
@@ -778,11 +778,24 @@ public class Web {
             else if (columnProperty.getInputType().equals("Combobox"))
             {
                 //ok gen lai cho anh file js cai file excel cua a la file nao a
-                fileWriter.append("\t\t\t\t\tvt_combobox.buildCombobox(\"cb"+columnProperty.getColName()+"\", \""+columnProperty.getComboboxBuildPath()+"\", data."+columnProperty.getColName()+", \""+columnProperty.getComboboxName()+"\", \""+columnProperty.getComboboxValue()+"\", \"- Chọn "+columnProperty.getColDescription()+" -\", 0);\n");
+//                    fileWriter.append("\t\t\t\t\tvt_combobox.buildCombobox(\"cb"+columnProperty.getColName()+"\", \""+columnProperty.getComboboxBuildPath()+"\", data."+columnProperty.getColName()+", \""+columnProperty.getComboboxName()+"\", \""+columnProperty.getComboboxValue()+"\", \"- Chọn "+columnProperty.getColDescription()+" -\", 0);\n");
+                fileWriter.append("\t\t\t\t\t$(\"#cb"+columnProperty.getColName()+"combobox"+"\").val(data."+columnProperty.getColName()+"ST"+");\n");
             }
             else fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+");\n");
 
         }
+        fileWriter.append("\n\t\t\t\t\t$('#dialog-formView').dialog({\n" +
+                "                        title: \"Xem " + tableInfo.description + "\"\n" +
+                "                    }).dialog('open');\n" +
+                "                    // set css to form\n" +
+                "                    $('#dialog-formView').parent().addClass(\"dialogAddEdit\");\n" +
+                "                    objCommon.setTimeout(\"code\");\n" +
+                "                    return false;\n" +
+                "                }\n" +
+                "            });\n" +
+                "        }\n" +
+                "    },\n" +
+                "\tgid: null,\n\n");
         fileWriter.close();
     }
 
@@ -952,9 +965,9 @@ public class Web {
                 "<%@ taglib uri=\"http://java.sun.com/jsp/jstl/core\" prefix=\"c\" %>\n" +
                 "<%@ taglib uri=\"http://java.sun.com/jsp/jstl/functions\" prefix=\"fn\" %>\n" +
                 "<%@ taglib uri=\"http://www.springframework.org/tags/form\" prefix=\"form\"%>  \n" +
-                "<%@ taglib prefix=\"fmt\" uri=\"http://java.sun.com/jsp/jstl/fmt\" %>\n"+
+                "<%@ taglib prefix=\"fmt\" uri=\"http://java.sun.com/jsp/jstl/fmt\" %>\n" +
                 "<div id=\"dialog-formView\">\n" +
-                "\t<form:form id=\""+uncapitalize(tableInfo.tableName)+"Form\" modelAttribute=\""+uncapitalize(tableInfo.tableName)+"Form\" class=\"form-horizontal\">\t\n" +
+                "\t<form:form id=\"" + uncapitalize(tableInfo.tableName) + "Form\" modelAttribute=\"" + uncapitalize(tableInfo.tableName) + "Form\" class=\"form-horizontal\">\t\n" +
                 "\t\t<input type=\"hidden\" name=\"${_csrf.parameterName}\" value=\"${_csrf.token}\" />\n" +
                 "\t\t<input type=\"hidden\" id=\"gid\" name=\"gid\" value=\"\"/>\n" +
                 "\t\t<input type=\"hidden\" id=\"isedit\" name=\"isedit\" value=\"0\"/>\n" +
@@ -963,30 +976,26 @@ public class Web {
                 "\t\t\t\t<span class=\"iconFS\"></span>\n" +
                 "\t\t\t\t<span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Thông tin chung</b></span>\n" +
                 "\t\t\t</legend>\n");
-        int k =tableInfo.columns.size()-1;
-        int r = k/4;
-        int q = k%4;
-        for (int i = 0;i<r;i++){
+        int k = tableInfo.columns.size() - 1;
+        int r = k / 4;
+        int q = k % 4;
+        for (int i = 0; i < r; i++) {
             fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
-            for (int j =0;j<=3;j++){
-                String res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+tableInfo.columns.get(i).getColDescription()+"</label>\n" +
-                        "\t\t\t\t<div class=\"col-lg-2\">\n" +
-                        "\t\t\t\t\t<div id=\"cb"+tableInfo.columns.get(i).getColName()+"\"></div> \n" +
-                        "\t\t\t\t\t<input name=\""+tableInfo.columns.get(i).getColName()+"\" id=\""+tableInfo.columns.get(i).getColName()+"\" class=\"text_hidden\"  />\n" +
-                        "\t\t\t\t\t<span id=\""+tableInfo.columns.get(i).getColName()+"_error\" class=\"note note-error\"></span>\n" +
+            for (int j = 0; j <= 3; j++) {
+                String res = "\t\t\t\t<label class=\"col-md-1 control-label \">" + tableInfo.columns.get(4*i+j+1).getColDescription() + "</label>\n" +
+                        "\t\t\t\t<div class=\"col-md-2\">\n" +
+                        "\t\t\t\t\t<input class=\"form-control\" placeholder=\"\" name=\"\" id=\""+tableInfo.columns.get(4*i+j+1).getColName()+"View"+"\" type=\"text\" readonly=\"true\"/>\n"+
                         "\t\t\t\t</div>\n";
                 fileWriter.append(res);
             }
             fileWriter.append("\t\t\t</div>\n\n");
         }
-        if (q != 0){
+        if (q != 0) {
             fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
-            for (int i = r*4+1;i<=k;i++){
-                String res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+tableInfo.columns.get(i).getColDescription()+"</label>\n" +
-                        "\t\t\t\t<div class=\"col-lg-2\">\n" +
-                        "\t\t\t\t\t<div id=\"cb"+tableInfo.columns.get(i).getColName()+"\"></div> \n" +
-                        "\t\t\t\t\t<input name=\""+tableInfo.columns.get(i).getColName()+"\" id=\""+tableInfo.columns.get(i).getColName()+"\" class=\"text_hidden\"  />\n" +
-                        "\t\t\t\t\t<span id=\""+tableInfo.columns.get(i).getColName()+"_error\" class=\"note note-error\"></span>\n" +
+            for (int i = r * 4 + 1; i <= k; i++) {
+                String res = "\t\t\t\t<label class=\"col-md-1 control-label \">" + tableInfo.columns.get(i).getColDescription() + "</label>\n" +
+                        "\t\t\t\t<div class=\"col-md-2\">\n" +
+                        "\t\t\t\t\t<input class=\"form-control\" placeholder=\"\" name=\"\" id=\""+tableInfo.columns.get(i).getColName()+"View"+"\" type=\"text\" readonly=\"true\"/>\n"+
                         "\t\t\t\t</div>\n";
                 fileWriter.append(res);
             }
@@ -1034,6 +1043,7 @@ public class Web {
                 "\t});\n" +
                 "</script>");
         fileWriter.close();
+
     }
 
     public static void genWeb(TableInfo tableInfo, String folder) throws IOException {
