@@ -1,7 +1,7 @@
 package com.tav.service.rest;
 
 import com.tav.service.dto.EvaluatePlan1DTO;
-import com.tav.service.dto.ObjectCommonSearchDTO;
+import com.tav.service.dto.SearchCommonFinalDTO;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,13 +16,13 @@ public interface EvaluatePlan1RsService {
 	@Path("/getAll/{offset}/{limit}")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response getAll(ObjectCommonSearchDTO searchDTO, @PathParam("offset") Integer offset, @PathParam("limit") Integer limit);
+	public Response getAll(SearchCommonFinalDTO searchDTO, @PathParam("offset") Integer offset, @PathParam("limit") Integer limit);
 
 	@POST
 	@Path("/getCount")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response getCount(ObjectCommonSearchDTO searchDTO);
+	public Response getCount(SearchCommonFinalDTO searchDTO);
 
 	@GET
 	@Path("/getOneById/{id}")
@@ -34,7 +34,7 @@ public interface EvaluatePlan1RsService {
 	@Path("/deleteList/")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response deleteList(ObjectCommonSearchDTO searchDTO);
+	public Response deleteList(SearchCommonFinalDTO searchDTO);
 
 	@POST
 	@Path("/updateBO/")

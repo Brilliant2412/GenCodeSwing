@@ -18,7 +18,6 @@ public class ColumnProperty {
     private String comboboxValue;
     private boolean show;
     private String validateMessage;
-
     private boolean search;
 
     public boolean isSearch() {

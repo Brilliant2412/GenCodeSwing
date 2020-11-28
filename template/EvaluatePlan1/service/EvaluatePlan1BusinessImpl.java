@@ -6,7 +6,7 @@ import com.tav.service.common.Constants;
 import com.tav.service.dao.EvaluatePlan1DAO;
 import com.tav.service.dao.ObjectReationDAO;
 import com.tav.service.dto.EvaluatePlan1DTO;
-import com.tav.service.dto.ObjectCommonSearchDTO;
+import com.tav.service.dto.SearchCommonFinalDTO;
 import com.tav.service.dto.ObjectSearchDTO;
 import com.tav.service.dto.ServiceResult;
 import java.util.ArrayList;
@@ -27,12 +27,12 @@ public class EvaluatePlan1BusinessImpl extends
 	@Override
 	public EvaluatePlan1DAO gettDAO() { return evaluatePlan1DAO; }
 
-	public List<EvaluatePlan1DTO> getAll(ObjectCommonSearchDTO searchDTOTmp, Integer offset, Integer limit) {
+	public List<EvaluatePlan1DTO> getAll(SearchCommonFinalDTO searchDTOTmp, Integer offset, Integer limit) {
 		List<EvaluatePlan1DTO> lstDTO = evaluatePlan1DAO.getAll(searchDTOTmp, offset, limit);
 		return lstDTO;
 	}
 
-	public Integer getCount(ObjectCommonSearchDTO searchDTO) { return evaluatePlan1DAO.getCount(searchDTO); }
+	public Integer getCount(SearchCommonFinalDTO searchDTO) { return evaluatePlan1DAO.getCount(searchDTO); }
 
 	//GET ONE
 	public EvaluatePlan1DTO getOneObjById(Long gid) {
@@ -57,7 +57,7 @@ public class EvaluatePlan1BusinessImpl extends
 	}
 
 	//delete
-	public ServiceResult deleteList(ObjectCommonSearchDTO searchDTO) {
+	public ServiceResult deleteList(SearchCommonFinalDTO searchDTO) {
 		ServiceResult result = evaluatePlan1DAO.deleteList(searchDTO.getLstFirst());
 		return result;
 	}
