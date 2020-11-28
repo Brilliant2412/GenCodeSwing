@@ -1041,7 +1041,11 @@ public class CodeGenerator {
 
             if (columnProperty.isShow())
             {
-                fileWriter.append("\t{text: \""+columnProperty.getColDescription()+"\", datafield: '"+columnProperty.getColName()+"', res: \"data-class='phone'\"},\n");
+                fileWriter.append("\t{text: \""+columnProperty.getColDescription()+"\", datafield: '" + columnProperty.getColName());
+                if(columnProperty.getColType().equals("Date") || columnProperty.getInputType().equals("Combobox")){
+                    fileWriter.append("ST");
+                }
+                fileWriter.append("', res: \"data-class='phone'\"},\n");
 
             }
         }
