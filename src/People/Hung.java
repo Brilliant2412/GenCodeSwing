@@ -19,7 +19,45 @@ import model.ColumnProperty;
 
 
 public class Hung {
-    
+    /*********************************************************************************************
+     *                                 Viewjsp
+     *********************************************************************************************/
+//        fileWriter.append("\tview: function (gid) {\n" +
+//                "        if (id !== null) {\n" +
+//                "            vt_form.reset($('#"+uncapitalize(tableInfo.tableName)+"Form'));\n" +
+//            "            vt_form.clearError();\n" +
+//            "            $.ajax({\n" +
+//            "                async: false,\n" +
+//            "                data: {gid: id},\n" +
+//            "                url: \"getone"+tableInfo.tableName.toLowerCase()+"bygid.json\",\n" +
+//            "                success: function (data, status, xhr) {\n" +
+//            "                    $(\"#gid\").val(data.gid);\n");
+//        for (int i = 1; i < tableInfo.columns.size(); i++) {
+//        ColumnProperty columnProperty = tableInfo.columns.get(i);
+//        if (columnProperty.getColType().equals("Date"))
+//        {
+//            fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+"ST);\n");
+//        }
+//        else if (columnProperty.getInputType().equals("Combobox"))
+//        {
+//            fileWriter.append("\t\t\t\t\t$(\"#cb"+columnProperty.getColName()+"combobox"+"\").val(data."+columnProperty.getColName()+"ST"+");\n");
+//        }
+//        else fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+");\n");
+//
+//    }
+//        fileWriter.append("\n\t\t\t\t\t$('#dialog-formView').dialog({\n" +
+//                "                        title: \"Xem " + tableInfo.description + "\"\n" +
+//            "                    }).dialog('open');\n" +
+//            "                    // set css to form\n" +
+//            "                    $('#dialog-formView').parent().addClass(\"dialogAddEdit\");\n" +
+//            "                    objCommon.setTimeout(\"code\");\n" +
+//            "                    return false;\n" +
+//            "                }\n" +
+//            "            });\n" +
+//            "        }\n" +
+//            "    },\n" +
+//            "\tgid: null,\n\n");
+//        fileWriter.close();
     
     static void genView(TableInfo tableInfo, String folder) throws IOException {
         FileWriter fileWriter = new FileWriter(folder + "\\View.jsp");
