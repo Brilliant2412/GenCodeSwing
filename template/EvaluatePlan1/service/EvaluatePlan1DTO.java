@@ -4,7 +4,8 @@ import com.tav.service.base.db.dto.BaseFWDTOImpl;
 import com.tav.service.bo.EvaluatePlan1BO;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
-import java.util.Date;import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "EvaluatePlan1DTO")
 public class EvaluatePlan1DTO extends BaseFWDTOImpl<EvaluatePlan1BO> {

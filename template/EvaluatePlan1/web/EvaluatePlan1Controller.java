@@ -15,7 +15,8 @@ import com.tav.web.common.StringUtil;
 import com.tav.web.data.EvaluatePlan1Data;
 import com.tav.web.dto.EvaluatePlan1DTO;
 import com.tav.web.dto.ImportErrorMessage;
-import java.util.Date;import com.tav.web.dto.ObjectCommonSearchDTO;
+import java.util.Date;
+import com.tav.web.dto.SearchCommonFinalDTO;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,7 +76,7 @@ public class EvaluatePlan1Controller extends SubBaseController {
             Integer limit = getTotalRecordPerPage();
             Integer offset = --currentPage * limit;
             JsonDataGrid dataGrid = new JsonDataGrid();
-            ObjectCommonSearchDTO searchDTO = new ObjectCommonSearchDTO();
+            SearchCommonFinalDTO searchDTO = new SearchCommonFinalDTO();
             List<EvaluatePlan1DTO> lst = new ArrayList<>();
             Integer totalRecords = 0;
             totalRecords = evaluatePlan1Data.getCount(searchDTO);
@@ -156,10 +157,10 @@ public class EvaluatePlan1Controller extends SubBaseController {
     @RequestMapping(value = {"/" + ErpConstants.RequestMapping.DELETE_EVALUATE_PLAN1}, method = RequestMethod.POST,
             produces = "text/html;charset=utf-8")
     public @ResponseBody
-    String deleteObj(@ModelAttribute("objectCommonSearchDTO") ObjectCommonSearchDTO objectCommonSearchDTO,
+    String deleteObj(@ModelAttribute("searchCommonFinalDTO") SearchCommonFinalDTO SearchCommonFinalDTO,
             HttpServletRequest request) {
         HttpSession session = request.getSession();
-        ServiceResult serviceResult = evaluatePlan1Data.deleteObj(objectCommonSearchDTO);
+        ServiceResult serviceResult = evaluatePlan1Data.deleteObj(searchCommonFinalDTO);
         processServiceResult(serviceResult);
         JSONObject result = new JSONObject(serviceResult);
         return result.toString();

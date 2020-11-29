@@ -3,12 +3,13 @@ package com.tav.service.dao;
 import com.tav.service.base.db.dao.BaseFWDAOImpl;
 import com.tav.service.bo.EvaluatePlan1BO;
 import com.tav.service.dto.EvaluatePlan1DTO;
-import com.tav.service.dto.ObjectCommonSearchDTO;
+import com.tav.service.dto.SearchCommonFinalDTO;
 import com.tav.service.dto.ServiceResult;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Date;import org.hibernate.Criteria;
+import java.util.Date;
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository("evaluatePlan1DAO")
 public class EvaluatePlan1DAO extends BaseFWDAOImpl<EvaluatePlan1BO, Long>{
     
-    public List<EvaluatePlan1DTO> getAll(ObjectCommonSearchDTO searchDTO, Integer offset, Integer limit) {
+    public List<EvaluatePlan1DTO> getAll(SearchCommonFinalDTO searchDTO, Integer offset, Integer limit) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         StringBuilder sqlCommand = new StringBuilder();
 		sqlCommand.append(" SELECT ");
@@ -82,7 +83,7 @@ public class EvaluatePlan1DAO extends BaseFWDAOImpl<EvaluatePlan1BO, Long>{
 		return query.list();
 	}
 
-public Integer getCount(ObjectCommonSearchDTO searchDTO) {
+public Integer getCount(SearchCommonFinalDTO searchDTO) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         StringBuilder sqlCommand = new StringBuilder();
         sqlCommand.append(" SELECT ");

@@ -4,9 +4,10 @@ import com.tav.web.bo.ServiceResult;
 import com.tav.web.common.Config;
 import com.tav.web.common.RestRequest;
 import com.tav.web.dto.EvaluatePlan1DTO;
-import com.tav.web.dto.ObjectCommonSearchDTO;
+import com.tav.web.dto.SearchCommonFinalDTO;
 import java.util.List;
-import java.util.Date;import org.apache.log4j.Logger;
+import java.util.Date;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,7 @@ public class EvaluatePlan1Data {
 	private Config config;
 
 	// get all
-	public List<EvaluatePlan1DTO> getAll(ObjectCommonSearchDTO searchDTO, Integer offset, Integer limit) {
+	public List<EvaluatePlan1DTO> getAll(SearchCommonFinalDTO searchDTO, Integer offset, Integer limit) {
 		String url = config.getRestURL() + subUrl + "/getAll/" + offset + "/" + limit;
 		try {
 			List<EvaluatePlan1DTO> jsResult = RestRequest.postAndReturnObjectArray(url, searchDTO, EvaluatePlan1DTO.class);
@@ -35,7 +36,7 @@ public class EvaluatePlan1Data {
 	}
 
 	//get count
-	public Integer getCount(ObjectCommonSearchDTO searchDTO) {
+	public Integer getCount(SearchCommonFinalDTO searchDTO) {
 		String url = config.getRestURL() + subUrl + "/getCount";
 		return (Integer) RestRequest.postAndReturnObject(url, searchDTO, Integer.class);
 	}
@@ -51,9 +52,9 @@ public class EvaluatePlan1Data {
 		return result;
 	}
 
-	public ServiceResult deleteObj(ObjectCommonSearchDTO objectCommonSearchDTO) {
+	public ServiceResult deleteObj(SearchCommonFinalDTO searchCommonFinalDTO) {
 		String url = config.getRestURL() + subUrl + "/deleteList/";
-		ServiceResult result = (ServiceResult) RestRequest.postAndReturnObject(url, objectCommonSearchDTO, ServiceResult.class);
+		ServiceResult result = (ServiceResult) RestRequest.postAndReturnObject(url, searchCommonFinalDTO, ServiceResult.class);
 		return result;
 	}
 

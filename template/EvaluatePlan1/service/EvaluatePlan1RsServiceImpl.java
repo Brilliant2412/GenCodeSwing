@@ -2,10 +2,11 @@ package com.tav.service.rest;
 
 import com.tav.service.business.EvaluatePlan1BusinessImpl;
 import com.tav.service.dto.EvaluatePlan1DTO;
-import com.tav.service.dto.ObjectCommonSearchDTO;
+import com.tav.service.dto.SearchCommonFinalDTO;
 import com.tav.service.dto.ServiceResult;
 import java.util.List;
-import java.util.Date;import javax.ws.rs.core.Response;
+import java.util.Date;
+import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class EvaluatePlan1RsServiceImpl implements EvaluatePlan1RsService{
@@ -14,7 +15,7 @@ public class EvaluatePlan1RsServiceImpl implements EvaluatePlan1RsService{
 	private EvaluatePlan1BusinessImpl evaluatePlan1BusinessImpl;
 
 	@Override
-	public Response getAll(ObjectCommonSearchDTO searchDTO, Integer offset, Integer limit) {
+	public Response getAll(SearchCommonFinalDTO searchDTO, Integer offset, Integer limit) {
 		List<EvaluatePlan1DTO> lst = evaluatePlan1BusinessImpl.getAll(searchDTO, offset, limit);
 		if (lst == null) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
@@ -24,7 +25,7 @@ public class EvaluatePlan1RsServiceImpl implements EvaluatePlan1RsService{
 	}
 
 	@Override
-	public Response getCount(ObjectCommonSearchDTO searchDTO) {
+	public Response getCount(SearchCommonFinalDTO searchDTO) {
 		int result = evaluatePlan1BusinessImpl.getCount(searchDTO);
 		return Response.ok(result).build();
 	}
@@ -36,7 +37,7 @@ public class EvaluatePlan1RsServiceImpl implements EvaluatePlan1RsService{
 	}
 
 	@Override
-	public Response deleteList(ObjectCommonSearchDTO searchDTO) {
+	public Response deleteList(SearchCommonFinalDTO searchDTO) {
 		ServiceResult result = evaluatePlan1BusinessImpl.deleteList(searchDTO);
 		if ("FAIL".equals(result.getError())) {
 			return Response.status(Response.Status.BAD_REQUEST).build();

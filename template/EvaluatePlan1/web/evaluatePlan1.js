@@ -313,7 +313,7 @@ var objTblDocumentType = {
 };        }
     },
 
-	editView: function (id) {
+	view: function (gid) {
         if (id !== null) {
             vt_form.reset($('#evaluatePlan1Form'));
             vt_form.clearError();
@@ -323,11 +323,11 @@ var objTblDocumentType = {
                 url: "getoneevaluateplan1bygid.json",
                 success: function (data, status, xhr) {
                     $("#gid").val(data.gid);
-					vt_combobox.buildCombobox("cbexpertise_organ", "gettypeuser.json?cd=701", data.expertise_organ, "dvsName", "dvsValue", "- Chọn Cơ quan thẩm định -", 0);
+					$("#cbexpertise_organcombobox").val(data.expertise_organST);
 					$("#plan_number").val(data.plan_number);
-					vt_combobox.buildCombobox("cbplace1", "gettypeuser.json?cd=705", data.place1, "dvsName", "dvsValue", "- Chọn Địa điểm lập kế hoạch 1 -", 0);
+					$("#cbplace1combobox").val(data.place1ST);
 					$("#expertise_date").val(data.expertise_dateST);
-					vt_combobox.buildCombobox("cbdept_id", "getdepartmentComBoBox.json", data.dept_id, "deptName", "deptId", "- Chọn Tên tổ chức, đơn vị được thẩm định -", 0);
+					$("#cbdept_idcombobox").val(data.dept_idST);
 					$("#dept_other").val(data.dept_other);
 					$("#the_bases").val(data.the_bases);
 					$("#the_purpose").val(data.the_purpose);
@@ -338,3 +338,17 @@ var objTblDocumentType = {
 					$("#master_id").val(data.master_id);
 					$("#left_long").val(data.left_long);
 					$("#right_long").val(data.right_long);
+
+					$('#dialog-formView').dialog({
+                        title: "Xem Kế hoạch Thẩm định đánh giá năng lực"
+                    }).dialog('open');
+                    // set css to form
+                    $('#dialog-formView').parent().addClass("dialogAddEdit");
+                    objCommon.setTimeout("code");
+                    return false;
+                }
+            });
+        }
+    },
+	gid: null,
+
