@@ -19,7 +19,7 @@ public class TableInfo {
     public String title;
     public String description;
     public ArrayList<ColumnProperty> columns;
-    public int countSearch = 0;
+    public  int countSearch = 0;
 
     public TableInfo(String exccelFile) throws IOException {
         int n_mst = 0;
@@ -75,7 +75,7 @@ public class TableInfo {
                 if(!row.getCell(15).equals("")){
                     colProp.setComboboxBuildPath(row.getCell(15).toString());
                     colProp.setComboboxName(row.getCell(16).toString());
-                    colProp.setComboboxValue(row.getCell(17).toString());
+//                    colProp.setComboboxValue(row.getCell(17).toString());
                 }
                 if(row.getCell(10).toString().equals("")){
                     colProp.setShow(false);
@@ -85,13 +85,13 @@ public class TableInfo {
                 }
                 colProp.setValidateMessage(row.getCell(13).toString());
                 columns.add(colProp);
-                if (row.getCell(9).equals(""))
+                if (row.getCell(9).toString().trim().equals(""))
                 {
                     colProp.setSearch(false);
-                    countSearch++;
                 }
                 else {
                     colProp.setSearch(true);
+                    countSearch++;
                 }
 
             }
