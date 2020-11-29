@@ -49,9 +49,9 @@ public class CodeGenerator {
         return s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 
-    public static void GEN() {
+    public void GEN(int sheet) {
         try {
-            TableInfo tableInfo = new TableInfo(url);
+            TableInfo tableInfo = new TableInfo(url, sheet);
             pathOne = pathString+"\\"+tableInfo.tableName+"\\"+"service";
             pathTwo = pathString+"\\"+tableInfo.tableName+"\\"+"web";
             Service.genService(tableInfo,pathOne);

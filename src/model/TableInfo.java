@@ -21,13 +21,13 @@ public class TableInfo {
     public ArrayList<ColumnProperty> columns;
     public int countSearch = 0;
 
-    public TableInfo(String exccelFile) throws IOException {
+    public TableInfo(String exccelFile, int nSheet) throws IOException {
         int n_mst = 0;
         int n_department = 0;
         FileInputStream inputStream = new FileInputStream(exccelFile);
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
         inputStream.close();
-        XSSFSheet sheet = workbook.getSheetAt(0);
+        XSSFSheet sheet = workbook.getSheetAt(nSheet);
         tableName = sheet.getSheetName();
         title = sheet.getRow(1).getCell(2).toString();
         description = sheet.getRow(2).getCell(2).toString();
