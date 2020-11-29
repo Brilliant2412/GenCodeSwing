@@ -15,40 +15,8 @@ import model.TableInfo;
  * @author hungy
  */
 public class Tung {
-
-    public static String resSearch(String tenTruong,String moTa,String kieuDL,String kieuNhap){
-        String res = "";
-        if (kieuDL.equals("Long") || kieuDL.equals("Double")){
-            if (kieuNhap.equals("Combobox")){
-                res = "\t\t\t\t<label class=\"col-lg-1 control-label\">"+moTa+"</label>\n" +
-                        "\t\t\t\t<div class=\"col-lg-2 selectContainer\">\n" +
-                        "\t\t\t\t\t<class=\"form-control\" placeholder=\""+moTa+"\" id=\"cb"+tenTruong+"Search\">" +
-                        "\t\t\t\t</div>\n";
-            }else{
-                res = "\t\t\t\t<label class=\"col-lg-1 control-label\">"+moTa+"</label>\n" +
-                        "\t\t\t\t<div class=\"col-lg-1 selectContainer\">\n" +
-                        "\t\t\t\t\t<div <input type=\"number\" class=\"form-control\" placeholder=\"Từ\" id=\""+tenTruong+"SearchFrom\"> </div> \n" +
-                        "\t\t\t\t</div>\n" +
-                        "\t\t\t\t<div class=\"col-lg-1\">\n" +
-                        "\t\t\t\t\t<div <input type=\"number\" class=\"form-control\" placeholder=\"Đến\" id=\""+tenTruong+"SearchTo\"> </div> \n" +
-                        "\t\t\t\t</div>\n";
-            }
-        }else if (kieuDL.equals("Date")){
-            res = "\t\t\t\t<label class=\"col-lg-1 control-label\">"+moTa+"</label>\n" +
-                    "\t\t\t\t<div class=\"col-lg-1 selectContainer\">\n" +
-                    "\t\t\t\t\t<div <input type=\"text\" class=\"dateCalendar\" placeholder=\"Từ\" id=\""+tenTruong+"SearchFrom\"> </div> \n" +
-                    "\t\t\t\t</div>\n" +
-                    "\t\t\t\t<div class=\"col-lg-1\">\n" +
-                    "\t\t\t\t\t<div <input type=\"text\" class=\"dateCalendar\" placeholder=\"Đến\" id=\""+tenTruong+"SearchTo\"> </div> \n" +
-                    "\t\t\t\t</div>\n";
-        }
-        return res;
-    }
-
-
-
     static void genControllerSearch(TableInfo tableInfo, String folder) throws IOException {
-        FileWriter fileWriter = new FileWriter(folder + "\\ControllerSearch.jsp.txt");
+        FileWriter fileWriter = new FileWriter(folder + "\\ControllerSearch.java");
         fileWriter.write("package com.tav.web.controller;\n" +
                 "\n" +
                 "import com.google.common.base.Strings;\n" +
@@ -286,8 +254,14 @@ public class Tung {
         fileWriter.close();
     }
 
+
     static void genDAOSearch(TableInfo tableInfo, String folder) throws IOException {
-        FileWriter fileWriter = new FileWriter(folder + "\\DAOSearch.txt");
+        int count_str =0;
+        int count_cb =0;
+        int count_db =0;
+        int count_long =0;
+        int count_date =0;
+        FileWriter fileWriter = new FileWriter(folder + "\\DAOSearch.java");
         fileWriter.write("package com.tav.service.dao;\n" +
                 "\n" +
                 "import com.tav.service.base.db.dao.BaseFWDAOImpl;\n" +
@@ -344,50 +318,42 @@ public class Tung {
                 "\t//String\n" +
                 " \tif (!StringUtil.isEmpty(objectSearchCommonDTO.getStringKeyWord())) {\n" +
                 "            sqlCommand.append(\" and (   \");\n");
-        int count_str =0;
-        int count_cb =0;
-        int count_db =0;
-        int count_long =0;
-        int count_date =0;
 
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("String"))
-                {
+                if (colProp.getColType().equals("String")) {
                     count_str++;
-                    if (count_str==1)
-                    {
-                        fileWriter.append("\t    sqlCommand.append(\"  LOWER(tbl."+colProp.getColName()+") like LOWER(:stringKeyWord)   \");\n");
-                    }
-                    else {
+                    if (count_str == 1) {
+                        fileWriter.append("\t    sqlCommand.append(\"  LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
+                    } else {
                         fileWriter.append("\t    sqlCommand.append(\"  OR LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
                     }
-                    if (colProp.getColType().equals("Long") )
-                    {
-                        if (colProp.getInputType().equals("Combobox"))
-                        {
-                            count_cb++;
-                        }
-                        else
-                        {
-                            count_long++;
-                        }
-                    }
-                    if (colProp.getColType().equals("Double"))
-                    {
-                        count_db++;
-                    }
-                    if (colProp.getColType().equals("Date"))
-                    {
-                        count_date++;
-                    }
-
                 }
-            }
+                if (colProp.getColType().equals("Long") )
+                {
+                    if (colProp.getInputType().equals("Combobox"))
+                    {
+                        count_cb++;
+                    }
+                    else
+                    {
+                        count_long++;
+                    }
+                }
+                if (colProp.getColType().equals("Double"))
+                {
+                    count_db++;
+                }
+                if (colProp.getColType().equals("Date"))
+                {
+                    count_date++;
+                }
 
+            }
         }
+
         fileWriter.append("\t    sqlCommand.append(\" )   \");\n" +
                 "        }\n" +
                 "\n");
@@ -500,7 +466,7 @@ public class Tung {
                 "\t\tq.setParameter(\"stringKeyWord\", \"%\" + objectSearchCommonDTO.getStringKeyWord() + \"%\");\n" +
                 "\t}\n");
         //Combobox
-        for (int i = 0; i <count_cb ; i++) {
+        for (int i = 1; i <count_cb+1 ; i++) {
 
             fileWriter.append("\tif (objectSearchCommonDTO.getListLong"+i+"() != null && !objectSearchCommonDTO.getListLong"+i+"().isEmpty()) {\n" +
                     "            q.setParameterList(\"listLong"+i+"\", objectSearchCommonDTO.getListLong"+i+"());\n" +
@@ -508,7 +474,7 @@ public class Tung {
 
         }
         //double
-        for (int i = 0; i <count_db ; i+=2) {
+        for (int i = 1; i <count_db*2 ; i+=2) {
 
             fileWriter.append("\tif (!StringUtil.isEmpty(objectSearchCommonDTO.getDouble"+i+"())) {\n" +
                     "\t\tq.setParameter(\"double"+i+"\", objectSearchCommonDTO.getDouble"+i+"());\n" +
@@ -519,7 +485,7 @@ public class Tung {
 
         }
         //Long
-        for (int i = 0; i <count_long ; i+=2) {
+        for (int i = 1; i <count_long*2 ; i+=2) {
 
             fileWriter.append("\tif (!StringUtil.isEmpty(objectSearchCommonDTO.getLong"+i+"())) {\n" +
                     "\t\tq.setParameter(\"long"+i+"\", objectSearchCommonDTO.getLong"+i+"());\n" +
@@ -531,7 +497,7 @@ public class Tung {
         }
 
         //date
-        for (int i = 0; i <count_date ; i+=2) {
+        for (int i = 1; i <count_date*2 ; i+=2) {
 
             fileWriter.append("\tif (  (objectSearchCommonDTO.getString"+i+"() != null && !objectSearchCommonDTO.getString"+i+"().isEmpty())   &&   (objectSearchCommonDTO.getString2() != null && !objectSearchCommonDTO.getString2().isEmpty())  ) {\n" +
                     "            try {\n" +
@@ -600,7 +566,7 @@ public class Tung {
                 {
                     if (!colProp.getInputType().equals("Combobox"))
                     {
-                        t2++;
+                        c2++;
                         fileWriter.append("\tif (!StringUtil.isEmpty(objectSearchCommonDTO.getLong"+c2+"())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl."+colProp.getColName()+" >= (:long"+(c2++)+") \");\n" +
                                 "\t}\n" +
@@ -621,7 +587,7 @@ public class Tung {
                 {
                     if (!colProp.getInputType().equals("Combobox"))
                     {
-                        t3++;
+                        c3++;
                         fileWriter.append("\tif (!StringUtil.isEmpty(objectSearchCommonDTO.getDouble"+c3+"())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl."+colProp.getColName()+" >= (:double"+(c3++)+") \");\n" +
                                 "\t}\n" +
@@ -641,7 +607,7 @@ public class Tung {
             if (colProp.isSearch())
             {
                 if (colProp.getColType().equals("Date") ) {
-                    t4++;
+                    c4++;
                     fileWriter.append("\tif (  (objectSearchCommonDTO.getString"+c4+"() != null && !objectSearchCommonDTO.getString"+c4+"().isEmpty())   &&   (objectSearchCommonDTO.getString"+(c4+1)+"() != null && !objectSearchCommonDTO.getString"+(c4+1)+"().isEmpty())  ) {\n" +
                             "            sqlCommand.append(\"  and ( tbl."+colProp.getColName()+" between (:string"+c4+") and (:string"+(c4+1)+")    ) \");\n" +
                             "        }\n");
@@ -657,7 +623,7 @@ public class Tung {
                 "\t\tq.setParameter(\"stringKeyWord\", \"%\" + objectSearchCommonDTO.getStringKeyWord() + \"%\");\n" +
                 "\t}\n");
         //Combobox
-        for (int i = 0; i <count_cb ; i++) {
+        for (int i = 1; i <count_cb+1 ; i++) {
 
             fileWriter.append("\tif (objectSearchCommonDTO.getListLong"+i+"() != null && !objectSearchCommonDTO.getListLong"+i+"().isEmpty()) {\n" +
                     "            q.setParameterList(\"listLong"+i+"\", objectSearchCommonDTO.getListLong"+i+"());\n" +
@@ -665,7 +631,7 @@ public class Tung {
 
         }
         //double
-        for (int i = 0; i <count_db ; i+=2) {
+        for (int i = 1; i <count_db*2 ; i+=2) {
 
             fileWriter.append("\tif (!StringUtil.isEmpty(objectSearchCommonDTO.getDouble"+i+"())) {\n" +
                     "\t\tq.setParameter(\"double"+i+"\", objectSearchCommonDTO.getDouble"+i+"());\n" +
@@ -676,7 +642,7 @@ public class Tung {
 
         }
         //Long
-        for (int i = 0; i <count_long ; i+=2) {
+        for (int i = 1; i <count_long*2 ; i+=2) {
 
             fileWriter.append("\tif (!StringUtil.isEmpty(objectSearchCommonDTO.getLong"+i+"())) {\n" +
                     "\t\tq.setParameter(\"long"+i+"\", objectSearchCommonDTO.getLong"+i+"());\n" +
@@ -688,7 +654,7 @@ public class Tung {
         }
 
         //date
-        for (int i = 0; i <count_date ; i+=2) {
+        for (int i = 1; i <count_date*2 ; i+=2) {
 
             fileWriter.append("\tif (  (objectSearchCommonDTO.getString"+i+"() != null && !objectSearchCommonDTO.getString"+i+"().isEmpty())   &&   (objectSearchCommonDTO.getString2() != null && !objectSearchCommonDTO.getString2().isEmpty())  ) {\n" +
                     "            try {\n" +
@@ -699,7 +665,6 @@ public class Tung {
                     "        }\n");
 
         }
-
         fileWriter.append("        return ((BigInteger) query.uniqueResult()).intValue();\n" +
                 "\n" +
                 "\n" +
@@ -827,6 +792,4 @@ public class Tung {
 
         fileWriter.close();
     }
-
-
 }
