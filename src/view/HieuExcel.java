@@ -184,7 +184,7 @@ public class HieuExcel extends javax.swing.JFrame {
         // TODO add your handling code here:                                       
             
         CodeGenerator generator = new CodeGenerator(tfieldBrowseFile.getText(),getPath());         
-        generator.GEN(numObj); 
+        generator.GEN();
     }//GEN-LAST:event_btnGenerateActionPerformed
 
     private void btnBrowseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseFileActionPerformed

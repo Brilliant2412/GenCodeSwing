@@ -2477,7 +2477,7 @@ public class CodeGenerator {
 
     public static void GEN() {
         try {
-            TableInfo tableInfo = new TableInfo(url,);
+            TableInfo tableInfo = new TableInfo(url,0);
             pathOne = pathString+"\\"+tableInfo.tableName+"\\"+"service";
             pathTwo = pathString+"\\"+tableInfo.tableName+"\\"+"web";
             genService(tableInfo,pathOne);
