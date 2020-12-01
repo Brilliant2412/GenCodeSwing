@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -182,9 +183,18 @@ public class HieuExcel extends javax.swing.JFrame {
 
     private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
         // TODO add your handling code here:                                       
-            
         CodeGenerator generator = new CodeGenerator(tfieldBrowseFile.getText(),getPath());         
-        generator.GEN();
+        try {
+            if(numObj < 0){
+                JOptionPane.showMessageDialog(this, "Please check an object box");
+                return;
+            }
+            generator.GEN(numObj);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            return;
+        }
+        JOptionPane.showMessageDialog(this, "Code has been generated successfully");
     }//GEN-LAST:event_btnGenerateActionPerformed
 
     private void btnBrowseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBrowseFileActionPerformed
@@ -250,8 +260,10 @@ public class HieuExcel extends javax.swing.JFrame {
      */
         @Override
         public void actionPerformed(ActionEvent evt){
+            boolean isCheck = false;
             for (int i = 0; i < objCheckBoxs.size(); i++) {
                 if(objCheckBoxs.get(i).isSelected()){
+                    isCheck = true;
                     if(evt.getSource().equals(objCheckBoxs.get(i))){
                         numObj = i;
                     }
@@ -259,12 +271,18 @@ public class HieuExcel extends javax.swing.JFrame {
                         objCheckBoxs.get(i).setSelected(false);
                     }
                 }
-            }
-            for(int i = 0; i < subObjCheckBoxs.size(); i++){
                 if(subObjCheckBoxs.get(i).isSelected() && i == numObj){
                     subObjCheckBoxs.get(i).setSelected(false);
                 }
             }
+            if(!isCheck){
+                numObj = -1;
+            }
+//            for(int i = 0; i < subObjCheckBoxs.size(); i++){
+//                if(subObjCheckBoxs.get(i).isSelected() && i == numObj){
+//                    subObjCheckBoxs.get(i).setSelected(false);
+//                }
+//            }
         }
     }
     
