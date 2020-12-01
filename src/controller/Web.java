@@ -65,6 +65,7 @@ public class Web {
                 "import com.tav.web.dto.ImportErrorMessage;\n" +
                 "import java.util.Date;\n" +
                 "import com.tav.web.dto.SearchCommonFinalDTO;\n" +
+                "import com.tav.web.dto.ObjectCommonSearchDTO;\n" +
                 "import java.io.BufferedOutputStream;\n" +
                 "import java.io.File;\n" +
                 "import java.io.FileInputStream;\n" +
@@ -165,32 +166,32 @@ public class Web {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getColType().equals("Date")){
                 fileWriter.append(
-                        "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
-                                "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
-                                "            }\n"
+                    "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
+                    "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
+                    "            }\n"
                 );
             }
         }
         fileWriter.append(
                 "            serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.addObj("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
-                        "            processServiceResult(serviceResult);\n" +
-                        "            result = new JSONObject(serviceResult);\n" +
-                        "        }\n" +
-                        "        return result.toString();\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    //update\n" +
-                        "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.UPDATE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)\n" +
-                        "    @ResponseBody\n" +
-                        "    public String updateOBJ(@ModelAttribute(\"" + uncapitalize(tableInfo.tableName) + "Form\") "+ tableInfo.tableName+"DTO "+uncapitalize(tableInfo.tableName)+"DTO, MultipartHttpServletRequest multipartRequest,\n" +
-                        "            HttpServletRequest request) throws ParseException {\n" +
-                        "\n" +
-                        "        JSONObject result;\n" +
-                        "        String error = validateForm("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
-                        "        ServiceResult serviceResult;\n" +
-                        "        if (error != null) {\n" +
-                        "            return error;\n" +
-                        "        } else {\n");
+                "            processServiceResult(serviceResult);\n" +
+                "            result = new JSONObject(serviceResult);\n" +
+                "        }\n" +
+                "        return result.toString();\n" +
+                "    }\n" +
+                "\n" +
+                "    //update\n" +
+                "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.UPDATE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)\n" +
+                "    @ResponseBody\n" +
+                "    public String updateOBJ(@ModelAttribute(\"" + uncapitalize(tableInfo.tableName) + "Form\") "+ tableInfo.tableName+"DTO "+uncapitalize(tableInfo.tableName)+"DTO, MultipartHttpServletRequest multipartRequest,\n" +
+                "            HttpServletRequest request) throws ParseException {\n" +
+                "\n" +
+                "        JSONObject result;\n" +
+                "        String error = validateForm("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
+                "        ServiceResult serviceResult;\n" +
+                "        if (error != null) {\n" +
+                "            return error;\n" +
+                "        } else {\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getColType().equals("Date")){
@@ -203,35 +204,35 @@ public class Web {
         }
         fileWriter.append(
                 "            serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.updateBO("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
-                        "            processServiceResult(serviceResult);\n" +
-                        "            result = new JSONObject(serviceResult);\n" +
-                        "        }\n" +
-                        "        return result.toString();\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    //validate\n" +
-                        "    private String validateForm("+ tableInfo.tableName+"DTO cbChaDTO) {\n" +
-                        "        List<ValidationResult> lsError = new ArrayList<>();\n" +
-                        "        if (lsError.size() > 0) {\n" +
-                        "            Gson gson = new Gson();\n" +
-                        "            return gson.toJson(lsError);\n" +
-                        "        }\n" +
-                        "        return null;\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.DELETE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST,\n" +
-                        "            produces = \"text/html;charset=utf-8\")\n" +
-                        "    public @ResponseBody\n" +
-                        "    String deleteObj(@ModelAttribute(\"searchCommonFinalDTO\") SearchCommonFinalDTO SearchCommonFinalDTO,\n" +
-                        "            HttpServletRequest request) {\n" +
-                        "        HttpSession session = request.getSession();\n" +
-                        "        ServiceResult serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.deleteObj(searchCommonFinalDTO);\n" +
-                        "        processServiceResult(serviceResult);\n" +
-                        "        JSONObject result = new JSONObject(serviceResult);\n" +
-                        "        return result.toString();\n" +
-                        "    }\n" +
-                        "\n" +
-                        "}\n");
+                "            processServiceResult(serviceResult);\n" +
+                "            result = new JSONObject(serviceResult);\n" +
+                "        }\n" +
+                "        return result.toString();\n" +
+                "    }\n" +
+                "\n" +
+                "    //validate\n" +
+                "    private String validateForm("+ tableInfo.tableName+"DTO cbChaDTO) {\n" +
+                "        List<ValidationResult> lsError = new ArrayList<>();\n" +
+                "        if (lsError.size() > 0) {\n" +
+                "            Gson gson = new Gson();\n" +
+                "            return gson.toJson(lsError);\n" +
+                "        }\n" +
+                "        return null;\n" +
+                "    }\n" +
+                "\n" +
+                "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.DELETE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST,\n" +
+                "            produces = \"text/html;charset=utf-8\")\n" +
+                "    public @ResponseBody\n" +
+                "    String deleteObj(@ModelAttribute(\"objectCommonSearchDTO\") ObjectCommonSearchDTO objectCommonSearchDTO,\n" +
+                "            HttpServletRequest request) {\n" +
+                "        HttpSession session = request.getSession();\n" +
+                "        ServiceResult serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.deleteObj(objectCommonSearchDTO);\n" +
+                "        processServiceResult(serviceResult);\n" +
+                "        JSONObject result = new JSONObject(serviceResult);\n" +
+                "        return result.toString();\n" +
+                "    }\n" +
+                "\n" +
+                "}\n");
 
         fileWriter.close();
     }
@@ -321,7 +322,7 @@ public class Web {
     }
 
     static void genListjsp(TableInfo tableInfo, String folder) throws IOException {
-        FileWriter fileWriter = new FileWriter(folder + "\\" + "List.jsp");
+        FileWriter fileWriter = new FileWriter(folder + "\\" + "list.jsp");
         fileWriter.write("<%@ page contentType=\"text/html;charset=UTF-8\" %>\n" +
                 "<%@ taglib uri=\"http://www.springframework.org/tags/form\" prefix=\"form\"%>  \n" +
                 "<%@ taglib uri=\"http://java.sun.com/jsp/jstl/fmt\" prefix=\"fmt\"%>\n" +
@@ -955,9 +956,8 @@ public class Web {
         fileWriter.close();
     }
 
-
     static void genView(TableInfo tableInfo, String folder) throws IOException {
-        FileWriter fileWriter = new FileWriter(folder + "\\View.jsp");
+        FileWriter fileWriter = new FileWriter(folder + "\\view.jsp");
         fileWriter.write("<%@ page contentType=\"text/html;charset=UTF-8\" %>\n" +
                 "<%@ taglib prefix=\"spring\" uri=\"http://www.springframework.org/tags\" %>\n" +
                 "<%@ taglib uri=\"http://java.sun.com/jsp/jstl/core\" prefix=\"c\" %>\n" +
@@ -1042,11 +1042,252 @@ public class Web {
                 "</script>");
         fileWriter.close();
     }
+    
+    static void genControllerSearch(TableInfo tableInfo, String folder) throws IOException {
+        FileWriter fileWriter = new FileWriter(folder + "\\ControllerSearch.java");
+        fileWriter.write("package com.tav.web.controller;\n" +
+                "\n" +
+                "import com.google.common.base.Strings;\n" +
+                "import com.tav.web.common.DateUtil;import com.google.gson.Gson;\n" +
+                "import com.google.gson.JsonObject;\n" +
+                "import com.tav.common.web.form.JsonDataGrid;\n" +
+                "import com.tav.web.bo.ServiceResult;\n" +
+                "import com.tav.web.bo.UserSession;\n" +
+                "import com.tav.web.bo.ValidationResult;\n" +
+                "import com.tav.web.common.CommonConstant;\n" +
+                "import com.tav.web.common.CommonFunction;\n" +
+                "import com.tav.web.common.ConvertData;\n" +
+                "import com.tav.web.common.ErpConstants;\n" +
+                "import com.tav.web.common.StringUtil;\n" +
+                "import com.tav.web.data.EvaluatePlan1Data;\n" +
+                "import com.tav.web.dto.EvaluatePlan1DTO;\n" +
+                "import com.tav.web.dto.ImportErrorMessage;\n" +
+                "import java.util.Date;\n" + 
+                "import com.tav.web.dto.ObjectCommonSearchDTO;\n" +
+                "import com.tav.web.dto.SearchCommonFinalDTO;\n" +
+                "import java.io.BufferedOutputStream;\n" +
+                "import java.io.File;\n" +
+                "import java.io.FileInputStream;\n" +
+                "import java.io.FileNotFoundException;\n" +
+                "import java.io.FileOutputStream;\n" +
+                "import java.io.IOException;\n" +
+                "import java.nio.file.Files;\n" +
+                "import java.nio.file.Path;\n" +
+                "import java.nio.file.Paths;\n" +
+                "import java.text.ParseException;\n" +
+                "import java.text.SimpleDateFormat;\n" +
+                "import java.util.ArrayList;\n" +
+                "import java.util.HashMap;\n" +
+                "import java.util.Iterator;\n" +
+                "import java.util.List;\n" +
+                "import java.util.regex.Pattern;\n" +
+                "import javax.servlet.http.HttpServletRequest;\n" +
+                "import javax.servlet.http.HttpServletResponse;\n" +
+                "import javax.servlet.http.HttpSession;\n" +
+                "import javax.ws.rs.core.MediaType;\n" +
+                "import org.apache.poi.hssf.usermodel.HSSFWorkbook;\n" +
+                "import org.apache.poi.ss.usermodel.Cell;\n" +
+                "import org.apache.poi.ss.usermodel.DataFormatter;\n" +
+                "import org.apache.poi.ss.usermodel.Row;\n" +
+                "import org.apache.poi.ss.usermodel.Sheet;\n" +
+                "import org.apache.poi.ss.usermodel.Workbook;\n" +
+                "import org.apache.poi.xssf.usermodel.XSSFWorkbook;\n" +
+                "import org.json.JSONObject;\n" +
+                "import org.springframework.beans.factory.annotation.Autowired;\n" +
+                "import org.springframework.stereotype.Controller;\n" +
+                "import org.springframework.ui.Model;\n" +
+                "import org.springframework.web.bind.annotation.ModelAttribute;\n" +
+                "import org.springframework.web.bind.annotation.RequestMapping;\n" +
+                "import org.springframework.web.bind.annotation.RequestMethod;\n" +
+                "import org.springframework.web.bind.annotation.ResponseBody;\n" +
+                "import org.springframework.web.multipart.MultipartFile;\n" +
+                "import org.springframework.web.multipart.MultipartHttpServletRequest;\n" +
+                "import org.springframework.web.servlet.ModelAndView;\n" +
+                "\n" +
+                "@Controller\n" +
+                "public class EvaluatePlan1Controller extends SubBaseController {\n" +
+                "\n" +
+                "    @Autowired\n" +
+                "    private EvaluatePlan1Data evaluatePlan1Data;\n" +
+                "\n" +
+                "    @RequestMapping(\"/\" + ErpConstants.RequestMapping.EVALUATE_PLAN1)\n" +
+                "    public ModelAndView agent(Model model, HttpServletRequest request) {\n" +
+                "        return new ModelAndView(\"evaluatePlan1\");\n" +
+                "    }\n" +
+                "\n" +
+                "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.GET_ALL_EVALUATE_PLAN1}, method = RequestMethod.GET)\n" +
+                "    @ResponseBody\n" +
+                "    public JsonDataGrid getAll(HttpServletRequest request) {\n" +
+                "        try {\n" +
+                "            // get info paging\n" +
+                "            Integer currentPage = getCurrentPage();\n" +
+                "            Integer limit = getTotalRecordPerPage();\n" +
+                "            Integer offset = --currentPage * limit;\n" +
+                "            JsonDataGrid dataGrid = new JsonDataGrid();\n" +
+                "            SearchCommonFinalDTO searchDTO = new SearchCommonFinalDTO();\n");
+
+        int count_cb =0;
+        int count_db =0;
+        int count_long =0;
+        int count_date =0;
+
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if (colProp.isSearch())
+            {
+                if (colProp.getColType().equals("Long") )
+                {
+                    if (colProp.getInputType().equals("Combobox"))
+                    {
+                        count_cb++;
+                    }
+                    else
+                    {
+                        count_long++;
+                    }
+                }
+                if (colProp.getColType().equals("Double"))
+                {
+                    count_db++;
+                }
+                if (colProp.getColType().equals("Date"))
+                {
+                    count_date++;
+                }
+
+            }
+
+        }
+        fileWriter.append("            searchDTO.setStringKeyWord(request.getParameter(\"key\"));\n");
+
+        for (int i = 0; i < count_cb; i++) {
+
+            fileWriter.append("\tif (request.getParameter(\"listLong"+(i+1)+"\") != null) {\n" +
+                    "                searchDTO.setListLong"+(i+1)+"(ConvertData.convertStringToListLong(request.getParameter(\"listLong"+(i+1)+"\")));\n" +
+                    "            }\n");
+            
+        }
+        for (int i = 0; i < 2*count_db; i+=2) {
+            fileWriter.append("\ttry{\n" +
+                    "                searchDTO.setDouble"+(i+1)+"(Double.parseDouble(request.getParameter(\"double"+(i+1)+"\")));\n" +
+                    "                searchDTO.setDouble"+(i+2)+"(Double.parseDouble(request.getParameter(\"double"+(i+2)+"\")));\n" +
+                    "            }catch(Exception ex){}\n");
+            
+        }
+
+        for (int i = 0; i < 2*count_long; i+=2) {
+            fileWriter.append("\ttry{\n" +
+                    "                searchDTO.setLong"+(i+1)+"(Long.parseLong(request.getParameter(\"long"+(i+1)+"\")));\n" +
+                    "                searchDTO.setLong"+(i+2)+"(Long.parseLong(request.getParameter(\"long"+(i+2)+"\")));\n" +
+                    "            }catch(Exception ex){}\n");
+
+        }
+
+        for (int i = 0; i < 2*count_date; i+=2) {
+            fileWriter.append("            searchDTO.setString"+(i+1)+"(request.getParameter(\"string"+(i+1)+"\"));\n" +
+                    "            searchDTO.setString"+(i+2)+"(request.getParameter(\"string"+(i+2)+"\"));");
+
+        }
+
+        fileWriter.append("\n" +
+                "            List<EvaluatePlan1DTO> lst = new ArrayList<>();\n" +
+                "            Integer totalRecords = 0;\n" +
+                "            totalRecords = evaluatePlan1Data.getCount(searchDTO);\n" +
+                "            if (totalRecords > 0) {\n" +
+                "                lst = evaluatePlan1Data.getAll(searchDTO, offset, limit);\n" +
+                "            }\n" +
+                "            dataGrid.setCurPage(getCurrentPage());\n" +
+                "            dataGrid.setTotalRecords(totalRecords);\n" +
+                "            dataGrid.setData(lst);\n" +
+                "            return dataGrid;\n" +
+                "        } catch (Exception e) {\n" +
+                "            logger.error(e.getMessage(), e);\n" +
+                "            return null;\n" +
+                "        }\n" +
+                "    }\n" +
+                "\n" +
+                "    @RequestMapping(value = \"/\" + ErpConstants.RequestMapping.GET_EVALUATE_PLAN1_BY_ID, method = RequestMethod.GET)\n" +
+                "    public @ResponseBody\n" +
+                "    EvaluatePlan1DTO getOneById(HttpServletRequest request) {\n" +
+                "        Long id = Long.parseLong(request.getParameter(\"gid\"));\n" +
+                "        return evaluatePlan1Data.getOneById(id);\n" +
+                "    }\n" +
+                "\n" +
+                "    //add\n" +
+                "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.ADD_EVALUATE_PLAN1}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)\n" +
+                "    @ResponseBody\n" +
+                "    public String addOBJ(@ModelAttribute(\"evaluatePlan1Form\") EvaluatePlan1DTO evaluatePlan1DTO, MultipartHttpServletRequest multipartRequest,\n" +
+                "            HttpServletRequest request) throws ParseException {\n" +
+                "\n" +
+                "        JSONObject result;\n" +
+                "        String error = validateForm(evaluatePlan1DTO);\n" +
+                "        ServiceResult serviceResult;\n" +
+                "        if (error != null) {\n" +
+                "            return error;\n" +
+                "        } else {\n" +
+                "            if (!StringUtil.isEmpty(evaluatePlan1DTO.getExpertise_date())) {\n" +
+                "                        evaluatePlan1DTO.setExpertise_date(DateUtil.formatDate(evaluatePlan1DTO.getExpertise_date()));\n" +
+                "            }\n" +
+                "            serviceResult = evaluatePlan1Data.addObj(evaluatePlan1DTO);\n" +
+                "            processServiceResult(serviceResult);\n" +
+                "            result = new JSONObject(serviceResult);\n" +
+                "        }\n" +
+                "        return result.toString();\n" +
+                "    }\n" +
+                "\n" +
+                "    //update\n" +
+                "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.UPDATE_EVALUATE_PLAN1}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)\n" +
+                "    @ResponseBody\n" +
+                "    public String updateOBJ(@ModelAttribute(\"evaluatePlan1Form\") EvaluatePlan1DTO evaluatePlan1DTO, MultipartHttpServletRequest multipartRequest,\n" +
+                "            HttpServletRequest request) throws ParseException {\n" +
+                "\n" +
+                "        JSONObject result;\n" +
+                "        String error = validateForm(evaluatePlan1DTO);\n" +
+                "        ServiceResult serviceResult;\n" +
+                "        if (error != null) {\n" +
+                "            return error;\n" +
+                "        } else {\n" +
+                "            if (!StringUtil.isEmpty(evaluatePlan1DTO.getExpertise_date())) {\n" +
+                "                        evaluatePlan1DTO.setExpertise_date(DateUtil.formatDate(evaluatePlan1DTO.getExpertise_date()));\n" +
+                "            }\n" +
+                "            serviceResult = evaluatePlan1Data.updateBO(evaluatePlan1DTO);\n" +
+                "            processServiceResult(serviceResult);\n" +
+                "            result = new JSONObject(serviceResult);\n" +
+                "        }\n" +
+                "        return result.toString();\n" +
+                "    }\n" +
+                "\n" +
+                "    //validate\n" +
+                "    private String validateForm(EvaluatePlan1DTO cbChaDTO) {\n" +
+                "        List<ValidationResult> lsError = new ArrayList<>();\n" +
+                "        if (lsError.size() > 0) {\n" +
+                "            Gson gson = new Gson();\n" +
+                "            return gson.toJson(lsError);\n" +
+                "        }\n" +
+                "        return null;\n" +
+                "    }\n" +
+                "\n" +
+                "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.DELETE_EVALUATE_PLAN1}, method = RequestMethod.POST,\n" +
+                "            produces = \"text/html;charset=utf-8\")\n" +
+                "    public @ResponseBody\n" +
+                "    String deleteObj(@ModelAttribute(\"objectCommonSearchDTO\") ObjectCommonSearchDTO objectCommonSearchDTO,\n" +
+                "            HttpServletRequest request) {\n" +
+                "        HttpSession session = request.getSession();\n" +
+                "        ServiceResult serviceResult = evaluatePlan1Data.deleteObj(objectCommonSearchDTO);\n" +
+                "        processServiceResult(serviceResult);\n" +
+                "        JSONObject result = new JSONObject(serviceResult);\n" +
+                "        return result.toString();\n" +
+                "    }\n" +
+                "\n" +
+                "}\n");
+
+        fileWriter.close();
+    }
 
     public static void genWeb(TableInfo tableInfo, String folder) throws IOException {
         File dir = new File(folder);
         dir.mkdirs();
-        File dir2 = new File(folder + "\\" + "webjsp");
+        File dir2 = new File(folder + "\\" + uncapitalize(tableInfo.tableName));
         dir2.mkdirs();
         genControllerParameters(tableInfo, folder);
         genController(tableInfo, folder);
@@ -1057,5 +1298,6 @@ public class Web {
         genDialogAdd(tableInfo, dir2.getAbsolutePath());
         genDTO_Web(tableInfo, folder);
         genView(tableInfo,folder);
+        genControllerSearch(tableInfo, folder);
     }
 }

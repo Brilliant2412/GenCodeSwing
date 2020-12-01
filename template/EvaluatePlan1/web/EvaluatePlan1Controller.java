@@ -17,6 +17,7 @@ import com.tav.web.dto.EvaluatePlan1DTO;
 import com.tav.web.dto.ImportErrorMessage;
 import java.util.Date;
 import com.tav.web.dto.SearchCommonFinalDTO;
+import com.tav.web.dto.ObjectCommonSearchDTO;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -157,10 +158,10 @@ public class EvaluatePlan1Controller extends SubBaseController {
     @RequestMapping(value = {"/" + ErpConstants.RequestMapping.DELETE_EVALUATE_PLAN1}, method = RequestMethod.POST,
             produces = "text/html;charset=utf-8")
     public @ResponseBody
-    String deleteObj(@ModelAttribute("searchCommonFinalDTO") SearchCommonFinalDTO SearchCommonFinalDTO,
+    String deleteObj(@ModelAttribute("objectCommonSearchDTO") ObjectCommonSearchDTO objectCommonSearchDTO,
             HttpServletRequest request) {
         HttpSession session = request.getSession();
-        ServiceResult serviceResult = evaluatePlan1Data.deleteObj(searchCommonFinalDTO);
+        ServiceResult serviceResult = evaluatePlan1Data.deleteObj(objectCommonSearchDTO);
         processServiceResult(serviceResult);
         JSONObject result = new JSONObject(serviceResult);
         return result.toString();

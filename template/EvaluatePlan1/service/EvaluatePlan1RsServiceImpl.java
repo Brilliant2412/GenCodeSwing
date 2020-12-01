@@ -3,6 +3,7 @@ package com.tav.service.rest;
 import com.tav.service.business.EvaluatePlan1BusinessImpl;
 import com.tav.service.dto.EvaluatePlan1DTO;
 import com.tav.service.dto.SearchCommonFinalDTO;
+import com.tav.service.dto.ObjectCommonSearchDTO;
 import com.tav.service.dto.ServiceResult;
 import java.util.List;
 import java.util.Date;
@@ -37,7 +38,7 @@ public class EvaluatePlan1RsServiceImpl implements EvaluatePlan1RsService{
 	}
 
 	@Override
-	public Response deleteList(SearchCommonFinalDTO searchDTO) {
+	public Response deleteList(ObjectCommonSearchDTO searchDTO) {
 		ServiceResult result = evaluatePlan1BusinessImpl.deleteList(searchDTO);
 		if ("FAIL".equals(result.getError())) {
 			return Response.status(Response.Status.BAD_REQUEST).build();

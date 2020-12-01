@@ -2,6 +2,7 @@ package com.tav.service.rest;
 
 import com.tav.service.dto.EvaluatePlan1DTO;
 import com.tav.service.dto.SearchCommonFinalDTO;
+import com.tav.service.dto.ObjectCommonSearchDTO;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -34,7 +35,7 @@ public interface EvaluatePlan1RsService {
 	@Path("/deleteList/")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response deleteList(SearchCommonFinalDTO searchDTO);
+	public Response deleteList(ObjectCommonSearchDTO searchDTO);
 
 	@POST
 	@Path("/updateBO/")

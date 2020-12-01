@@ -78,9 +78,9 @@ $(function () {
         vt_form.clearError();
         $("#isedit").val("0");
         
-		vt_combobox.buildCombobox("cbexpertise_organ", "gettypeuser.json?cd=701", 0, "dvsName", "dvsValue", "- Chọn Cơ quan thẩm định -", 0);
-		vt_combobox.buildCombobox("cbplace1", "gettypeuser.json?cd=705", 0, "dvsName", "dvsValue", "- Chọn Địa điểm lập kế hoạch 1 -", 0);
-		vt_combobox.buildCombobox("cbdept_id", "getdepartmentComBoBox.json", 0, "deptName", "deptId", "- Chọn Tên tổ chức, đơn vị được thẩm định -", 0);
+		vt_combobox.buildCombobox("cbexpertise_organ", "gettypeuser.json?cd=701", 0, "dvsName", "null", "- Chọn Cơ quan thẩm định -", 0);
+		vt_combobox.buildCombobox("cbplace1", "gettypeuser.json?cd=705", 0, "dvsName", "null", "- Chọn Địa điểm lập kế hoạch 1 -", 0);
+		vt_combobox.buildCombobox("cbdept_id", "getdepartmentComBoBox.json", 0, "deptName", "null", "- Chọn Tên tổ chức, đơn vị được thẩm định -", 0);
 
         $('#dialog-formAddNew').dialog({
             title: "Thêm mới Kế hoạch Thẩm định đánh giá năng lực"
@@ -249,11 +249,11 @@ var objTblDocumentType = {
                 url: "getoneevaluateplan1bygid.json",
                 success: function (data, status, xhr) {
                     $("#gid").val(data.gid);
-					vt_combobox.buildCombobox("cbexpertise_organ", "gettypeuser.json?cd=701", data.expertise_organ, "dvsName", "dvsValue", "- Chọn Cơ quan thẩm định -", 0);
+					vt_combobox.buildCombobox("cbexpertise_organ", "gettypeuser.json?cd=701", data.expertise_organ, "dvsName", "null", "- Chọn Cơ quan thẩm định -", 0);
 					$("#plan_number").val(data.plan_number);
-					vt_combobox.buildCombobox("cbplace1", "gettypeuser.json?cd=705", data.place1, "dvsName", "dvsValue", "- Chọn Địa điểm lập kế hoạch 1 -", 0);
+					vt_combobox.buildCombobox("cbplace1", "gettypeuser.json?cd=705", data.place1, "dvsName", "null", "- Chọn Địa điểm lập kế hoạch 1 -", 0);
 					$("#expertise_date").val(data.expertise_dateST);
-					vt_combobox.buildCombobox("cbdept_id", "getdepartmentComBoBox.json", data.dept_id, "deptName", "deptId", "- Chọn Tên tổ chức, đơn vị được thẩm định -", 0);
+					vt_combobox.buildCombobox("cbdept_id", "getdepartmentComBoBox.json", data.dept_id, "deptName", "null", "- Chọn Tên tổ chức, đơn vị được thẩm định -", 0);
 					$("#dept_other").val(data.dept_other);
 					$("#the_bases").val(data.the_bases);
 					$("#the_purpose").val(data.the_purpose);

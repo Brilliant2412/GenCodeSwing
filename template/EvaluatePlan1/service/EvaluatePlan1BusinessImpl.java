@@ -6,6 +6,7 @@ import com.tav.service.common.Constants;
 import com.tav.service.dao.EvaluatePlan1DAO;
 import com.tav.service.dao.ObjectReationDAO;
 import com.tav.service.dto.EvaluatePlan1DTO;
+import com.tav.service.dto.ObjectCommonSearchDTO;
 import com.tav.service.dto.SearchCommonFinalDTO;
 import com.tav.service.dto.ObjectSearchDTO;
 import com.tav.service.dto.ServiceResult;
@@ -58,7 +59,7 @@ public class EvaluatePlan1BusinessImpl extends
 	}
 
 	//delete
-	public ServiceResult deleteList(SearchCommonFinalDTO searchDTO) {
+	public ServiceResult deleteList(ObjectCommonSearchDTO searchDTO) {
 		ServiceResult result = evaluatePlan1DAO.deleteList(searchDTO.getLstFirst());
 		return result;
 	}
