@@ -762,7 +762,7 @@ public class Web {
         /*********************************************************************************************
          *                                 Viewjsp
          *********************************************************************************************/
-        fileWriter.append("\tview: function (gid) {\n" +
+        fileWriter.append("\n\tview : function(id) {\n" +
                 "        if (id !== null) {\n" +
                 "            vt_form.reset($('#"+uncapitalize(tableInfo.tableName)+"Form'));\n" +
                 "            vt_form.clearError();\n" +
@@ -776,15 +776,13 @@ public class Web {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
             if (columnProperty.getColType().equals("Date"))
             {
-                fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+"ST);\n");
+                fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"View"+"\").val(data."+columnProperty.getColName()+"ST);\n");
             }
             else if (columnProperty.getInputType().equals("Combobox"))
             {
-                //ok gen lai cho anh file js cai file excel cua a la file nao a
-//                    fileWriter.append("\t\t\t\t\tvt_combobox.buildCombobox(\"cb"+columnProperty.getColName()+"\", \""+columnProperty.getComboboxBuildPath()+"\", data."+columnProperty.getColName()+", \""+columnProperty.getComboboxName()+"\", \""+columnProperty.getComboboxValue()+"\", \"- Chọn "+columnProperty.getColDescription()+" -\", 0);\n");
-                fileWriter.append("\t\t\t\t\t$(\"#cb"+columnProperty.getColName()+"combobox"+"\").val(data."+columnProperty.getColName()+"ST"+");\n");
+                fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"View"+"\").val(data."+columnProperty.getColName()+"ST"+");\n");
             }
-            else fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+");\n");
+            else fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"View"+"\").val(data."+columnProperty.getColName()+");\n");
 
         }
         fileWriter.append("\n\t\t\t\t\t$('#dialog-formView').dialog({\n" +
@@ -797,8 +795,8 @@ public class Web {
                 "                }\n" +
                 "            });\n" +
                 "        }\n" +
-                "    },\n" +
-                "\tgid: null,\n\n");
+                "    }\n" +
+                "}");
         fileWriter.close();
     }
 
