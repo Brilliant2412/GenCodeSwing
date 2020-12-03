@@ -1302,6 +1302,6 @@ public class Web {
         genView(tableInfo,folder);
         genControllerSearch(tableInfo, folder);
         Tung.genJsSearch(tableInfo,folder);
-        Tung.genformSearch(tableInfo,folder);
+        Hung.genformSearch(tableInfo,folder);
     }
 }

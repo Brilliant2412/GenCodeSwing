@@ -49,7 +49,7 @@ public class Hung {
     }
 
 
-    static void genformSearch(TableInfo tableInfo, String folder) throws IOException {
+    public static void genformSearch(TableInfo tableInfo, String folder) throws IOException {
         FileWriter fileWriter = new FileWriter(folder+"\\formSearch.jsp");
         fileWriter.write("<%@page contentType=\"text/html\" pageEncoding=\"UTF-8\"%>\n" +
                 "<%@ taglib prefix=\"fmt\" uri=\"http://java.sun.com/jsp/jstl/fmt\" %>\n" +

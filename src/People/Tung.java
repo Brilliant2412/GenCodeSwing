@@ -30,7 +30,7 @@ public class Tung {
             "import com.tav.service.dto." + tableInfo.tableName + "DTO;\n" +
             "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
             "import com.tav.service.dto.ServiceResult;\n" +
-            "import com.tav.service.common.StringUtils;\n" +
+            "import com.tav.service.common.StringUtil;\n" +
             "improt java.text.ParseException;\n" +
             "import java.math.BigInteger;\n" +
             "import java.text.SimpleDateFormat;\n" +

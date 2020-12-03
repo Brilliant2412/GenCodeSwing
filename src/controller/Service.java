@@ -1154,7 +1154,7 @@ public class Service {
                         "import com.tav.service.dto." + tableInfo.tableName + "DTO;\n" +
                         "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
                         "import com.tav.service.dto.ServiceResult;\n" +
-                        "import com.tav.service.common.StringUtils;\n" +
+                        "import com.tav.service.common.StringUtil;\n" +
                         "import java.text.ParseException;\n" +
                         "import java.math.BigInteger;\n" +
                         "import java.text.SimpleDateFormat;\n" +
@@ -1558,8 +1558,8 @@ public class Service {
         genRsServiceImpl(tableInfo, folder);
         genBean(tableInfo, folder);
         genDAOSearch(tableInfo, folder);
-        genDAO1(tableInfo, folder);
-        //Tung.genDAO1(tableInfo, folder);
+        //genDAO1(tableInfo, folder);
+        Tung.genDAO1(tableInfo, folder);
 
     }
 }
