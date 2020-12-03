@@ -257,6 +257,7 @@ public class Web {
                 "import com.tav.web.common.RestRequest;\n" +
                 "import com.tav.web.dto."+ tableInfo.tableName +"DTO;\n" +
                 "import com.tav.web.dto.SearchCommonFinalDTO;\n" +
+                "import com.tav.web.dto.ObjectCommonSearchDTO\n" +
                 "import java.util.List;\n" +
                 "import java.util.Date;\n" +
                 "import org.apache.log4j.Logger;\n" +
@@ -298,9 +299,9 @@ public class Web {
                 "\t\tServiceResult result = (ServiceResult) RestRequest.postAndReturnObject(url, cbChaDTO, ServiceResult.class);\n" +
                 "\t\treturn result;\n" +
                 "\t}\n");
-        fileWriter.append("\n\tpublic ServiceResult deleteObj(SearchCommonFinalDTO searchCommonFinalDTO) {\n" +
+        fileWriter.append("\n\tpublic ServiceResult deleteObj(ObjectCommonSearchDTO objectCommonSearchDTO) {\n" +
                 "\t\tString url = config.getRestURL() + subUrl + \"/deleteList/\";\n" +
-                "\t\tServiceResult result = (ServiceResult) RestRequest.postAndReturnObject(url, searchCommonFinalDTO, ServiceResult.class);\n" +
+                "\t\tServiceResult result = (ServiceResult) RestRequest.postAndReturnObject(url, objectCommonSearchDTO, ServiceResult.class);\n" +
                 "\t\treturn result;\n" +
                 "\t}\n");
         fileWriter.append("\n\tpublic "+ tableInfo.tableName +"DTO getOneById(Long id) {\n" +

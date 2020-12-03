@@ -4,13 +4,14 @@ import model.ColumnProperty;
 import model.TableInfo;
 import static controller.CodeGenerator.capitalize;
 import static controller.CodeGenerator.uncapitalize;
+import People.*;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class Service {
-    static void genSELECT(FileWriter fileWriter, TableInfo tableInfo) throws IOException {
+    public static void genSELECT(FileWriter fileWriter, TableInfo tableInfo) throws IOException {
         fileWriter.append("\t\tsqlCommand.append(\" SELECT \");\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
@@ -1142,40 +1143,38 @@ public class Service {
         fileWriter.close();
     }
 
-    static void genDAO1(TableInfo tableInfo, String folder) throws IOException{
-        int count_str =0;
-        int count_cb =0;
-        int count_db =0;
-        int count_long =0;
-        int count_date =0;
+    public static void genDAO1(TableInfo tableInfo, String folder) throws IOException {
+
         FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "DAO1.java");
         fileWriter.write(
                 "package com.tav.service.dao;\n" +
-                "\n" +
-                "import com.tav.service.base.db.dao.BaseFWDAOImpl;\n" +
-                "import com.tav.service.bo." + tableInfo.tableName + "BO;\n" +
-                "import com.tav.service.dto." + tableInfo.tableName + "DTO;\n" +
-                "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
-                "import com.tav.service.dto.ServiceResult;\n" +
-                "import java.math.BigInteger;\n" +
-                "import java.text.SimpleDateFormat;\n" +
-                "import java.util.List;\n" +
-                "import java.util.Date;\n" +
-                "import org.hibernate.Criteria;\n" +
-                "import org.hibernate.HibernateException;\n" +
-                "import org.hibernate.Query;\n" +
-                "import org.hibernate.Session;\n" +
-                "import org.hibernate.exception.ConstraintViolationException;\n" +
-                "import org.hibernate.exception.JDBCConnectionException;\n" +
-                "import org.hibernate.transform.Transformers;\n" +
-                "import org.hibernate.type.LongType;\n" +
-                "import org.hibernate.type.StringType;\n" +
-                "import org.springframework.stereotype.Repository;\n" +
-                "import org.springframework.transaction.annotation.Transactional;\n" +
-                "\n" +
-                "@Repository(\"" + uncapitalize(tableInfo.tableName) + "DAO\")\n" +
-                "public class " + tableInfo.tableName + "DAO extends BaseFWDAOImpl<" + tableInfo.tableName + "BO, Long>{\n" +
-                "    \n");
+                        "\n" +
+                        "import com.tav.service.base.db.dao.BaseFWDAOImpl;\n" +
+                        "import com.tav.service.bo." + tableInfo.tableName + "BO;\n" +
+                        "import com.tav.service.dto." + tableInfo.tableName + "DTO;\n" +
+                        "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
+                        "import com.tav.service.dto.ServiceResult;\n" +
+                        "import com.tav.service.common.StringUtils;\n" +
+                        "import java.text.ParseException;\n" +
+                        "import java.math.BigInteger;\n" +
+                        "import java.text.SimpleDateFormat;\n" +
+                        "import java.util.List;\n" +
+                        "import java.util.Date;\n" +
+                        "import org.hibernate.Criteria;\n" +
+                        "import org.hibernate.HibernateException;\n" +
+                        "import org.hibernate.Query;\n" +
+                        "import org.hibernate.Session;\n" +
+                        "import org.hibernate.exception.ConstraintViolationException;\n" +
+                        "import org.hibernate.exception.JDBCConnectionException;\n" +
+                        "import org.hibernate.transform.Transformers;\n" +
+                        "import org.hibernate.type.LongType;\n" +
+                        "import org.hibernate.type.StringType;\n" +
+                        "import org.springframework.stereotype.Repository;\n" +
+                        "import org.springframework.transaction.annotation.Transactional;\n" +
+                        "\n" +
+                        "@Repository(\"" + uncapitalize(tableInfo.tableName) + "DAO\")\n" +
+                        "public class " + tableInfo.tableName + "DAO extends BaseFWDAOImpl<" + tableInfo.tableName + "BO, Long>{\n" +
+                        "    \n");
 
         /***************************************************************************************
          *                                     getAll()
@@ -1188,217 +1187,14 @@ public class Service {
         fileWriter.append(
                 "\n\t\tsqlCommand.append(\" WHERE 1=1 \");\n");
         fileWriter.append(
-                        "\t//String\n" +
-                " \tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
-                "            sqlCommand.append(\" and (   \");\n");
-
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isSearch())
-            {
-                if (colProp.getColType().equals("String")) {
-                    count_str++;
-                    if (count_str == 1) {
-                        fileWriter.append("\t    sqlCommand.append(\"  LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
-                    } else {
-                        fileWriter.append("\t    sqlCommand.append(\"  OR LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
-                    }
-                }
-                if (colProp.getColType().equals("Long") )
-                    {
-                        if (colProp.getInputType().equals("Combobox"))
-                        {
-                            count_cb++;
-                        }
-                        else
-                        {
-                            count_long++;
-                        }
-                    }
-                if (colProp.getColType().equals("Double"))
-                    {
-                        count_db++;
-                    }
-                if (colProp.getColType().equals("Date"))
-                    {
-                        count_date++;
-                    }
-
-                }
-            }
-
-        fileWriter.append("\t    sqlCommand.append(\" )   \");\n" +
-                "        }\n" +
-                "\n");
-        int t1=0;
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isSearch())
-            {
-                if (colProp.getColType().equals("Long") )
-                {
-                    if (colProp.getInputType().equals("Combobox"))
-                    {
-                        t1++;
-                        fileWriter.append("\tif (searchDTO.getListLong"+t1+"() != null && !searchDTO.getListLong"+t1+"().isEmpty()) {\n" +
-                                "            sqlCommand.append(\" and tbl."+colProp.getColName()+" in (:listLong"+t1+") \");\n" +
-                                "        }\n\n");
-                    }
-                }
-
-            }
-
-        }
-
-        int t2=0;
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isSearch())
-            {
-                if (colProp.getColType().equals("Long") )
-                {
-                    if (!colProp.getInputType().equals("Combobox"))
-                    {
-                        t2++;
-                        fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong"+t2+"())) {\n" +
-                                "\t\tsqlCommand.append(\" and tbl."+colProp.getColName()+" >= (:long"+(t2++)+") \");\n" +
-                                "\t}\n" +
-                                "\tif (!StringUtil.isEmpty(searchDTO.getLong"+t2+"())) {\n" +
-                                "\t\tsqlCommand.append(\" and tbl."+colProp.getColName()+" <= (:long"+t2+") \");\n" +
-                                "\t}\n");
-                    }
-                }
-            }
-        }
-
-        int t3=0;
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isSearch())
-            {
-                if (colProp.getColType().equals("Double") )
-                {
-                    if (!colProp.getInputType().equals("Combobox"))
-                    {
-                        t3++;
-                        fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble"+t3+"())) {\n" +
-                                "\t\tsqlCommand.append(\" and tbl."+colProp.getColName()+" >= (:double"+(t3++)+") \");\n" +
-                                "\t}\n" +
-                                "\tif (!StringUtil.isEmpty(searchDTO.getDouble"+t3+"())) {\n" +
-                                "\t\tsqlCommand.append(\" and tbl."+colProp.getColName()+" <= (:double"+t3+") \");\n" +
-                                "\t}\n");
-                    }
-                }
-
-            }
-
-        }
-
-        int t4=0;
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isSearch())
-            {
-                if (colProp.getColType().equals("Date") ) {
-                    t4++;
-                    fileWriter.append("\tif (  (searchDTO.getString"+t4+"() != null && !searchDTO.getString"+t4+"().isEmpty())   &&   (searchDTO.getString"+(t4+1)+"() != null && !searchDTO.getString"+(t4+1)+"().isEmpty())  ) {\n" +
-                            "            sqlCommand.append(\"  and ( tbl."+colProp.getColName()+" between (:string"+t4+") and (:string"+(t4+1)+")    ) \");\n" +
-                            "        }\n");
-
-                }
-
-            }
-
-        }
-        fileWriter.append(
-                        "\t\tsqlCommand.append(\" ORDER BY tbl." + tableInfo.columns.get(0).getColName() + " \");" +
-
-                        "\n\t\tQuery query = getSession().createSQLQuery(sqlCommand.toString())\n");
-        for(int i = 0; i < tableInfo.columns.size(); i++){
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            fileWriter.append("\t\t\t.addScalar(\"");
-            if(colProp.getColType().equals("Date")){
-                fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
-            }
-            else{
-                fileWriter.append(colProp.getColName() + "\", " + capitalize((colProp.getColType())) + "Type.INSTANCE)\n");
-                if(!colProp.getFKTable().equals("")){
-                    fileWriter.append("\t\t\t.addScalar(\"");
-                    fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
-                }
-            }
-        }
-        fileWriter.append(
-                "\t\t\t.setResultTransformer(Transformers.aliasToBean(" + tableInfo.tableName + "DTO.class))\n" +
-                        "\t\t\t.setFirstResult(offset);\n" +
-                        "\t\tif (limit != null && limit != 0) {\n" +
-                        "\t\t\tquery.setMaxResults(limit);\n" +
-                        "\t\t}\n");
-        //String
-        fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
-                "\t\tq.setParameter(\"stringKeyWord\", \"%\" + searchDTO.getStringKeyWord() + \"%\");\n" +
-                "\t}\n");
-        //Combobox
-        for (int i = 1; i <count_cb+1 ; i++) {
-
-            fileWriter.append("\tif (searchDTO.getListLong"+i+"() != null && !searchDTO.getListLong"+i+"().isEmpty()) {\n" +
-                    "            q.setParameterList(\"listLong"+i+"\", searchDTO.getListLong"+i+"());\n" +
-                    "        }\n");
-
-        }
-        //double
-        for (int i = 1; i <count_db*2 ; i+=2) {
-
-            fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble"+i+"())) {\n" +
-                    "\t\tq.setParameter(\"double"+i+"\", searchDTO.getDouble"+i+"());\n" +
-                    "\t}\n" +
-                    "\tif (!StringUtil.isEmpty(searchDTO.getDouble"+(i+1)+"())) {\n" +
-                    "\t\tq.setParameter(\"double"+(i+1)+"\", searchDTO.getDouble"+(i+1)+"());\n" +
-                    "\t}\n");
-
-        }
-        //Long
-        for (int i = 1; i <count_long*2 ; i+=2) {
-
-            fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong"+i+"())) {\n" +
-                    "\t\tq.setParameter(\"long"+i+"\", searchDTO.getLong"+i+"());\n" +
-                    "\t}\n" +
-                    "\tif (!StringUtil.isEmpty(searchDTO.getLong"+(i+1)+"())) {\n" +
-                    "\t\tq.setParameter(\"long"+(i+1)+"\", searchDTO.getLong"+(i+1)+"());\n" +
-                    "\t}\n");
-
-        }
-
-        //date
-        for (int i = 1; i <count_date*2 ; i+=2) {
-
-            fileWriter.append("\tif (  (searchDTO.getString"+i+"() != null && !searchDTO.getString"+i+"().isEmpty())   &&   (searchDTO.getString2() != null && !searchDTO.getString2().isEmpty())  ) {\n" +
-                    "            try {\n" +
-                    "                q.setParameter(\"string"+i+"\", formatter.parse(searchDTO.getString"+i+"() + \" 00:00:00\"));\n" +
-                    "                q.setParameter(\"string"+(i+1)+"\", formatter.parse(searchDTO.getString"+(i+1)+"() + \" 23:59:59\"));\n" +
-                    "            } catch (ParseException ex) {\n" +
-                    "            }\n" +
-                    "        }\n");
-
-        }
-        fileWriter.append(
-                        "\t\treturn query.list();\n" +
-                        "\t}\n\n");
-
-        /***************************************************************************************
-         *                                     GET COUNT
-         ***************************************************************************************/
-        fileWriter.append(
-                "public Integer getCount(SearchCommonFinalDTO searchDTO) {\n" +
-                "        SimpleDateFormat formatter = new SimpleDateFormat(\"dd/MM/yyyy HH:mm:ss\");\n" +
-                "        StringBuilder sqlCommand = new StringBuilder();\n" +
-                "        sqlCommand.append(\" SELECT \");\n" +
-                "        sqlCommand.append(\" COUNT(1)\");\n" +
-                "        sqlCommand.append(\" FROM  " + tableInfo.title + " tbl \");\n" +
-                "        sqlCommand.append(\" WHERE 1=1 \");\n" +
-                        "\t//String\n" +
-                " \tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
-                "            sqlCommand.append(\" and (   \");\n");
+                "\t//String\n" +
+                        " \tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
+                        "            sqlCommand.append(\" and (   \");\n");
+        int count_str = 0;
+        int count_cb = 0;
+        int count_db = 0;
+        int count_long = 0;
+        int count_date = 0;
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
@@ -1410,143 +1206,105 @@ public class Service {
                         fileWriter.append("\t    sqlCommand.append(\"  OR LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
                     }
                 }
+                if (colProp.getColType().equals("Long")) {
+                    if (colProp.getInputType().equals("Combobox")) {
+                        count_cb++;
+                    } else {
+                        count_long++;
+                    }
+                }
+                if (colProp.getColType().equals("Double")) {
+                    count_db++;
+                }
+                if (colProp.getColType().equals("Date")) {
+                    count_date++;
+                }
+
             }
         }
+
         fileWriter.append("\t    sqlCommand.append(\" )   \");\n" +
                 "        }\n" +
                 "\n");
-        int c1=0;
+
+
+        f1(tableInfo, fileWriter);
+
+
+        fileWriter.append(
+                "\t\tsqlCommand.append(\" ORDER BY tbl." + tableInfo.columns.get(0).getColName() + " \");" +
+
+                        "\n\t\tQuery query = getSession().createSQLQuery(sqlCommand.toString())\n");
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isSearch())
-            {
-                if (colProp.getColType().equals("Long") )
-                {
-                    if (colProp.getInputType().equals("Combobox"))
-                    {
-                        c1++;
-                        fileWriter.append("\tif (searchDTO.getListLong"+c1+"() != null && !searchDTO.getListLong"+c1+"().isEmpty()) {\n" +
-                                "            sqlCommand.append(\" and tbl."+colProp.getColName()+" in (:listLong"+c1+") \");\n" +
-                                "        }\n\n");
+            fileWriter.append("\t\t\t.addScalar(\"");
+            if (colProp.getColType().equals("Date")) {
+                fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
+            } else {
+                fileWriter.append(colProp.getColName() + "\", " + capitalize((colProp.getColType())) + "Type.INSTANCE)\n");
+                if (!colProp.getFKTable().equals("")) {
+                    fileWriter.append("\t\t\t.addScalar(\"");
+                    fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
+                }
+            }
+        }
+        fileWriter.append(
+                "\t\t\t.setResultTransformer(Transformers.aliasToBean(" + tableInfo.tableName + "DTO.class))\n" +
+                        "\t\t\t.setFirstResult(offset);\n" +
+                        "\t\tif (limit != null && limit != 0) {\n" +
+                        "\t\t\tquery.setMaxResults(limit);\n" +
+                        "\t\t}\n");
+
+        f2(fileWriter, count_cb, count_db, count_long, count_date);
+
+        fileWriter.append(
+                "\t\treturn query.list();\n" +
+                        "\t}\n\n");
+
+        /***************************************************************************************
+         *                                     GET COUNT
+         ***************************************************************************************/
+        fileWriter.append(
+                "public Integer getCount(SearchCommonFinalDTO searchDTO) {\n" +
+                        "           SimpleDateFormat formatter = new SimpleDateFormat(\"dd/MM/yyyy HH:mm:ss\");\n" +
+                        "           StringBuilder sqlCommand = new StringBuilder();\n" +
+                        "        sqlCommand.append(\" SELECT \");\n" +
+                        "        sqlCommand.append(\" COUNT(1)\");\n" +
+                        "        sqlCommand.append(\" FROM  " + tableInfo.title + " tbl \");\n" +
+                        "        sqlCommand.append(\" WHERE 1=1 \");\n" +
+                        "\t//String\n" +
+                        " \tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
+                        "            sqlCommand.append(\" and (   \");\n");
+
+        int temp = 0;
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if (colProp.isSearch()) {
+                if (colProp.getColType().equals("String")) {
+                    temp++;
+                    if (temp == 1) {
+                        fileWriter.append("\t    sqlCommand.append(\"  LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
+                    } else {
+                        fileWriter.append("\t    sqlCommand.append(\"  OR LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
                     }
                 }
-
-            }
-
-        }
-
-        int c2=0;
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isSearch())
-            {
-                if (colProp.getColType().equals("Long") )
-                {
-                    if (!colProp.getInputType().equals("Combobox"))
-                    {
-                        c2++;
-                        fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong"+c2+"())) {\n" +
-                                "\t\tsqlCommand.append(\" and tbl."+colProp.getColName()+" >= (:long"+(c2++)+") \");\n" +
-                                "\t}\n" +
-                                "\tif (!StringUtil.isEmpty(searchDTO.getLong"+c2+"())) {\n" +
-                                "\t\tsqlCommand.append(\" and tbl."+colProp.getColName()+" <= (:long"+c2+") \");\n" +
-                                "\t}\n");
-                    }
-                }
             }
         }
 
-        int c3=0;
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isSearch())
-            {
-                if (colProp.getColType().equals("Double") )
-                {
-                    if (!colProp.getInputType().equals("Combobox"))
-                    {
-                        c3++;
-                        fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble"+c3+"())) {\n" +
-                                "\t\tsqlCommand.append(\" and tbl."+colProp.getColName()+" >= (:double"+(c3++)+") \");\n" +
-                                "\t}\n" +
-                                "\tif (!StringUtil.isEmpty(searchDTO.getDouble"+t3+"())) {\n" +
-                                "\t\tsqlCommand.append(\" and tbl."+colProp.getColName()+" <= (:double"+c3+") \");\n" +
-                                "\t}\n");
-                    }
-                }
 
-            }
+        f1(tableInfo, fileWriter);
 
-        }
 
-        int c4=0;
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isSearch())
-            {
-                if (colProp.getColType().equals("Date") ) {
-                    c4++;
-                    fileWriter.append("\tif (  (searchDTO.getString"+c4+"() != null && !searchDTO.getString"+c4+"().isEmpty())   &&   (objectSearchCommonDTO.getString"+(c4+1)+"() != null && !objectSearchCommonDTO.getString"+(c4+1)+"().isEmpty())  ) {\n" +
-                            "            sqlCommand.append(\"  and ( tbl."+colProp.getColName()+" between (:string"+c4+") and (:string"+(c4+1)+")    ) \");\n" +
-                            "        }\n");
-
-                }
-
-            }
-
-        }
         fileWriter.append(
                 "        Query query = getSession().createSQLQuery(sqlCommand.toString());\n");
-        //String
-        fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
-                "\t\tq.setParameter(\"stringKeyWord\", \"%\" + searchDTO.getStringKeyWord() + \"%\");\n" +
-                "\t}\n");
-        //Combobox
-        for (int i = 1; i <count_cb+1 ; i++) {
 
-            fileWriter.append("\tif (searchDTO.getListLong"+i+"() != null && !searchDTO.getListLong"+i+"().isEmpty()) {\n" +
-                    "            q.setParameterList(\"listLong"+i+"\", searchDTO.getListLong"+i+"());\n" +
-                    "        }\n");
 
-        }
-        //double
-        for (int i = 1; i <count_db*2 ; i+=2) {
+        f2(fileWriter, count_cb, count_db, count_long, count_date);
 
-            fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble"+i+"())) {\n" +
-                    "\t\tq.setParameter(\"double"+i+"\", searchDTO.getDouble"+i+"());\n" +
-                    "\t}\n" +
-                    "\tif (!StringUtil.isEmpty(searchDTO.getDouble"+(i+1)+"())) {\n" +
-                    "\t\tq.setParameter(\"double"+(i+1)+"\", searchDTO.getDouble"+(i+1)+"());\n" +
-                    "\t}\n");
 
-        }
-        //Long
-        for (int i = 1; i <count_long*2 ; i+=2) {
-
-            fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong"+i+"())) {\n" +
-                    "\t\tq.setParameter(\"long"+i+"\", searchDTO.getLong"+i+"());\n" +
-                    "\t}\n" +
-                    "\tif (!StringUtil.isEmpty(searchDTO.getLong"+(i+1)+"())) {\n" +
-                    "\t\tq.setParameter(\"long"+(i+1)+"\", searchDTO.getLong"+(i+1)+"());\n" +
-                    "\t}\n");
-
-        }
-
-        //date
-        for (int i = 1; i <count_date*2 ; i+=2) {
-
-            fileWriter.append("\tif (  (searchDTO.getString"+i+"() != null && !searchDTO.getString"+i+"().isEmpty())   &&   (searchDTO.getString2() != null && !searchDTO.getString2().isEmpty())  ) {\n" +
-                    "            try {\n" +
-                    "                q.setParameter(\"string"+i+"\", formatter.parse(searchDTO.getString"+i+"() + \" 00:00:00\"));\n" +
-                    "                q.setParameter(\"string"+(i+1)+"\", formatter.parse(searchDTO.getString"+(i+1)+"() + \" 23:59:59\"));\n" +
-                    "            } catch (ParseException ex) {\n" +
-                    "            }\n" +
-                    "        }\n");
-
-        }
         fileWriter.append(
                 "        return ((BigInteger) query.uniqueResult()).intValue();\n" +
-                "    }\n"
+                        "    }\n"
         );
 
         /***************************************************************************************
@@ -1557,17 +1315,16 @@ public class Service {
                         "\tpublic " + tableInfo.tableName + "DTO getOneObjById(Long id) {\n" +
                         "\t\tStringBuilder sqlCommand = new StringBuilder();\n");
         genSELECT(fileWriter, tableInfo);
-        fileWriter.append("\t\tsqlCommand.append(\" WHERE tbl." + tableInfo.columns.get(0).getColName() +" = :" + tableInfo.columns.get(0).getColName() +"\");\n");
+        fileWriter.append("\t\tsqlCommand.append(\" WHERE tbl." + tableInfo.columns.get(0).getColName() + " = :" + tableInfo.columns.get(0).getColName() + "\");\n");
         fileWriter.append("\t\tQuery query = getSession().createSQLQuery(sqlCommand.toString())\n");
-        for(int i = 0; i < tableInfo.columns.size(); i++){
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append("\t\t\t.addScalar(\"");
-            if(colProp.getColType().equals("Date")){
+            if (colProp.getColType().equals("Date")) {
                 fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
-            }
-            else{
+            } else {
                 fileWriter.append(colProp.getColName() + "\", " + capitalize((colProp.getColType())) + "Type.INSTANCE)\n");
-                if(!colProp.getFKTable().equals("")){
+                if (!colProp.getFKTable().equals("")) {
                     fileWriter.append("\t\t\t.addScalar(\"");
                     fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
                 }
@@ -1575,7 +1332,7 @@ public class Service {
         }
         fileWriter.append(
                 "\t\t\t.setResultTransformer(Transformers.aliasToBean(" + tableInfo.tableName + "DTO.class));\n" +
-                        "\t\tquery.setParameter(\"" + tableInfo.columns.get(0).getColName()  + "\", id);\n" +
+                        "\t\tquery.setParameter(\"" + tableInfo.columns.get(0).getColName() + "\", id);\n" +
                         "\t\t" + tableInfo.tableName + "DTO item = (" + tableInfo.tableName + "DTO) query.uniqueResult();\n" +
                         "\t\treturn item;\n" +
                         "\t}\n\n");
@@ -1664,6 +1421,129 @@ public class Service {
         );
         fileWriter.close();
     }
+
+    public static void f1(TableInfo tableInfo, FileWriter fileWriter) throws IOException {
+        int t1 = 0;
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if (colProp.isSearch()) {
+                if (colProp.getColType().equals("Long")) {
+                    if (colProp.getInputType().equals("Combobox")) {
+                        t1++;
+                        fileWriter.append("\tif (searchDTO.getListLong" + t1 + "() != null && !searchDTO.getListLong" + t1 + "().isEmpty()) {\n" +
+                                "            sqlCommand.append(\" and tbl." + colProp.getColName() + " in (:listLong" + t1 + ") \");\n" +
+                                "        }\n\n");
+                    }
+                }
+
+            }
+
+        }
+
+        int t2 = 0;
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if (colProp.isSearch()) {
+                if (colProp.getColType().equals("Long")) {
+                    if (!colProp.getInputType().equals("Combobox")) {
+                        t2++;
+                        fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong" + t2 + "())) {\n" +
+                                "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " >= (:long" + (t2++) + ") \");\n" +
+                                "\t}\n" +
+                                "\tif (!StringUtil.isEmpty(searchDTO.getLong" + t2 + "())) {\n" +
+                                "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " <= (:long" + t2 + ") \");\n" +
+                                "\t}\n");
+                    }
+                }
+            }
+        }
+
+        int t3 = 0;
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if (colProp.isSearch()) {
+                if (colProp.getColType().equals("Double")) {
+                    if (!colProp.getInputType().equals("Combobox")) {
+                        t3++;
+                        fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble" + t3 + "())) {\n" +
+                                "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " >= (:double" + (t3++) + ") \");\n" +
+                                "\t}\n" +
+                                "\tif (!StringUtil.isEmpty(searchDTO.getDouble" + t3 + "())) {\n" +
+                                "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " <= (:double" + t3 + ") \");\n" +
+                                "\t}\n");
+                    }
+                }
+
+            }
+
+        }
+
+        int t4 = 0;
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if (colProp.isSearch()) {
+                if (colProp.getColType().equals("Date")) {
+                    t4++;
+                    fileWriter.append("\tif (  (searchDTO.getString" + t4 + "() != null && !searchDTO.getString" + t4 + "().isEmpty())   &&   (searchDTO.getString" + (t4 + 1) + "() != null && !searchDTO.getString" + (t4 + 1) + "().isEmpty())  ) {\n" +
+                            "            sqlCommand.append(\"  and ( tbl." + colProp.getColName() + " between (:string" + t4 + ") and (:string" + (t4 + 1) + ")    ) \");\n" +
+                            "        }\n");
+
+                }
+
+            }
+
+        }
+    }
+
+    public static void f2(FileWriter fileWriter, int count_cb, int count_db, int count_long, int count_date) throws IOException {
+        //String
+        fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
+                "\t\tquery.setParameter(\"stringKeyWord\", \"%\" + searchDTO.getStringKeyWord() + \"%\");\n" +
+                "\t}\n");
+        //Combobox
+        for (int i = 1; i < count_cb + 1; i++) {
+
+            fileWriter.append("\tif (searchDTO.getListLong" + i + "() != null && !searchDTO.getListLong" + i + "().isEmpty()) {\n" +
+                    "            query.setParameterList(\"listLong" + i + "\", searchDTO.getListLong" + i + "());\n" +
+                    "        }\n");
+
+        }
+        //double
+        for (int i = 1; i < count_db * 2; i += 2) {
+
+            fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble" + i + "())) {\n" +
+                    "\t\tquery.setParameter(\"double" + i + "\", searchDTO.getDouble" + i + "());\n" +
+                    "\t}\n" +
+                    "\tif (!StringUtil.isEmpty(searchDTO.getDouble" + (i + 1) + "())) {\n" +
+                    "\t\tquery.setParameter(\"double" + (i + 1) + "\", searchDTO.getDouble" + (i + 1) + "());\n" +
+                    "\t}\n");
+
+        }
+        //Long
+        for (int i = 1; i < count_long * 2; i += 2) {
+
+            fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong" + i + "())) {\n" +
+                    "\t\tquery.setParameter(\"long" + i + "\", searchDTO.getLong" + i + "());\n" +
+                    "\t}\n" +
+                    "\tif (!StringUtil.isEmpty(searchDTO.getLong" + (i + 1) + "())) {\n" +
+                    "\t\tquery.setParameter(\"long" + (i + 1) + "\", searchDTO.getLong" + (i + 1) + "());\n" +
+                    "\t}\n");
+
+        }
+
+        //date
+        for (int i = 1; i < count_date * 2; i += 2) {
+
+            fileWriter.append("\tif (  (searchDTO.getString" + i + "() != null && !searchDTO.getString" + i + "().isEmpty())   &&   (searchDTO.getString" + (i + 1) + "() != null && !searchDTO.getString" + (i + 1) + "().isEmpty())  ) {\n" +
+                    "            try {\n" +
+                    "                query.setParameter(\"string" + i + "\", formatter.parse(searchDTO.getString" + i + "() + \" 00:00:00\"));\n" +
+                    "                query.setParameter(\"string" + (i + 1) + "\", formatter.parse(searchDTO.getString" + (i + 1) + "() + \" 23:59:59\"));\n" +
+                    "            } catch (ParseException ex) {\n" +
+                    "            }\n" +
+                    "        }\n");
+
+        }
+    }
     
     public static void genService(TableInfo tableInfo, String folder) throws IOException {
         File dir = new File(folder);
@@ -1678,5 +1558,6 @@ public class Service {
         genBean(tableInfo, folder);
         genDAOSearch(tableInfo, folder);
         genDAO1(tableInfo, folder);
+        //Tung.genDAO1(tableInfo, folder);
     }
 }
