@@ -5,6 +5,7 @@ import com.tav.web.common.Config;
 import com.tav.web.common.RestRequest;
 import com.tav.web.dto.EvaluatePlan1DTO;
 import com.tav.web.dto.SearchCommonFinalDTO;
+import com.tav.web.dto.ObjectCommonSearchDTO
 import java.util.List;
 import java.util.Date;
 import org.apache.log4j.Logger;
@@ -52,9 +53,9 @@ public class EvaluatePlan1Data {
 		return result;
 	}
 
-	public ServiceResult deleteObj(SearchCommonFinalDTO searchCommonFinalDTO) {
+	public ServiceResult deleteObj(ObjectCommonSearchDTO objectCommonSearchDTO) {
 		String url = config.getRestURL() + subUrl + "/deleteList/";
-		ServiceResult result = (ServiceResult) RestRequest.postAndReturnObject(url, searchCommonFinalDTO, ServiceResult.class);
+		ServiceResult result = (ServiceResult) RestRequest.postAndReturnObject(url, objectCommonSearchDTO, ServiceResult.class);
 		return result;
 	}
 
