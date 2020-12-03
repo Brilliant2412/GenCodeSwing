@@ -1558,6 +1558,6 @@ public class Service {
         genBean(tableInfo, folder);
         genDAOSearch(tableInfo, folder);
         genDAO1(tableInfo, folder);
-        //Tung.genDAO1(tableInfo, folder);
+
     }
 }
