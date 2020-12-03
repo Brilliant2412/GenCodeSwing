@@ -263,7 +263,7 @@ public class Tung {
                 "import com.tav.service.base.db.dao.BaseFWDAOImpl;\n" +
                 "import com.tav.service.bo.EvaluatePlan1BO;\n" +
                 "import com.tav.service.dto.EvaluatePlan1DTO;\n" +
-                "import com.tav.service.dto.SearchDTO;\n" +
+                "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
                 "import com.tav.service.dto.ServiceResult;\n" +
                 "import java.math.BigInteger;\n" +
                 "import java.text.SimpleDateFormat;\n" +
@@ -490,7 +490,7 @@ public class Tung {
         fileWriter.append("\t\treturn query.list();\n" +
                 "\t}\n" +
                 "\n" +
-                "public Integer getCount(SearchDTO searchDTO) {\n" +
+                "public Integer getCount(SearchCommonFinalDTO searchDTO) {\n" +
                 "        SimpleDateFormat formatter = new SimpleDateFormat(\"dd/MM/yyyy HH:mm:ss\");\n" +
                 "        StringBuilder sqlCommand = new StringBuilder();\n" +
                 "        sqlCommand.append(\" SELECT \");\n" +
