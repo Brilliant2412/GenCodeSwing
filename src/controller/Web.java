@@ -1288,7 +1288,7 @@ public class Web {
 
     static void genformSearch(TableInfo tableInfo, String folder) throws IOException {
         FileWriter fileWriter = new FileWriter(folder+"\\formSearch.jsp");
-        System.out.println(tableInfo.columns.size());
+        //System.out.println(tableInfo.columns.size());
         fileWriter.write("<%@page contentType=\"text/html\" pageEncoding=\"UTF-8\"%>\n" +
                 "<%@ taglib prefix=\"fmt\" uri=\"http://java.sun.com/jsp/jstl/fmt\" %>\n" +
                 "<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\" %>\n" +
@@ -1311,7 +1311,7 @@ public class Web {
         int k = tableInfo.countSearch;
         int r = k / 4;
         int q = k%4;
-        System.out.println(k);
+        //System.out.println(k);
         int i = 0;
         int countSearch = 0;
         if (r == 0) {
