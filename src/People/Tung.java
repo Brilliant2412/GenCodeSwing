@@ -451,7 +451,7 @@ public class Tung {
     }
 
 
-    static void genformSearch(TableInfo tableInfo, String folder) throws IOException {
+    public static void genformSearch(TableInfo tableInfo, String folder) throws IOException {
         FileWriter fileWriter = new FileWriter(folder+"\\formSearch.jsp");
         System.out.println(tableInfo.columns.size());
         fileWriter.write("<%@page contentType=\"text/html\" pageEncoding=\"UTF-8\"%>\n" +
@@ -606,7 +606,7 @@ public class Tung {
         fileWriter.close();
     }
 
-    static void genJsSearch(TableInfo tableInfo, String folder) throws  IOException{
+    public static void genJsSearch(TableInfo tableInfo, String folder) throws  IOException{
         FileWriter fileWriter = new FileWriter(folder+"\\jsSearch.js");
         fileWriter.write("//$(\"#TBL_DOCUMENT_TYPE\").addClass(\"active\");\n" +
                 "//$(\"#naviParent\").replaceWith($(\"#ROOT_LAND_POINT  span\").html());\n" +

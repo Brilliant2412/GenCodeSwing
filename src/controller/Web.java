@@ -1,5 +1,6 @@
 package controller;
 
+import People.Tung;
 import model.ColumnProperty;
 import model.TableInfo;
 import static controller.CodeGenerator.capitalize;
@@ -166,32 +167,32 @@ public class Web {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getColType().equals("Date")){
                 fileWriter.append(
-                    "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
-                    "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
-                    "            }\n"
+                        "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
+                                "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
+                                "            }\n"
                 );
             }
         }
         fileWriter.append(
                 "            serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.addObj("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
-                "            processServiceResult(serviceResult);\n" +
-                "            result = new JSONObject(serviceResult);\n" +
-                "        }\n" +
-                "        return result.toString();\n" +
-                "    }\n" +
-                "\n" +
-                "    //update\n" +
-                "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.UPDATE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)\n" +
-                "    @ResponseBody\n" +
-                "    public String updateOBJ(@ModelAttribute(\"" + uncapitalize(tableInfo.tableName) + "Form\") "+ tableInfo.tableName+"DTO "+uncapitalize(tableInfo.tableName)+"DTO, MultipartHttpServletRequest multipartRequest,\n" +
-                "            HttpServletRequest request) throws ParseException {\n" +
-                "\n" +
-                "        JSONObject result;\n" +
-                "        String error = validateForm("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
-                "        ServiceResult serviceResult;\n" +
-                "        if (error != null) {\n" +
-                "            return error;\n" +
-                "        } else {\n");
+                        "            processServiceResult(serviceResult);\n" +
+                        "            result = new JSONObject(serviceResult);\n" +
+                        "        }\n" +
+                        "        return result.toString();\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    //update\n" +
+                        "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.UPDATE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)\n" +
+                        "    @ResponseBody\n" +
+                        "    public String updateOBJ(@ModelAttribute(\"" + uncapitalize(tableInfo.tableName) + "Form\") "+ tableInfo.tableName+"DTO "+uncapitalize(tableInfo.tableName)+"DTO, MultipartHttpServletRequest multipartRequest,\n" +
+                        "            HttpServletRequest request) throws ParseException {\n" +
+                        "\n" +
+                        "        JSONObject result;\n" +
+                        "        String error = validateForm("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
+                        "        ServiceResult serviceResult;\n" +
+                        "        if (error != null) {\n" +
+                        "            return error;\n" +
+                        "        } else {\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getColType().equals("Date")){
@@ -204,35 +205,35 @@ public class Web {
         }
         fileWriter.append(
                 "            serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.updateBO("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
-                "            processServiceResult(serviceResult);\n" +
-                "            result = new JSONObject(serviceResult);\n" +
-                "        }\n" +
-                "        return result.toString();\n" +
-                "    }\n" +
-                "\n" +
-                "    //validate\n" +
-                "    private String validateForm("+ tableInfo.tableName+"DTO cbChaDTO) {\n" +
-                "        List<ValidationResult> lsError = new ArrayList<>();\n" +
-                "        if (lsError.size() > 0) {\n" +
-                "            Gson gson = new Gson();\n" +
-                "            return gson.toJson(lsError);\n" +
-                "        }\n" +
-                "        return null;\n" +
-                "    }\n" +
-                "\n" +
-                "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.DELETE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST,\n" +
-                "            produces = \"text/html;charset=utf-8\")\n" +
-                "    public @ResponseBody\n" +
-                "    String deleteObj(@ModelAttribute(\"objectCommonSearchDTO\") ObjectCommonSearchDTO objectCommonSearchDTO,\n" +
-                "            HttpServletRequest request) {\n" +
-                "        HttpSession session = request.getSession();\n" +
-                "        ServiceResult serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.deleteObj(objectCommonSearchDTO);\n" +
-                "        processServiceResult(serviceResult);\n" +
-                "        JSONObject result = new JSONObject(serviceResult);\n" +
-                "        return result.toString();\n" +
-                "    }\n" +
-                "\n" +
-                "}\n");
+                        "            processServiceResult(serviceResult);\n" +
+                        "            result = new JSONObject(serviceResult);\n" +
+                        "        }\n" +
+                        "        return result.toString();\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    //validate\n" +
+                        "    private String validateForm("+ tableInfo.tableName+"DTO cbChaDTO) {\n" +
+                        "        List<ValidationResult> lsError = new ArrayList<>();\n" +
+                        "        if (lsError.size() > 0) {\n" +
+                        "            Gson gson = new Gson();\n" +
+                        "            return gson.toJson(lsError);\n" +
+                        "        }\n" +
+                        "        return null;\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.DELETE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST,\n" +
+                        "            produces = \"text/html;charset=utf-8\")\n" +
+                        "    public @ResponseBody\n" +
+                        "    String deleteObj(@ModelAttribute(\"objectCommonSearchDTO\") ObjectCommonSearchDTO objectCommonSearchDTO,\n" +
+                        "            HttpServletRequest request) {\n" +
+                        "        HttpSession session = request.getSession();\n" +
+                        "        ServiceResult serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.deleteObj(objectCommonSearchDTO);\n" +
+                        "        processServiceResult(serviceResult);\n" +
+                        "        JSONObject result = new JSONObject(serviceResult);\n" +
+                        "        return result.toString();\n" +
+                        "    }\n" +
+                        "\n" +
+                        "}\n");
 
         fileWriter.close();
     }
@@ -1043,7 +1044,7 @@ public class Web {
                 "</script>");
         fileWriter.close();
     }
-    
+
     static void genControllerSearch(TableInfo tableInfo, String folder) throws IOException {
         FileWriter fileWriter = new FileWriter(folder + "\\ControllerSearch.java");
         fileWriter.write("package com.tav.web.controller;\n" +
@@ -1063,7 +1064,7 @@ public class Web {
                 "import com.tav.web.data.EvaluatePlan1Data;\n" +
                 "import com.tav.web.dto.EvaluatePlan1DTO;\n" +
                 "import com.tav.web.dto.ImportErrorMessage;\n" +
-                "import java.util.Date;\n" + 
+                "import java.util.Date;\n" +
                 "import com.tav.web.dto.ObjectCommonSearchDTO;\n" +
                 "import com.tav.web.dto.SearchCommonFinalDTO;\n" +
                 "import java.io.BufferedOutputStream;\n" +
@@ -1166,14 +1167,14 @@ public class Web {
             fileWriter.append("\tif (request.getParameter(\"listLong"+(i+1)+"\") != null) {\n" +
                     "                searchDTO.setListLong"+(i+1)+"(ConvertData.convertStringToListLong(request.getParameter(\"listLong"+(i+1)+"\")));\n" +
                     "            }\n");
-            
+
         }
         for (int i = 0; i < 2*count_db; i+=2) {
             fileWriter.append("\ttry{\n" +
                     "                searchDTO.setDouble"+(i+1)+"(Double.parseDouble(request.getParameter(\"double"+(i+1)+"\")));\n" +
                     "                searchDTO.setDouble"+(i+2)+"(Double.parseDouble(request.getParameter(\"double"+(i+2)+"\")));\n" +
                     "            }catch(Exception ex){}\n");
-            
+
         }
 
         for (int i = 0; i < 2*count_long; i+=2) {
@@ -1300,5 +1301,7 @@ public class Web {
         genDTO_Web(tableInfo, folder);
         genView(tableInfo,folder);
         genControllerSearch(tableInfo, folder);
+        Tung.genJsSearch(tableInfo,folder);
+        Tung.genformSearch(tableInfo,folder);
     }
 }

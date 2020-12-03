@@ -59,24 +59,24 @@ public class Service {
         fileWriter.write(
                 "package com.tav.service.bo;\n\n" +
 
-                "import com.tav.service.base.db.dto.BaseFWDTOImpl;\n" +
-                "import com.tav.service.base.db.model.BaseFWModelImpl;\n" +
-                "import com.tav.service.dto." + tableInfo.tableName + "DTO;\n" +
-                "import com.vividsolutions.jts.geom.Geometry;\n" +
-                "import com.vividsolutions.jts.geom.Point;\n" +
-                "import java.util.Date;\n" +
-                "import javax.persistence.Column;\n" +
-                "import javax.persistence.Entity;\n" +
-                "import javax.persistence.GeneratedValue;\n" +
-                "import javax.persistence.Id;\n" +
-                "import javax.persistence.Table;\n" +
-                "import org.hibernate.annotations.GenericGenerator;\n" +
-                "import org.hibernate.annotations.Parameter;\n" +
-                "import org.hibernate.annotations.Type;\n\n" +
+                        "import com.tav.service.base.db.dto.BaseFWDTOImpl;\n" +
+                        "import com.tav.service.base.db.model.BaseFWModelImpl;\n" +
+                        "import com.tav.service.dto." + tableInfo.tableName + "DTO;\n" +
+                        "import com.vividsolutions.jts.geom.Geometry;\n" +
+                        "import com.vividsolutions.jts.geom.Point;\n" +
+                        "import java.util.Date;\n" +
+                        "import javax.persistence.Column;\n" +
+                        "import javax.persistence.Entity;\n" +
+                        "import javax.persistence.GeneratedValue;\n" +
+                        "import javax.persistence.Id;\n" +
+                        "import javax.persistence.Table;\n" +
+                        "import org.hibernate.annotations.GenericGenerator;\n" +
+                        "import org.hibernate.annotations.Parameter;\n" +
+                        "import org.hibernate.annotations.Type;\n\n" +
 
-                "@Entity\n" +
-                "@Table(name = \"" + tableInfo.title + "\")\n" +
-                "public class " + tableInfo.tableName + "BO extends BaseFWModelImpl {\n"
+                        "@Entity\n" +
+                        "@Table(name = \"" + tableInfo.title + "\")\n" +
+                        "public class " + tableInfo.tableName + "BO extends BaseFWModelImpl {\n"
         );
         for(int i = 0; i < tableInfo.columns.size(); i++){
             fileWriter.append("\tprivate " + tableInfo.columns.get(i).getColType() + " " + tableInfo.columns.get(i).getColName() + ";\t\t//" + tableInfo.columns.get(i).getColDescription() + "\n");
@@ -129,15 +129,15 @@ public class Service {
         fileWriter.write(
                 "package com.tav.service.dto;\n\n" +
 
-                "import com.tav.service.base.db.dto.BaseFWDTOImpl;\n" +
-                "import com.tav.service.bo." + tableInfo.tableName + "BO;\n" +
-                "import com.vividsolutions.jts.geom.Geometry;\n" +
-                "import com.vividsolutions.jts.geom.Point;\n" +
-                "import java.util.Date;\n" +
-                "import javax.xml.bind.annotation.XmlRootElement;\n\n" +
+                        "import com.tav.service.base.db.dto.BaseFWDTOImpl;\n" +
+                        "import com.tav.service.bo." + tableInfo.tableName + "BO;\n" +
+                        "import com.vividsolutions.jts.geom.Geometry;\n" +
+                        "import com.vividsolutions.jts.geom.Point;\n" +
+                        "import java.util.Date;\n" +
+                        "import javax.xml.bind.annotation.XmlRootElement;\n\n" +
 
-                "@XmlRootElement(name = \"" + tableInfo.tableName + "DTO\")\n" +
-                "public class " + tableInfo.tableName + "DTO extends BaseFWDTOImpl<" + tableInfo.tableName + "BO> {\n"
+                        "@XmlRootElement(name = \"" + tableInfo.tableName + "DTO\")\n" +
+                        "public class " + tableInfo.tableName + "DTO extends BaseFWDTOImpl<" + tableInfo.tableName + "BO> {\n"
         );
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
@@ -206,31 +206,31 @@ public class Service {
         FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "DAO.java");
         fileWriter.write(
                 "package com.tav.service.dao;\n" +
-                "\n" +
-                "import com.tav.service.base.db.dao.BaseFWDAOImpl;\n" +
-                "import com.tav.service.bo." + tableInfo.tableName + "BO;\n" +
-                "import com.tav.service.dto." + tableInfo.tableName + "DTO;\n" +
-                "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
-                "import com.tav.service.dto.ServiceResult;\n" +
-                "import java.math.BigInteger;\n" +
-                "import java.text.SimpleDateFormat;\n" +
-                "import java.util.List;\n" +
-                "import java.util.Date;\n" +
-                "import org.hibernate.Criteria;\n" +
-                "import org.hibernate.HibernateException;\n" +
-                "import org.hibernate.Query;\n" +
-                "import org.hibernate.Session;\n" +
-                "import org.hibernate.exception.ConstraintViolationException;\n" +
-                "import org.hibernate.exception.JDBCConnectionException;\n" +
-                "import org.hibernate.transform.Transformers;\n" +
-                "import org.hibernate.type.LongType;\n" +
-                "import org.hibernate.type.StringType;\n" +
-                "import org.springframework.stereotype.Repository;\n" +
-                "import org.springframework.transaction.annotation.Transactional;\n" +
-                "\n" +
-                "@Repository(\"" + uncapitalize(tableInfo.tableName) + "DAO\")\n" +
-                "public class " + tableInfo.tableName + "DAO extends BaseFWDAOImpl<" + tableInfo.tableName + "BO, Long>{\n" +
-                "    \n");
+                        "\n" +
+                        "import com.tav.service.base.db.dao.BaseFWDAOImpl;\n" +
+                        "import com.tav.service.bo." + tableInfo.tableName + "BO;\n" +
+                        "import com.tav.service.dto." + tableInfo.tableName + "DTO;\n" +
+                        "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
+                        "import com.tav.service.dto.ServiceResult;\n" +
+                        "import java.math.BigInteger;\n" +
+                        "import java.text.SimpleDateFormat;\n" +
+                        "import java.util.List;\n" +
+                        "import java.util.Date;\n" +
+                        "import org.hibernate.Criteria;\n" +
+                        "import org.hibernate.HibernateException;\n" +
+                        "import org.hibernate.Query;\n" +
+                        "import org.hibernate.Session;\n" +
+                        "import org.hibernate.exception.ConstraintViolationException;\n" +
+                        "import org.hibernate.exception.JDBCConnectionException;\n" +
+                        "import org.hibernate.transform.Transformers;\n" +
+                        "import org.hibernate.type.LongType;\n" +
+                        "import org.hibernate.type.StringType;\n" +
+                        "import org.springframework.stereotype.Repository;\n" +
+                        "import org.springframework.transaction.annotation.Transactional;\n" +
+                        "\n" +
+                        "@Repository(\"" + uncapitalize(tableInfo.tableName) + "DAO\")\n" +
+                        "public class " + tableInfo.tableName + "DAO extends BaseFWDAOImpl<" + tableInfo.tableName + "BO, Long>{\n" +
+                        "    \n");
 
         /***************************************************************************************
          *                                     getAll()
@@ -273,15 +273,15 @@ public class Service {
          ***************************************************************************************/
         fileWriter.append(
                 "public Integer getCount(SearchCommonFinalDTO searchDTO) {\n" +
-                "        SimpleDateFormat formatter = new SimpleDateFormat(\"dd/MM/yyyy HH:mm:ss\");\n" +
-                "        StringBuilder sqlCommand = new StringBuilder();\n" +
-                "        sqlCommand.append(\" SELECT \");\n" +
-                "        sqlCommand.append(\" COUNT(1)\");\n" +
-                "        sqlCommand.append(\" FROM  " + tableInfo.title + " tbl \");\n" +
-                "        sqlCommand.append(\" WHERE 1=1 \");\n" +
-                "        Query query = getSession().createSQLQuery(sqlCommand.toString());\n" +
-                "        return ((BigInteger) query.uniqueResult()).intValue();\n" +
-                "    }"
+                        "        SimpleDateFormat formatter = new SimpleDateFormat(\"dd/MM/yyyy HH:mm:ss\");\n" +
+                        "        StringBuilder sqlCommand = new StringBuilder();\n" +
+                        "        sqlCommand.append(\" SELECT \");\n" +
+                        "        sqlCommand.append(\" COUNT(1)\");\n" +
+                        "        sqlCommand.append(\" FROM  " + tableInfo.title + " tbl \");\n" +
+                        "        sqlCommand.append(\" WHERE 1=1 \");\n" +
+                        "        Query query = getSession().createSQLQuery(sqlCommand.toString());\n" +
+                        "        return ((BigInteger) query.uniqueResult()).intValue();\n" +
+                        "    }"
         );
 
         /***************************************************************************************
@@ -603,7 +603,7 @@ public class Service {
                 "\t</jaxrs:server>");
         fileWriter.close();
     }
-    
+
     static void genDAOSearch(TableInfo tableInfo, String folder) throws IOException {
         int count_str =0;
         int count_cb =0;
@@ -682,27 +682,27 @@ public class Service {
                     }
                 }
                 if (colProp.getColType().equals("Long") )
+                {
+                    if (colProp.getInputType().equals("Combobox"))
                     {
-                        if (colProp.getInputType().equals("Combobox"))
-                        {
-                            count_cb++;
-                        }
-                        else
-                        {
-                            count_long++;
-                        }
+                        count_cb++;
                     }
-                if (colProp.getColType().equals("Double"))
+                    else
                     {
-                        count_db++;
+                        count_long++;
                     }
-                if (colProp.getColType().equals("Date"))
-                    {
-                        count_date++;
-                    }
-
                 }
+                if (colProp.getColType().equals("Double"))
+                {
+                    count_db++;
+                }
+                if (colProp.getColType().equals("Date"))
+                {
+                    count_date++;
+                }
+
             }
+        }
 
         fileWriter.append("\t    sqlCommand.append(\" )   \");\n" +
                 "        }\n" +
@@ -821,7 +821,7 @@ public class Service {
             fileWriter.append("\tif (searchDTO.getListLong"+i+"() != null && !searchDTO.getListLong"+i+"().isEmpty()) {\n" +
                     "            q.setParameterList(\"listLong"+i+"\", searchDTO.getListLong"+i+"());\n" +
                     "        }\n");
-            
+
         }
         //double
         for (int i = 1; i <count_db*2 ; i+=2) {
@@ -1544,7 +1544,7 @@ public class Service {
 
         }
     }
-    
+
     public static void genService(TableInfo tableInfo, String folder) throws IOException {
         File dir = new File(folder);
         dir.mkdirs();
@@ -1557,7 +1557,8 @@ public class Service {
         genRsServiceImpl(tableInfo, folder);
         genBean(tableInfo, folder);
         genDAOSearch(tableInfo, folder);
-        genDAO1(tableInfo, folder);
-        //Tung.genDAO1(tableInfo, folder);
+        //genDAO1(tableInfo, folder);
+        Tung.genDAO1(tableInfo, folder);
+
     }
 }
