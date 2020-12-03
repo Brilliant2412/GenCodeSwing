@@ -1304,7 +1304,8 @@ public class Service {
 
         fileWriter.append(
                 "        return ((BigInteger) query.uniqueResult()).intValue();\n" +
-                        "    }\n"
+                        "    }\n" +
+                        "}\n"
         );
 
         /***************************************************************************************
@@ -1450,7 +1451,7 @@ public class Service {
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong" + t2 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " >= (:long" + (t2++) + ") \");\n" +
                                 "\t}\n" +
-                                "\tif (!StringUtil.isEmpty(searchDTO.getLong" + t2 + "())) {\n" +
+                                "\tif (!StringUtils.isEmpty(searchDTO.getLong" + t2 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " <= (:long" + t2 + ") \");\n" +
                                 "\t}\n");
                     }
@@ -1468,7 +1469,7 @@ public class Service {
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble" + t3 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " >= (:double" + (t3++) + ") \");\n" +
                                 "\t}\n" +
-                                "\tif (!StringUtil.isEmpty(searchDTO.getDouble" + t3 + "())) {\n" +
+                                "\tif (!StringUtils.isEmpty(searchDTO.getDouble" + t3 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " <= (:double" + t3 + ") \");\n" +
                                 "\t}\n");
                     }
@@ -1497,7 +1498,7 @@ public class Service {
 
     public static void f2(FileWriter fileWriter, int count_cb, int count_db, int count_long, int count_date) throws IOException {
         //String
-        fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
+        fileWriter.append("\tif (!StringUtils.isEmpty(searchDTO.getStringKeyWord())) {\n" +
                 "\t\tquery.setParameter(\"stringKeyWord\", \"%\" + searchDTO.getStringKeyWord() + \"%\");\n" +
                 "\t}\n");
         //Combobox
@@ -1557,8 +1558,8 @@ public class Service {
         genRsServiceImpl(tableInfo, folder);
         genBean(tableInfo, folder);
         genDAOSearch(tableInfo, folder);
-        //genDAO1(tableInfo, folder);
-        Tung.genDAO1(tableInfo, folder);
+        genDAO1(tableInfo, folder);
+        //Tung.genDAO1(tableInfo, folder);
 
     }
 }

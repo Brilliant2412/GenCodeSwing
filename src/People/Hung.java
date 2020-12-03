@@ -51,7 +51,6 @@ public class Hung {
 
     static void genformSearch(TableInfo tableInfo, String folder) throws IOException {
         FileWriter fileWriter = new FileWriter(folder+"\\formSearch.jsp");
-        System.out.println(tableInfo.columns.size());
         fileWriter.write("<%@page contentType=\"text/html\" pageEncoding=\"UTF-8\"%>\n" +
                 "<%@ taglib prefix=\"fmt\" uri=\"http://java.sun.com/jsp/jstl/fmt\" %>\n" +
                 "<%@ taglib prefix=\"c\" uri=\"http://java.sun.com/jsp/jstl/core\" %>\n" +
@@ -74,7 +73,6 @@ public class Hung {
         int k = tableInfo.countSearch;
         int r = k / 4;
         int q = k%4;
-        System.out.println(k);
         int i = 0;
         int countSearch = 0;
         if (r == 0) {
@@ -198,14 +196,14 @@ public class Hung {
                 "        margin-left: 0px !important;\n" +
                 "    }\n" +
                 "    .formsearchBody{\n" +
-                "        display: none\n" +
+                "        display: block\n" +
                 "    }\n" +
                 "</style>");
         fileWriter.close();
     }
 
-    static void genJs(TableInfo tableInfo, String folder) throws  IOException{
-        FileWriter fileWriter = new FileWriter(folder+"\\js.js");
+    public static void genJs(TableInfo tableInfo, String folder) throws  IOException{
+        FileWriter fileWriter = new FileWriter(folder+"\\" + uncapitalize(tableInfo.tableName) + " .js");
         fileWriter.write("//$(\"#TBL_DOCUMENT_TYPE\").addClass(\"active\");\n" +
                 "//$(\"#naviParent\").replaceWith($(\"#ROOT_LAND_POINT  span\").html());\n" +
                 "//$(\"#naviChild\").replaceWith($(\"#cbma  span\").html());\n" +

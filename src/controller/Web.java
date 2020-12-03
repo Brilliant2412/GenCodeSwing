@@ -1,5 +1,6 @@
 package controller;
 
+import People.Hung;
 import People.Tung;
 import model.ColumnProperty;
 import model.TableInfo;
@@ -258,7 +259,7 @@ public class Web {
                 "import com.tav.web.common.RestRequest;\n" +
                 "import com.tav.web.dto."+ tableInfo.tableName +"DTO;\n" +
                 "import com.tav.web.dto.SearchCommonFinalDTO;\n" +
-                "import com.tav.web.dto.ObjectCommonSearchDTO\n" +
+                "import com.tav.web.dto.ObjectCommonSearchDTO;\n" +
                 "import java.util.List;\n" +
                 "import java.util.Date;\n" +
                 "import org.apache.log4j.Logger;\n" +
@@ -1294,7 +1295,8 @@ public class Web {
         genData(tableInfo, folder);
         genTitle(tableInfo, folder);
         genListjsp(tableInfo, dir2.getAbsolutePath());
-        genJs(tableInfo, folder);
+        //genJs(tableInfo, folder);
+        Hung.genJs(tableInfo, folder);
         genDialogAdd(tableInfo, dir2.getAbsolutePath());
         genDTO_Web(tableInfo, folder);
         genView(tableInfo,folder);
