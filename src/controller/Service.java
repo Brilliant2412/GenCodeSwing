@@ -1145,7 +1145,7 @@ public class Service {
 
     public static void genDAO1(TableInfo tableInfo, String folder) throws IOException {
 
-        FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "DAO1.java");
+        FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "DAO.java");
         fileWriter.write(
                 "package com.tav.service.dao;\n" +
                         "\n" +
@@ -1290,6 +1290,8 @@ public class Service {
                 }
             }
         }
+        fileWriter.append("            sqlCommand.append(\" )   \");\n");
+        fileWriter.append("}");
 
 
         f1(tableInfo, fileWriter);
@@ -1304,7 +1306,7 @@ public class Service {
 
         fileWriter.append(
                 "        return ((BigInteger) query.uniqueResult()).intValue();\n" +
-                        "    }\n" +
+
                         "}\n"
         );
 
@@ -1451,7 +1453,7 @@ public class Service {
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong" + t2 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " >= (:long" + (t2++) + ") \");\n" +
                                 "\t}\n" +
-                                "\tif (!StringUtils.isEmpty(searchDTO.getLong" + t2 + "())) {\n" +
+                                "\tif (!StringUtil.isEmpty(searchDTO.getLong" + t2 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " <= (:long" + t2 + ") \");\n" +
                                 "\t}\n");
                     }
@@ -1469,7 +1471,7 @@ public class Service {
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble" + t3 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " >= (:double" + (t3++) + ") \");\n" +
                                 "\t}\n" +
-                                "\tif (!StringUtils.isEmpty(searchDTO.getDouble" + t3 + "())) {\n" +
+                                "\tif (!StringUtil.isEmpty(searchDTO.getDouble" + t3 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " <= (:double" + t3 + ") \");\n" +
                                 "\t}\n");
                     }
@@ -1498,7 +1500,7 @@ public class Service {
 
     public static void f2(FileWriter fileWriter, int count_cb, int count_db, int count_long, int count_date) throws IOException {
         //String
-        fileWriter.append("\tif (!StringUtils.isEmpty(searchDTO.getStringKeyWord())) {\n" +
+        fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
                 "\t\tquery.setParameter(\"stringKeyWord\", \"%\" + searchDTO.getStringKeyWord() + \"%\");\n" +
                 "\t}\n");
         //Combobox
@@ -1551,15 +1553,15 @@ public class Service {
         dir.mkdirs();
         genBO(tableInfo, folder);
         genDTO(tableInfo, folder);
-        genDAO(tableInfo, folder);
+        //genDAO(tableInfo, folder);
         genBusiness(tableInfo, folder);
         genBusinessImpl(tableInfo, folder);
         genRsService(tableInfo, folder);
         genRsServiceImpl(tableInfo, folder);
         genBean(tableInfo, folder);
         genDAOSearch(tableInfo, folder);
-        //genDAO1(tableInfo, folder);
-        Tung.genDAO1(tableInfo, folder);
+        genDAO1(tableInfo, folder);
+        //Tung.genDAO1(tableInfo, folder);
 
     }
 }

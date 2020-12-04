@@ -427,7 +427,7 @@ public class Tung {
             if (kieuNhap.equals("Combobox")) {
                 res = "\t\t\t\t\t\t\t\t\t<label class=\"col-lg-1 control-label\">" + moTa + "</label>\n" +
                         "\t\t\t\t\t\t\t\t\t<div class=\"col-lg-2 selectContainer\">\n" +
-                        "\t\t\t\t\t\t\t\t\t\t<div id=\"cb" + tenTruong + "Search\">\n" +
+                        "\t\t\t\t\t\t\t\t\t\t<div id=\"cb" + tenTruong + "Search\"></div>\n" +
                         "\t\t\t\t\t\t\t\t\t</div>\n";
             } else {
                 res = "\t\t\t\t\t\t\t\t\t<label class=\"col-lg-1 control-label\">" + moTa + "</label>\n" +
@@ -493,6 +493,10 @@ public class Tung {
                     fileWriter.append(res);
                 }
             }
+            fileWriter.append("\t\t\t\t\t\t\t\t<label class=\"col-md-1 control-label\" ></label>\n" +
+"                                <div class=\"col-lg-2 selectContainer\">\n" +
+"                                    <button id=\"btnSearch\" class=\"btn btn-success\" type=\"button\" style=\"width: 100%;\">Tìm kiếm</button>\n" +
+"                                </div>\n");
             fileWriter.append("\t\t\t\t\t\t\t\t</div>\n\n");
         }else {
             fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
@@ -510,11 +514,16 @@ public class Tung {
                     );
                     fileWriter.append(res);
                     if (countSearch == 3) {
+                                    fileWriter.append("\t\t\t\t\t\t\t\t<label class=\"col-md-1 control-label\" ></label>\n" +
+"                                <div class=\"col-lg-2 selectContainer\">\n" +
+"                                    <button id=\"btnSearch\" class=\"btn btn-success\" type=\"button\" style=\"width: 100%;\">Tìm kiếm</button>\n" +
+"                                </div>\n");
                         fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
                         break;
                     }
                 }
             }
+            
             k -= 3;
             countSearch -= 3;
             r = k / 4;
@@ -532,6 +541,10 @@ public class Tung {
                         fileWriter.append(res);
                     }
                 }
+                            fileWriter.append("\t\t\t\t\t\t\t\t<label class=\"col-md-1 control-label\" ></label>\n" +
+"                                <div class=\"col-lg-2 selectContainer\">\n" +
+"                                    <button id=\"btnSearch\" class=\"btn btn-success\" type=\"button\" style=\"width: 100%;\">Tìm kiếm</button>\n" +
+"                                </div>\n");
                 fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
             } else {
                 for (int dem = 0; dem < r; dem++) {
@@ -546,6 +559,10 @@ public class Tung {
                             );
                             fileWriter.append(res);
                             if (countSearch % 4 == 3 && countSearch <= k) {
+                                            fileWriter.append("\t\t\t\t\t\t\t\t<label class=\"col-md-1 control-label\" ></label>\n" +
+"                                <div class=\"col-lg-2 selectContainer\">\n" +
+"                                    <button id=\"btnSearch\" class=\"btn btn-success\" type=\"button\" style=\"width: 100%;\">Tìm kiếm</button>\n" +
+"                                </div>\n");
                                 fileWriter.append("\t\t\t\t\t\t\t\t/div>\n");
                             } else {
                                 break;
@@ -565,6 +582,10 @@ public class Tung {
                             fileWriter.append(res);
                         }
                     }
+                                fileWriter.append("\t\t\t\t\t\t\t\t<label class=\"col-md-1 control-label\" ></label>\n" +
+"                                <div class=\"col-lg-2 selectContainer\">\n" +
+"                                    <button id=\"btnSearch\" class=\"btn btn-success\" type=\"button\" style=\"width: 100%;\">Tìm kiếm</button>\n" +
+"                                </div>\n");
                     fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
                 }
             }
@@ -598,7 +619,7 @@ public class Tung {
                 "        margin-left: 0px !important;\n" +
                 "    }\n" +
                 "    .formsearchBody{\n" +
-                "        display: none\n" +
+                "        display: block\n" +
                 "    }\n" +
                 "</style>");
         fileWriter.close();

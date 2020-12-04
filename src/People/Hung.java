@@ -203,7 +203,7 @@ public class Hung {
     }
 
     public static void genJs(TableInfo tableInfo, String folder) throws  IOException{
-        FileWriter fileWriter = new FileWriter(folder+"\\" + uncapitalize(tableInfo.tableName) + " .js");
+        FileWriter fileWriter = new FileWriter(folder+"\\" + uncapitalize(tableInfo.tableName) + ".js");
         fileWriter.write("//$(\"#TBL_DOCUMENT_TYPE\").addClass(\"active\");\n" +
                 "//$(\"#naviParent\").replaceWith($(\"#ROOT_LAND_POINT  span\").html());\n" +
                 "//$(\"#naviChild\").replaceWith($(\"#cbma  span\").html());\n" +
@@ -257,6 +257,124 @@ public class Hung {
         fileWriter.append("];\n\n");
 
         /*********************************************************************************************
+         *                                do search funtion 1
+         *********************************************************************************************/
+        fileWriter.append("doSearch = function () {\n" +
+"    \n" +
+"    var keySearch = $('#keySearch').val();\n" +
+"    \n");
+//        int count_cb = 0;
+//        int count_db = 0;
+//        int count_long = 0;
+//        int count_date = 0;
+//        for (int i = 0; i < tableInfo.columns.size(); i++) {
+//            ColumnProperty colProp = tableInfo.columns.get(i);
+//            if (colProp.isSearch()) {                
+//                if (colProp.getColType().equals("Long")) {
+//                    if (colProp.getInputType().equals("Combobox")) {
+//                        count_cb++;
+//                    } else {
+//                        count_long++;
+//                    }
+//                }
+//                if (colProp.getColType().equals("Double")) {
+//                    count_db++;
+//                }
+//                if (colProp.getColType().equals("Date")) {
+//                    count_date++;
+//                }
+//            }
+//        }
+        
+        //Combobox
+        int t_cb = 0;
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isSearch()){
+                t_cb++;
+                fileWriter.append("    var listLong"+(t_cb)+" = $('#cb"+tableInfo.columns.get(i).getColName()+"SearchCombobox').val();\n");
+            }
+        }
+        //date
+        int t_date = 0;
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isSearch()){
+                t_date++;
+                fileWriter.append("    var string"+(t_date)+" = $('#"+tableInfo.columns.get(i).getColName()+"SearchFrom').val();\n");
+                t_date++;
+                fileWriter.append("    var string"+(t_date)+" = $('#"+tableInfo.columns.get(i).getColName()+"SearchTo').val();\n");
+            }
+        }
+        
+        //long not cb
+        int t_long = 0;
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") && !tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).isSearch()){
+                t_long++;
+                fileWriter.append("    var long"+(t_long)+" = $('#"+tableInfo.columns.get(i).getColName()+"SearchCombobox').val();\n");
+            }
+        }
+        
+        //double
+        int t_db = 0;
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Double") && tableInfo.columns.get(i).isSearch()){
+                t_db++;
+                fileWriter.append("    var double"+(t_db)+" = $('#"+tableInfo.columns.get(i).getColName()+"SearchCombobox').val();\n");
+            }
+        }
+        
+        
+        fileWriter.append(
+"    var url = \"getall"+tableInfo.tableName.toLowerCase()+".json\";\n" +
+"    url += \"?key=\" + keySearch;\n");
+        //Combobox
+        int t_cb1 = 0;
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isSearch()){
+                t_cb1++;
+                fileWriter.append("url += \"&listLong"+t_cb1+"=\"+listLong"+t_cb1+";\n");
+            }
+        }
+        //date
+        int t_date1 = 0;
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isSearch()){
+                t_date1++;
+                fileWriter.append("    url += \"&string"+t_date1+"=\"+string"+t_date1+";\n");
+                t_date1++;
+                fileWriter.append("    url += \"&string"+t_date1+"=\"+string"+t_date1+";\n");
+            }
+        }
+        
+        //long not cb
+        int t_long1 = 0;
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") && !tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).isSearch()){
+                t_long1++;
+                fileWriter.append("    url += \"&long"+t_long1+"=\"+long"+t_long1+";\n");
+            }
+        }
+        
+        //double
+        int t_db1 = 0;
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Double") && tableInfo.columns.get(i).isSearch()){
+                t_db1++;
+                fileWriter.append("    url += \"&double"+t_db1+"=\"+double"+t_db1+";\n");
+            }
+        }
+        
+        
+                fileWriter.append("\n"+
+"    vt_datagrid.loadPageAgainRes(\"#dataTblDocumentType\", url);\n" +
+"    vt_sys.showBody();\n" +
+"    vt_loading.hideIconLoading();\n" +
+"    return false;\n" +
+"};");
+        
+        
+        
+        /*********************************************************************************************
          *                                 var gridSetting
          *********************************************************************************************/
         fileWriter.append("var gridSetting = {\n" +
@@ -269,14 +387,34 @@ public class Hung {
         /*********************************************************************************************
          *                                 do search
          *********************************************************************************************/
-        fileWriter.append(
-                "doSearch = function () {\n" +
-                        "    vt_datagrid.loadPageAgainRes(\"#dataTblDocumentType\", \"getall" + tableInfo.tableName.toLowerCase() + ".json\");\n" +
-                        "    vt_sys.showBody();\n" +
-                        "    vt_loading.hideIconLoading();\n" +
-                        "    return false;\n" +
-                        "};\n\n"
-        );
+//        fileWriter.append(
+//                "doSearch = function () {\n" +
+//                        "    vt_datagrid.loadPageAgainRes(\"#dataTblDocumentType\", \"getall" + tableInfo.tableName.toLowerCase() + ".json\");\n" +
+//                        "    vt_sys.showBody();\n" +
+//                        "    vt_loading.hideIconLoading();\n" +
+//                        "    return false;\n" +
+//                        "};\n\n"
+//        );
+        
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if(colProp.getColType().equals("Date")){
+                fileWriter.append(
+                        "$(\"#" + colProp.getColName() + "\").datepicker({\n" +
+                                "\tduration: \"fast\",\n" +
+                                "\tchangeMonth: true,\n" +
+                                "\tchangeYear: true,\n" +
+                                "\tdateFormat: 'dd/mm/yy',\n" +
+                                "\tconstrainInput: true,\n" +
+                                "\tdisabled: false,\n" +
+                                "\tyearRange: \"-20:+10\",\n" +
+                                "\tonSelect: function (selected) {\n" +
+                                "\t}\n" +
+                                "});\n\n"
+                );
+            }
+        }
+        
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getColType().equals("Date")){
@@ -312,6 +450,17 @@ public class Hung {
                 "$(function () {\n" +
                         "\tdoSearch();\n" +
                         "\t\n" );
+        for(int i = 1; i < tableInfo.columns.size(); i++){
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if(colProp.getInputType().equals("Combobox")){
+                fileWriter.append("\t\tvt_combobox.buildMultipleCombobox(\"cb" + colProp.getColName() + "Search\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
+            }
+        }
+        
+        
+        fileWriter.append("\t$(\"#btnSearch\").click(function () {\n" +
+"        doSearch();\n" +
+"    });\n");
 
         /**********************************************************************************************
          *                            edit
@@ -612,7 +761,7 @@ public class Hung {
         /*********************************************************************************************
          *                                 Viewjsp
          *********************************************************************************************/
-        fileWriter.append("\n\teditView: function(id) {\n" +
+        fileWriter.append("\n\tview: function(id) {\n" +
                 "        if (id !== null) {\n" +
                 "            vt_form.reset($('#"+uncapitalize(tableInfo.tableName)+"Form'));\n" +
                 "            vt_form.clearError();\n" +
@@ -626,41 +775,13 @@ public class Hung {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
             if (columnProperty.getColType().equals("Date"))
             {
-                fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+"ST);\n");
+                fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"View"+"\").val(data."+columnProperty.getColName()+"ST);\n");
             }
             else if (columnProperty.getInputType().equals("Combobox"))
             {
-                //ok gen lai cho anh file js cai file excel cua a la file nao a
-                fileWriter.append("\t\t\t\t\tvt_combobox.buildCombobox(\"cb"+columnProperty.getColName()+"\", \""+columnProperty.getComboboxBuildPath()+"\", data."+columnProperty.getColName()+", \""+columnProperty.getComboboxName()+"\", \""+columnProperty.getComboboxValue()+"\", \"- Chọn "+columnProperty.getColDescription()+" -\", 0);\n");
+                fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"View"+"\").val(data."+columnProperty.getColName()+"ST"+");\n");
             }
-            else fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+");\n");
-
-        }
-        fileWriter.append("\t\t\t\t}\n\t\t\t});\n\t\t}\n\t},\n");
-        /*********************************************************************************************
-         *                                 Viewjsp
-         *********************************************************************************************/
-        fileWriter.append("\n\tview: function(gid) {\n" +
-                "        if (id !== null) {\n" +
-                "            vt_form.reset($('#"+uncapitalize(tableInfo.tableName)+"Form'));\n" +
-                "            vt_form.clearError();\n" +
-                "            $.ajax({\n" +
-                "                async: false,\n" +
-                "                data: {gid: id},\n" +
-                "                url: \"getone"+tableInfo.tableName.toLowerCase()+"bygid.json\",\n" +
-                "                success: function (data, status, xhr) {\n" +
-                "                    $(\"#gid\").val(data.gid);\n");
-        for (int i = 1; i < tableInfo.columns.size(); i++) {
-            ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("Date"))
-            {
-                fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+"ST);\n");
-            }
-            else if (columnProperty.getInputType().equals("Combobox"))
-            {
-                fileWriter.append("\t\t\t\t\t$(\"#cb"+columnProperty.getColName()+"combobox"+"\").val(data."+columnProperty.getColName()+"ST"+");\n");
-            }
-            else fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+");\n");
+            else fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"View"+"\").val(data."+columnProperty.getColName()+");\n");
 
         }
         fileWriter.append("\n\t\t\t\t\t$('#dialog-formView').dialog({\n" +

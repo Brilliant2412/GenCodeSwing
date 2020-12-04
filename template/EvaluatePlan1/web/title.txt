@@ -1,4 +1,0 @@
-	<definition name="evaluatePlan1" extends="bodyContentAdmin.definition">  
-        	<put-attribute name="title" value="title.role" />  
-        	<put-attribute name="body" value="/WEB-INF/pages/evaluatePlan1/list.jsp" />  
-    	</definition>
