@@ -33,9 +33,10 @@ public class TableInfo {
         title = sheet.getRow(1).getCell(2).toString();
         description = sheet.getRow(2).getCell(2).toString();
         Iterator<Row> rowIterator = sheet.iterator();
-        Row row = rowIterator.next();
+        Row row;
         columns = new ArrayList<>();
         while (rowIterator.hasNext()){
+            row = rowIterator.next();
             if(row.getRowNum() >= 5 && !row.getCell(1).toString().equals("")){
                 ColumnProperty colProp = new ColumnProperty();
                 colProp.setColName(row.getCell(1).toString().trim());
@@ -96,7 +97,6 @@ public class TableInfo {
                 }
 
             }
-            row = rowIterator.next();
         }
     }
 }

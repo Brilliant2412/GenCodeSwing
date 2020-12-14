@@ -1551,8 +1551,8 @@ public class Service {
     public static void genService(TableInfo tableInfo, String folder) throws IOException {
         File dir = new File(folder);
         dir.mkdirs();
-        genBO(tableInfo, folder);
-        genDTO(tableInfo, folder);
+        Hieu.genBO(tableInfo, folder);
+        Hieu.genDTO(tableInfo, folder);
         //genDAO(tableInfo, folder);
         genBusiness(tableInfo, folder);
         genBusinessImpl(tableInfo, folder);

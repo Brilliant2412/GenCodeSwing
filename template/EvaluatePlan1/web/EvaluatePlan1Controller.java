@@ -78,7 +78,16 @@ public class EvaluatePlan1Controller extends SubBaseController {
             Integer offset = --currentPage * limit;
             JsonDataGrid dataGrid = new JsonDataGrid();
             SearchCommonFinalDTO searchDTO = new SearchCommonFinalDTO();
-            List<EvaluatePlan1DTO> lst = new ArrayList<>();
+            searchDTO.setStringKeyWord(request.getParameter("key"));
+	if (request.getParameter("listLong1") != null) {
+                searchDTO.setListLong1(ConvertData.convertStringToListLong(request.getParameter("listLong1")));
+            }
+	try{
+                searchDTO.setDouble1(Double.parseDouble(request.getParameter("double1")));
+                searchDTO.setDouble2(Double.parseDouble(request.getParameter("double2")));
+            }catch(Exception ex){}
+            searchDTO.setString1(request.getParameter("string1"));
+            searchDTO.setString2(request.getParameter("string2"));            List<EvaluatePlan1DTO> lst = new ArrayList<>();
             Integer totalRecords = 0;
             totalRecords = evaluatePlan1Data.getCount(searchDTO);
             if (totalRecords > 0) {

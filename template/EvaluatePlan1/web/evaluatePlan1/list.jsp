@@ -15,7 +15,7 @@
             <article class="col-sm-12 col-md-12 col-lg-12">
                 <div style="height:100% !important;padding: 3px;">
                     <article class="widgetTop1 col-sm-12 col-md-12 col-lg-12">
-                    <%--jsp:include page="formSearch.jsp" /--%>
+                    <jsp:include page="formSearch.jsp" />
                     <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-1" data-widget-fullscreenbutton="false"
                          data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-colorbutton="false" data-widget-editbutton="false"
                          style="height:100% !important;">
@@ -32,6 +32,7 @@
                 </div>
             </article>
         <jsp:include page="dialogAdd.jsp" /> 
+        <jsp:include page="view.jsp" />
     </section>
     <input type="hidden" id="screenId" value="${requestScope['javax.servlet.forward.request_uri']}"/>
 <script src="${pageContext.request.contextPath}/share/core/js/common.js"/>
