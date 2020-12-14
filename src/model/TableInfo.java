@@ -22,7 +22,7 @@ public class TableInfo {
     public ArrayList<ColumnProperty> columns;
     public int countSearch = 0;
 
-    public TableInfo(String exccelFile, int nSheet, Vector<Integer> numSubObjs) throws IOException {
+    public TableInfo(String exccelFile, int nSheet) throws IOException {
         int n_mst = 0;
         int n_department = 0;
         FileInputStream inputStream = new FileInputStream(exccelFile);

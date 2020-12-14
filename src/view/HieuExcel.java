@@ -35,7 +35,6 @@ public class HieuExcel extends javax.swing.JFrame {
     private final ArrayList<JCheckBox> subObjCheckBoxs;
     private int numObj = -1;
     private Vector<Integer> numSubObjs;
-    //private int numSubObj;
     
     private String path;
 
@@ -54,6 +53,7 @@ public class HieuExcel extends javax.swing.JFrame {
         //listSheet = new ArrayList<>();
         objCheckBoxs = new ArrayList<>();
         subObjCheckBoxs = new ArrayList<>();
+        numSubObjs = new Vector<>();
 //        panelObject.scrollRectToVisible(panelObject.getVisibleRect());
 //        panelSubObject.scrollRectToVisible(panelObject.getVisibleRect());
     }

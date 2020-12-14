@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import model.ColumnProperty;
 import model.TableInfo;
+import model.TableSet;
 
 
 public class CodeGenerator {
@@ -51,10 +52,10 @@ public class CodeGenerator {
     }
 
     public void GEN(int sheet, Vector<Integer> numSubObjs) throws IOException {
-        TableInfo tableInfo = new TableInfo(url, sheet, numSubObjs);
-        pathOne = pathString+"\\"+tableInfo.tableName+"\\"+"service";
-        pathTwo = pathString+"\\"+tableInfo.tableName+"\\"+"web";
-        Service.genService(tableInfo,pathOne);
-        Web.genWeb(tableInfo, pathTwo);
+        TableSet tableSet = new TableSet(url, sheet, numSubObjs);
+        pathOne = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"service";
+        pathTwo = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"web";
+        Service.genService(tableSet.tableInfo,pathOne);
+        Web.genWeb(tableSet.tableInfo, pathTwo);
     }
 }
