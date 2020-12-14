@@ -16,6 +16,7 @@ public class CodeGenerator {
     static String pathString;
     static String pathOne;
     static String pathTwo;
+    static String pathSubObjs;
 
     public CodeGenerator() {
         url="";
@@ -55,7 +56,11 @@ public class CodeGenerator {
         TableSet tableSet = new TableSet(url, sheet, numSubObjs);
         pathOne = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"service";
         pathTwo = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"web";
+        pathSubObjs = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"sub objects";
         Service.genService(tableSet.tableInfo,pathOne);
         Web.genWeb(tableSet.tableInfo, pathTwo);
+        for(int i = 0; i < tableSet.subTables.size(); i++){
+            SubObj.genSubObj(tableSet.subTables.get(i), pathSubObjs);
+        }
     }
 }

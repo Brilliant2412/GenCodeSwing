@@ -1,5 +1,6 @@
 package controller;
 
+import People.Hieu;
 import People.Hung;
 import People.Tung;
 import model.ColumnProperty;
@@ -1406,11 +1407,11 @@ public class Web {
         genListjsp(tableInfo, dir2.getAbsolutePath());
         //genJs(tableInfo, folder);
         Hung.genJs(tableInfo, folder);
-        genDialogAdd(tableInfo, dir2.getAbsolutePath());
-        genDTO_Web(tableInfo, folder);
+        Hieu.genDialogAdd(tableInfo, dir2.getAbsolutePath());
+        Hieu.genDTO_Web(tableInfo, folder);
         genView(tableInfo,dir2.getAbsolutePath());
-        genControllerSearch(tableInfo, folder);
-        Tung.genJsSearch(tableInfo,folder);
+        //genControllerSearch(tableInfo, folder);
+        //Tung.genJsSearch(tableInfo,folder);
         Tung.genformSearch(tableInfo,dir2.getAbsolutePath());
     }
 }
