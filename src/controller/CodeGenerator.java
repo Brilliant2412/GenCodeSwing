@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Vector;
+
 import model.ColumnProperty;
 import model.TableInfo;
 
@@ -48,8 +50,8 @@ public class CodeGenerator {
         return s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 
-    public void GEN(int sheet) throws IOException {
-        TableInfo tableInfo = new TableInfo(url, sheet);
+    public void GEN(int sheet, Vector<Integer> numSubObjs) throws IOException {
+        TableInfo tableInfo = new TableInfo(url, sheet, numSubObjs);
         pathOne = pathString+"\\"+tableInfo.tableName+"\\"+"service";
         pathTwo = pathString+"\\"+tableInfo.tableName+"\\"+"web";
         Service.genService(tableInfo,pathOne);

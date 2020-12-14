@@ -13,15 +13,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Vector;
 
 public class TableInfo {
     public String tableName;
     public String title;
     public String description;
     public ArrayList<ColumnProperty> columns;
-    public  int countSearch = 0;
+    public int countSearch = 0;
 
-    public TableInfo(String exccelFile, int nSheet) throws IOException {
+    public TableInfo(String exccelFile, int nSheet, Vector<Integer> numSubObjs) throws IOException {
         int n_mst = 0;
         int n_department = 0;
         FileInputStream inputStream = new FileInputStream(exccelFile);
