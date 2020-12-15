@@ -936,7 +936,7 @@ public class Hung {
     }
 
     public static void genSubTableJs(TableInfo tableInfo,String folder) throws IOException {
-        FileWriter fileWriter = new FileWriter(folder +tableInfo.tableName +"\\subTable.js");
+        FileWriter fileWriter = new FileWriter(folder +"\\"+tableInfo.tableName +"subTable.js");
         fileWriter.write("var indexTopicMember = 2;\n" +
                 "var strFile = \"\";\n" +
                 "var gid = 0;\n" );
