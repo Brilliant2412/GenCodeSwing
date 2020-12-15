@@ -18,17 +18,16 @@ var datafields = [
     {name: 'place1', type: 'Number'},
     {name: 'expertise_date', type: 'String'},
     {name: 'expertise_dateST', type: 'String'},
-    {name: 'dept_id', type: 'Number'},
-    {name: 'dept_other', type: 'String'},
-    {name: 'the_bases', type: 'String'},
-    {name: 'the_purpose', type: 'String'},
-    {name: 'place_and_time', type: 'String'},
+    {name: 'dept_id1', type: 'Number'},
+    {name: 'dept_other1', type: 'String'},
+    {name: 'the_bases1', type: 'String'},
+    {name: 'the_purpose1', type: 'String'},
+    {name: 'place_and_time1', type: 'String'},
     {name: 'test_content', type: 'String'},
     {name: 'the_participants', type: 'String'},
     {name: 'organization_perform', type: 'String'},
     {name: 'master_id', type: 'String'},
-    {name: 'left_long', type: 'Number'},
-    {name: 'right_long', type: 'Number'},
+    {name: 'file', type: 'Number'},
 ];
 
 var columns = [
@@ -42,7 +41,26 @@ var columns = [
 	{text: "Chức năng", datafield: 'gid', edit: 1, sortable: false, clstitle: 'tlb_class_center'}
 ];
 
-var gridSetting = {
+doSearch = function () {
+    
+    var keySearch = $('#keySearch').val();
+    
+    var listLong1 = $('#cbexpertise_organSearchCombobox').val();
+    var listLong2 = $('#cbplace1SearchCombobox').val();
+    var string1 = $('#expertise_dateSearchFrom').val();
+    var string2 = $('#expertise_dateSearchTo').val();
+    var url = "getallevaluateplan6.json";
+    url += "?key=" + keySearch;
+url += "&listLong1="+listLong1;
+url += "&listLong2="+listLong2;
+    url += "&string1="+string1;
+    url += "&string2="+string2;
+
+    vt_datagrid.loadPageAgainRes("#dataTblDocumentType", url);
+    vt_sys.showBody();
+    vt_loading.hideIconLoading();
+    return false;
+};var gridSetting = {
     sortable: false,
     virtualmode: true,
     isSetting: false,
@@ -50,12 +68,17 @@ var gridSetting = {
     onClickRow: true
 };
 
-doSearch = function () {
-    vt_datagrid.loadPageAgainRes("#dataTblDocumentType", "getallevaluateplan1.json");
-    vt_sys.showBody();
-    vt_loading.hideIconLoading();
-    return false;
-};
+$("#expertise_date").datepicker({
+	duration: "fast",
+	changeMonth: true,
+	changeYear: true,
+	dateFormat: 'dd/mm/yy',
+	constrainInput: true,
+	disabled: false,
+	yearRange: "-20:+10",
+	onSelect: function (selected) {
+	}
+});
 
 $("#expertise_dateSearchFrom").datepicker({
 	duration: "fast",
@@ -84,15 +107,21 @@ $("#expertise_dateSearchTo").datepicker({
 $(function () {
 	doSearch();
 	
+		vt_combobox.buildMultipleCombobox("cbexpertise_organSearch", "gettypeuser.json?cd=701", 0, "dvsName", "dvsValue", "- Chọn Cơ quan thẩm định -", 0);
+		vt_combobox.buildMultipleCombobox("cbplace1Search", "gettypeuser.json?cd=701", 0, "dvsName", "dvsValue", "- Chọn Địa điểm lập kế hoạch 1 -", 0);
+		vt_combobox.buildMultipleCombobox("cbdept_id1Search", "gettypeuser.json?cd=701", 0, "dvsName", "dvsValue", "- Chọn Tên tổ chức, đơn vị được thẩm định -", 0);
+	$("#btnSearch").click(function () {
+        doSearch();
+    });
 	onClickBtAdd = function () {
-        vt_form.reset($('#evaluatePlan1Form'));
+        vt_form.reset($('#evaluatePlan6Form'));
         $("#gid").val(""); // reset form
         vt_form.clearError();
         $("#isedit").val("0");
         
 		vt_combobox.buildCombobox("cbexpertise_organ", "gettypeuser.json?cd=701", 0, "dvsName", "dvsValue", "- Chọn Cơ quan thẩm định -", 0);
-		vt_combobox.buildCombobox("cbplace1", "gettypeuser.json?cd=705", 0, "dvsName", "dvsValue", "- Chọn Địa điểm lập kế hoạch 1 -", 0);
-		vt_combobox.buildCombobox("cbdept_id", "getdepartmentComBoBox.json", 0, "deptName", "deptId", "- Chọn Tên tổ chức, đơn vị được thẩm định -", 0);
+		vt_combobox.buildCombobox("cbplace1", "gettypeuser.json?cd=701", 0, "dvsName", "dvsValue", "- Chọn Địa điểm lập kế hoạch 1 -", 0);
+		vt_combobox.buildCombobox("cbdept_id1", "gettypeuser.json?cd=701", 0, "dvsName", "dvsValue", "- Chọn Tên tổ chức, đơn vị được thẩm định -", 0);
 
         $('#dialog-formAddNew').dialog({
             title: "Thêm mới Kế hoạch Thẩm định đánh giá năng lực"
@@ -106,8 +135,8 @@ $(function () {
 		$('input[name="expertise_organ"]').val(item);
 		item = $('#cbplace1Combobox').val();
 		$('input[name="place1"]').val(item);
-		item = $('#cbdept_idCombobox').val();
-		$('input[name="dept_id"]').val(item);
+		item = $('#cbdept_id1Combobox').val();
+		$('input[name="dept_id1"]').val(item);
 	}
 	editTblDocumentTypeMethod = function () {
         clearError();
@@ -118,16 +147,16 @@ $(function () {
             dataType: "text",
             type: "GET"
         }).success(function (result) {
-            if (vt_form.validate1("#evaluatePlan1Form", null, objTblDocumentType.validateRule))
+            if (vt_form.validate1("#evaluatePlan6Form", null, objTblDocumentType.validateRule))
             {
                 var formdataTmp = new FormData();
-                var formData = new FormData(document.getElementById("evaluatePlan1Form"));
+                var formData = new FormData(document.getElementById("evaluatePlan6Form"));
                 for (var pair of formData.entries()) {
                     formdataTmp.append(pair[0], pair[1]);
                 }
                 $.ajax({
                     async: false,
-                    url: "updateevaluateplan1.html",
+                    url: "updateevaluateplan6.html",
                     data: formdataTmp,
                     processData: false,
                     contentType: false,
@@ -174,15 +203,15 @@ $(function () {
             dataType: "text",
             type: "GET"
         }).success(function (result) {
-            if (vt_form.validate1("#evaluatePlan1Form", null, objTblDocumentType.validateRule))
+            if (vt_form.validate1("#evaluatePlan6Form", null, objTblDocumentType.validateRule))
             {
                 var formdataTmp = new FormData();
-                var formData = new FormData(document.getElementById("evaluatePlan1Form"));
+                var formData = new FormData(document.getElementById("evaluatePlan6Form"));
                 for (var pair of formData.entries()) {
                     formdataTmp.append(pair[0], pair[1]);
                 }
                 $.ajax({
-                    url: "addevaluateplan1.html",
+                    url: "addevaluateplan6.html",
                     data: formdataTmp,
                     processData: false,
                     contentType: false,
@@ -222,10 +251,13 @@ $(function () {
 var objTblDocumentType = {
 	validateRule: {
         rules: {
-			expertise_organ: {
+			plan_number: {
                 required: true
             },
-			plan_number: {
+			expertise_date: {
+                required: true
+            },
+			place_and_time1: {
                 required: true
             },
 			the_participants: {
@@ -236,46 +268,48 @@ var objTblDocumentType = {
             },
         },
         messages: {
-			expertise_organ: {
-                required: "test"
-            },
 			plan_number: {
+                required: "Chưa nhập số kế hoạch"
+            },
+			expertise_date: {
+                required: ""
+            },
+			place_and_time1: {
                 required: ""
             },
 			the_participants: {
-                required: ""
+                required: "Chưa nhập thành phần tgia"
             },
 			master_id: {
-                required: ""
+                required: "Chưa nhập thủ trưởng"
             },
         }
     },
 
 	editTblDocumentType: function (id) {
         if (id !== null) {
-            vt_form.reset($('#evaluatePlan1Form'));
+            vt_form.reset($('#evaluatePlan6Form'));
             vt_form.clearError();
             $.ajax({
                 async: false,
                 data: {gid: id},
-                url: "getoneevaluateplan1bygid.json",
+                url: "getoneevaluateplan6bygid.json",
                 success: function (data, status, xhr) {
                     $("#gid").val(data.gid);
 					vt_combobox.buildCombobox("cbexpertise_organ", "gettypeuser.json?cd=701", data.expertise_organ, "dvsName", "dvsValue", "- Chọn Cơ quan thẩm định -", 0);
 					$("#plan_number").val(data.plan_number);
-					vt_combobox.buildCombobox("cbplace1", "gettypeuser.json?cd=705", data.place1, "dvsName", "dvsValue", "- Chọn Địa điểm lập kế hoạch 1 -", 0);
+					vt_combobox.buildCombobox("cbplace1", "gettypeuser.json?cd=701", data.place1, "dvsName", "dvsValue", "- Chọn Địa điểm lập kế hoạch 1 -", 0);
 					$("#expertise_date").val(data.expertise_dateST);
-					vt_combobox.buildCombobox("cbdept_id", "getdepartmentComBoBox.json", data.dept_id, "deptName", "deptId", "- Chọn Tên tổ chức, đơn vị được thẩm định -", 0);
-					$("#dept_other").val(data.dept_other);
-					$("#the_bases").val(data.the_bases);
-					$("#the_purpose").val(data.the_purpose);
-					$("#place_and_time").val(data.place_and_time);
+					vt_combobox.buildCombobox("cbdept_id1", "gettypeuser.json?cd=701", data.dept_id1, "dvsName", "dvsValue", "- Chọn Tên tổ chức, đơn vị được thẩm định -", 0);
+					$("#dept_other1").val(data.dept_other1);
+					$("#the_bases1").val(data.the_bases1);
+					$("#the_purpose1").val(data.the_purpose1);
+					$("#place_and_time1").val(data.place_and_time1);
 					$("#test_content").val(data.test_content);
 					$("#the_participants").val(data.the_participants);
 					$("#organization_perform").val(data.organization_perform);
 					$("#master_id").val(data.master_id);
-					$("#left_long").val(data.left_long);
-					$("#right_long").val(data.right_long);
+					$("#file").val(data.file);
 
 					$('#dialog-formAddNew').dialog({
                         title: "Cập nhật thông tin Kế hoạch Thẩm định đánh giá năng lực"
@@ -319,64 +353,33 @@ var objTblDocumentType = {
                 vt_loading.showAlertSuccess("Xóa thành công");
             }
         };
-        vt_form.ajax("POST", "deleteevaluateplan1.html", {lstFirst: ids}, null, null, onDone);
+        vt_form.ajax("POST", "deleteevaluateplan6.html", {lstFirst: ids}, null, null, onDone);
     },
 
-	editView: function(id) {
+	view: function(id) {
         if (id !== null) {
-            vt_form.reset($('#evaluatePlan1Form'));
+            vt_form.reset($('#evaluatePlan6Form'));
             vt_form.clearError();
             $.ajax({
                 async: false,
                 data: {gid: id},
-                url: "getoneevaluateplan1bygid.json",
+                url: "getoneevaluateplan6bygid.json",
                 success: function (data, status, xhr) {
                     $("#gid").val(data.gid);
-					vt_combobox.buildCombobox("cbexpertise_organ", "gettypeuser.json?cd=701", data.expertise_organ, "dvsName", "dvsValue", "- Chọn Cơ quan thẩm định -", 0);
-					$("#plan_number").val(data.plan_number);
-					vt_combobox.buildCombobox("cbplace1", "gettypeuser.json?cd=705", data.place1, "dvsName", "dvsValue", "- Chọn Địa điểm lập kế hoạch 1 -", 0);
-					$("#expertise_date").val(data.expertise_dateST);
-					vt_combobox.buildCombobox("cbdept_id", "getdepartmentComBoBox.json", data.dept_id, "deptName", "deptId", "- Chọn Tên tổ chức, đơn vị được thẩm định -", 0);
-					$("#dept_other").val(data.dept_other);
-					$("#the_bases").val(data.the_bases);
-					$("#the_purpose").val(data.the_purpose);
-					$("#place_and_time").val(data.place_and_time);
-					$("#test_content").val(data.test_content);
-					$("#the_participants").val(data.the_participants);
-					$("#organization_perform").val(data.organization_perform);
-					$("#master_id").val(data.master_id);
-					$("#left_long").val(data.left_long);
-					$("#right_long").val(data.right_long);
-				}
-			});
-		}
-	},
-
-	view: function(gid) {
-        if (id !== null) {
-            vt_form.reset($('#evaluatePlan1Form'));
-            vt_form.clearError();
-            $.ajax({
-                async: false,
-                data: {gid: id},
-                url: "getoneevaluateplan1bygid.json",
-                success: function (data, status, xhr) {
-                    $("#gid").val(data.gid);
-					$("#cbexpertise_organcombobox").val(data.expertise_organST);
-					$("#plan_number").val(data.plan_number);
-					$("#cbplace1combobox").val(data.place1ST);
-					$("#expertise_date").val(data.expertise_dateST);
-					$("#cbdept_idcombobox").val(data.dept_idST);
-					$("#dept_other").val(data.dept_other);
-					$("#the_bases").val(data.the_bases);
-					$("#the_purpose").val(data.the_purpose);
-					$("#place_and_time").val(data.place_and_time);
-					$("#test_content").val(data.test_content);
-					$("#the_participants").val(data.the_participants);
-					$("#organization_perform").val(data.organization_perform);
-					$("#master_id").val(data.master_id);
-					$("#left_long").val(data.left_long);
-					$("#right_long").val(data.right_long);
+					$("#expertise_organView").val(data.expertise_organST);
+					$("#plan_numberView").val(data.plan_number);
+					$("#place1View").val(data.place1ST);
+					$("#expertise_dateView").val(data.expertise_dateST);
+					$("#dept_id1View").val(data.dept_id1ST);
+					$("#dept_other1View").val(data.dept_other1);
+					$("#the_bases1View").val(data.the_bases1);
+					$("#the_purpose1View").val(data.the_purpose1);
+					$("#place_and_time1View").val(data.place_and_time1);
+					$("#test_contentView").val(data.test_content);
+					$("#the_participantsView").val(data.the_participants);
+					$("#organization_performView").val(data.organization_perform);
+					$("#master_idView").val(data.master_id);
+					$("#fileView").val(data.file);
 
 					$('#dialog-formView').dialog({
                         title: "Xem Kế hoạch Thẩm định đánh giá năng lực"

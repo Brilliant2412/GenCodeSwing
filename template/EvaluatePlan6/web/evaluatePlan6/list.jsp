@@ -4,7 +4,7 @@
 
 <link href="${pageContext.request.contextPath}/share/bootstrap-multiselect/css/bootstrap-multiselect.css" rel="stylesheet" type="text/css"/>
 <script src="${pageContext.request.contextPath}/share/bootstrap-multiselect/js/bootstrap-multiselect.js" type="text/javascript"></script>
-<script src="${pageContext.request.contextPath}/share/core/js/evaluatePlan1.js"/>
+<script src="${pageContext.request.contextPath}/share/core/js/evaluatePlan6.js"/>
 
 
 <link href="share/core/css/guideproperty.css" rel="stylesheet">

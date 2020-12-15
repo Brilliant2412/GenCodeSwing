@@ -12,12 +12,12 @@ import com.tav.web.common.CommonFunction;
 import com.tav.web.common.ConvertData;
 import com.tav.web.common.ErpConstants;
 import com.tav.web.common.StringUtil;
-import com.tav.web.data.EvaluatePlan1Data;
-import com.tav.web.dto.EvaluatePlan1DTO;
+import com.tav.web.data.EvaluatePlan6Data;
+import com.tav.web.dto.EvaluatePlan6DTO;
 import com.tav.web.dto.ImportErrorMessage;
 import java.util.Date;
-import com.tav.web.dto.ObjectCommonSearchDTO;
 import com.tav.web.dto.SearchCommonFinalDTO;
+import com.tav.web.dto.ObjectCommonSearchDTO;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,17 +58,17 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class EvaluatePlan1Controller extends SubBaseController {
+public class EvaluatePlan6Controller extends SubBaseController {
 
     @Autowired
-    private EvaluatePlan1Data evaluatePlan1Data;
+    private EvaluatePlan6Data evaluatePlan6Data;
 
-    @RequestMapping("/" + ErpConstants.RequestMapping.EVALUATE_PLAN1)
+    @RequestMapping("/" + ErpConstants.RequestMapping.EVALUATE_PLAN6)
     public ModelAndView agent(Model model, HttpServletRequest request) {
-        return new ModelAndView("evaluatePlan1");
+        return new ModelAndView("evaluatePlan6");
     }
 
-    @RequestMapping(value = {"/" + ErpConstants.RequestMapping.GET_ALL_EVALUATE_PLAN1}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/" + ErpConstants.RequestMapping.GET_ALL_EVALUATE_PLAN6}, method = RequestMethod.GET)
     @ResponseBody
     public JsonDataGrid getAll(HttpServletRequest request) {
         try {
@@ -82,17 +82,15 @@ public class EvaluatePlan1Controller extends SubBaseController {
 	if (request.getParameter("listLong1") != null) {
                 searchDTO.setListLong1(ConvertData.convertStringToListLong(request.getParameter("listLong1")));
             }
-	try{
-                searchDTO.setDouble1(Double.parseDouble(request.getParameter("double1")));
-                searchDTO.setDouble2(Double.parseDouble(request.getParameter("double2")));
-            }catch(Exception ex){}
+	if (request.getParameter("listLong2") != null) {
+                searchDTO.setListLong2(ConvertData.convertStringToListLong(request.getParameter("listLong2")));
+            }
             searchDTO.setString1(request.getParameter("string1"));
-            searchDTO.setString2(request.getParameter("string2"));
-            List<EvaluatePlan1DTO> lst = new ArrayList<>();
+            searchDTO.setString2(request.getParameter("string2"));            List<EvaluatePlan6DTO> lst = new ArrayList<>();
             Integer totalRecords = 0;
-            totalRecords = evaluatePlan1Data.getCount(searchDTO);
+            totalRecords = evaluatePlan6Data.getCount(searchDTO);
             if (totalRecords > 0) {
-                lst = evaluatePlan1Data.getAll(searchDTO, offset, limit);
+                lst = evaluatePlan6Data.getAll(searchDTO, offset, limit);
             }
             dataGrid.setCurPage(getCurrentPage());
             dataGrid.setTotalRecords(totalRecords);
@@ -104,29 +102,29 @@ public class EvaluatePlan1Controller extends SubBaseController {
         }
     }
 
-    @RequestMapping(value = "/" + ErpConstants.RequestMapping.GET_EVALUATE_PLAN1_BY_ID, method = RequestMethod.GET)
+    @RequestMapping(value = "/" + ErpConstants.RequestMapping.GET_EVALUATE_PLAN6_BY_ID, method = RequestMethod.GET)
     public @ResponseBody
-    EvaluatePlan1DTO getOneById(HttpServletRequest request) {
+    EvaluatePlan6DTO getOneById(HttpServletRequest request) {
         Long id = Long.parseLong(request.getParameter("gid"));
-        return evaluatePlan1Data.getOneById(id);
+        return evaluatePlan6Data.getOneById(id);
     }
 
     //add
-    @RequestMapping(value = {"/" + ErpConstants.RequestMapping.ADD_EVALUATE_PLAN1}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)
+    @RequestMapping(value = {"/" + ErpConstants.RequestMapping.ADD_EVALUATE_PLAN6}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)
     @ResponseBody
-    public String addOBJ(@ModelAttribute("evaluatePlan1Form") EvaluatePlan1DTO evaluatePlan1DTO, MultipartHttpServletRequest multipartRequest,
+    public String addOBJ(@ModelAttribute("evaluatePlan6Form") EvaluatePlan6DTO evaluatePlan6DTO, MultipartHttpServletRequest multipartRequest,
             HttpServletRequest request) throws ParseException {
 
         JSONObject result;
-        String error = validateForm(evaluatePlan1DTO);
+        String error = validateForm(evaluatePlan6DTO);
         ServiceResult serviceResult;
         if (error != null) {
             return error;
         } else {
-            if (!StringUtil.isEmpty(evaluatePlan1DTO.getExpertise_date())) {
-                        evaluatePlan1DTO.setExpertise_date(DateUtil.formatDate(evaluatePlan1DTO.getExpertise_date()));
+            if (!StringUtil.isEmpty(evaluatePlan6DTO.getExpertise_date())) {
+                        evaluatePlan6DTO.setExpertise_date(DateUtil.formatDate(evaluatePlan6DTO.getExpertise_date()));
             }
-            serviceResult = evaluatePlan1Data.addObj(evaluatePlan1DTO);
+            serviceResult = evaluatePlan6Data.addObj(evaluatePlan6DTO);
             processServiceResult(serviceResult);
             result = new JSONObject(serviceResult);
         }
@@ -134,21 +132,21 @@ public class EvaluatePlan1Controller extends SubBaseController {
     }
 
     //update
-    @RequestMapping(value = {"/" + ErpConstants.RequestMapping.UPDATE_EVALUATE_PLAN1}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)
+    @RequestMapping(value = {"/" + ErpConstants.RequestMapping.UPDATE_EVALUATE_PLAN6}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)
     @ResponseBody
-    public String updateOBJ(@ModelAttribute("evaluatePlan1Form") EvaluatePlan1DTO evaluatePlan1DTO, MultipartHttpServletRequest multipartRequest,
+    public String updateOBJ(@ModelAttribute("evaluatePlan6Form") EvaluatePlan6DTO evaluatePlan6DTO, MultipartHttpServletRequest multipartRequest,
             HttpServletRequest request) throws ParseException {
 
         JSONObject result;
-        String error = validateForm(evaluatePlan1DTO);
+        String error = validateForm(evaluatePlan6DTO);
         ServiceResult serviceResult;
         if (error != null) {
             return error;
         } else {
-            if (!StringUtil.isEmpty(evaluatePlan1DTO.getExpertise_date())) {
-                        evaluatePlan1DTO.setExpertise_date(DateUtil.formatDate(evaluatePlan1DTO.getExpertise_date()));
+            if (!StringUtil.isEmpty(evaluatePlan6DTO.getExpertise_date())) {
+                        evaluatePlan6DTO.setExpertise_date(DateUtil.formatDate(evaluatePlan6DTO.getExpertise_date()));
             }
-            serviceResult = evaluatePlan1Data.updateBO(evaluatePlan1DTO);
+            serviceResult = evaluatePlan6Data.updateBO(evaluatePlan6DTO);
             processServiceResult(serviceResult);
             result = new JSONObject(serviceResult);
         }
@@ -156,7 +154,7 @@ public class EvaluatePlan1Controller extends SubBaseController {
     }
 
     //validate
-    private String validateForm(EvaluatePlan1DTO cbChaDTO) {
+    private String validateForm(EvaluatePlan6DTO cbChaDTO) {
         List<ValidationResult> lsError = new ArrayList<>();
         if (lsError.size() > 0) {
             Gson gson = new Gson();
@@ -165,13 +163,13 @@ public class EvaluatePlan1Controller extends SubBaseController {
         return null;
     }
 
-    @RequestMapping(value = {"/" + ErpConstants.RequestMapping.DELETE_EVALUATE_PLAN1}, method = RequestMethod.POST,
+    @RequestMapping(value = {"/" + ErpConstants.RequestMapping.DELETE_EVALUATE_PLAN6}, method = RequestMethod.POST,
             produces = "text/html;charset=utf-8")
     public @ResponseBody
     String deleteObj(@ModelAttribute("objectCommonSearchDTO") ObjectCommonSearchDTO objectCommonSearchDTO,
             HttpServletRequest request) {
         HttpSession session = request.getSession();
-        ServiceResult serviceResult = evaluatePlan1Data.deleteObj(objectCommonSearchDTO);
+        ServiceResult serviceResult = evaluatePlan6Data.deleteObj(objectCommonSearchDTO);
         processServiceResult(serviceResult);
         JSONObject result = new JSONObject(serviceResult);
         return result.toString();

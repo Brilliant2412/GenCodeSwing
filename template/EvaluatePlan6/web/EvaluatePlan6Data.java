@@ -3,7 +3,7 @@ package com.tav.web.data;
 import com.tav.web.bo.ServiceResult;
 import com.tav.web.common.Config;
 import com.tav.web.common.RestRequest;
-import com.tav.web.dto.EvaluatePlan1DTO;
+import com.tav.web.dto.EvaluatePlan6DTO;
 import com.tav.web.dto.SearchCommonFinalDTO;
 import com.tav.web.dto.ObjectCommonSearchDTO;
 import java.util.List;
@@ -13,18 +13,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EvaluatePlan1Data {
-	protected static final Logger logger = Logger.getLogger(EvaluatePlan1Data.class);
-	private static final String subUrl = "/evaluatePlan1RsServiceRest";
+public class EvaluatePlan6Data {
+	protected static final Logger logger = Logger.getLogger(EvaluatePlan6Data.class);
+	private static final String subUrl = "/evaluatePlan6RsServiceRest";
 
 	@Autowired
 	private Config config;
 
 	// get all
-	public List<EvaluatePlan1DTO> getAll(SearchCommonFinalDTO searchDTO, Integer offset, Integer limit) {
+	public List<EvaluatePlan6DTO> getAll(SearchCommonFinalDTO searchDTO, Integer offset, Integer limit) {
 		String url = config.getRestURL() + subUrl + "/getAll/" + offset + "/" + limit;
 		try {
-			List<EvaluatePlan1DTO> jsResult = RestRequest.postAndReturnObjectArray(url, searchDTO, EvaluatePlan1DTO.class);
+			List<EvaluatePlan6DTO> jsResult = RestRequest.postAndReturnObjectArray(url, searchDTO, EvaluatePlan6DTO.class);
 			if (jsResult == null) {
 				return null;
 			} else {
@@ -42,12 +42,12 @@ public class EvaluatePlan1Data {
 		return (Integer) RestRequest.postAndReturnObject(url, searchDTO, Integer.class);
 	}
 
-	public ServiceResult addObj(EvaluatePlan1DTO cbChaDTO) {
+	public ServiceResult addObj(EvaluatePlan6DTO cbChaDTO) {
 		String url = config.getRestURL() + subUrl + "/addDTO/";
 		ServiceResult result = (ServiceResult) RestRequest.postAndReturnObject(url, cbChaDTO, ServiceResult.class);
 		return result;
 	}
-	public ServiceResult updateBO(EvaluatePlan1DTO cbChaDTO) {
+	public ServiceResult updateBO(EvaluatePlan6DTO cbChaDTO) {
 		String url = config.getRestURL() + subUrl + "/updateBO/";
 		ServiceResult result = (ServiceResult) RestRequest.postAndReturnObject(url, cbChaDTO, ServiceResult.class);
 		return result;
@@ -59,9 +59,9 @@ public class EvaluatePlan1Data {
 		return result;
 	}
 
-	public EvaluatePlan1DTO getOneById(Long id) {
+	public EvaluatePlan6DTO getOneById(Long id) {
 		String url = config.getRestURL() + subUrl + "/getOneById/" + id;
-		EvaluatePlan1DTO item = (EvaluatePlan1DTO) RestRequest.getObject(url, EvaluatePlan1DTO.class);
+		EvaluatePlan6DTO item = (EvaluatePlan6DTO) RestRequest.getObject(url, EvaluatePlan6DTO.class);
 		return item;
 	}
 

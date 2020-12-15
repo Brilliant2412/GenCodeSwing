@@ -5,7 +5,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>  
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <div id="dialog-formAddNew">
-	<form:form id="evaluatePlan1Form" modelAttribute="evaluatePlan1Form" class="form-horizontal">	
+	<form:form id="evaluatePlan6Form" modelAttribute="evaluatePlan6Form" class="form-horizontal">	
 		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		<input type="hidden" id="gid" name="gid" value=""/>
 		<input type="hidden" id="isedit" name="isedit" value="0"/>
@@ -42,32 +42,32 @@
 			<div class="form-group-add row">
 				<label class="col-lg-1 control-label  lb_input">Tên tổ chức, đơn vị được thẩm định</label>
 				<div class="col-lg-2">
-					<div id="cbdept_id"></div> 
-					<input name="dept_id" id="dept_id" class="text_hidden"  />
-					<span id="dept_id_error" class="note note-error"></span>
+					<div id="cbdept_id1"></div> 
+					<input name="dept_id1" id="dept_id1" class="text_hidden"  />
+					<span id="dept_id1_error" class="note note-error"></span>
 				</div>
 				<label class="col-lg-1 control-label  lb_input">Đơn vị khác</label>
 				<div class="col-lg-2">
-					<input name="dept_other" id="dept_other" type="text" class="form-control"/>
-					<span id="dept_other_error" class="note note-error"></span>
+					<input name="dept_other1" id="dept_other1" type="text" class="form-control"/>
+					<span id="dept_other1_error" class="note note-error"></span>
 				</div>
 				<label class="col-lg-1 control-label  lb_input">Các căn cứ</label>
 				<div class="col-lg-2">
-					<input name="the_bases" id="the_bases" type="text" class="form-control"/>
-					<span id="the_bases_error" class="note note-error"></span>
+					<input name="the_bases1" id="the_bases1" type="text" class="form-control"/>
+					<span id="the_bases1_error" class="note note-error"></span>
 				</div>
 				<label class="col-lg-1 control-label  lb_input">Mục đích, yêu cầu</label>
 				<div class="col-lg-2">
-					<input name="the_purpose" id="the_purpose" type="text" class="form-control"/>
-					<span id="the_purpose_error" class="note note-error"></span>
+					<input name="the_purpose1" id="the_purpose1" type="text" class="form-control"/>
+					<span id="the_purpose1_error" class="note note-error"></span>
 				</div>
 			</div>
 
 			<div class="form-group-add row">
 				<label class="col-lg-1 control-label  lb_input">Thời gian, địa điểm</label>
 				<div class="col-lg-2">
-					<input name="place_and_time" id="place_and_time" type="text" class="form-control"/>
-					<span id="place_and_time_error" class="note note-error"></span>
+					<input name="place_and_time1" id="place_and_time1" type="text" class="form-control"/>
+					<span id="place_and_time1_error" class="note note-error"></span>
 				</div>
 				<label class="col-lg-1 control-label  lb_input">Nội dung kiểm tra</label>
 				<div class="col-lg-2">
@@ -92,28 +92,26 @@
 					<input name="master_id" id="master_id" type="text" class="form-control"/>
 					<span id="master_id_error" class="note note-error"></span>
 				</div>
-				<label class="col-lg-1 control-label  lb_input">Kinh độ trái</label>
-				<div class="col-lg-2">
-					<input name="left_long" id="left_long" type="number" class="form-control"/>
-					<span id="left_long_error" class="note note-error"></span>                           
-				</div>
-				<label class="col-lg-1 control-label  lb_input">Kinh độ phải</label>
-				<div class="col-lg-2">
-					<input name="right_long" id="right_long" type="number" class="form-control"/>
-					<span id="right_long_error" class="note note-error"></span>                           
-				</div>
 			</div>
+
+			<div class="form-group-add row">
+                <label class="col-lg-1 control-label  lb_input">File đính kèm</label>
+                <div class="col-md-11" id="fileTopicFilesTmp">
+                    <input class="form-control" placeholder="" name="filestTmp" id="filestTmp" type="file"/>
+                    <span id="filestTmp_error" class="note note-error"></span>
+                </div>
+            </div>
 
 		</fieldset>
 	</form:form>
 </div>
 <script type="text/javascript">
 	$("#dialog-formAddNew").dialog({
-		width: isMobile.any() ? $(window).width() : ($(window).width() / 5 * 4),
-		height: $(window).height() / 5 * 4,
+		width: isMobile.any() ? $(window).width() : ($(window).width() / 20 * 19),
+		height: $(window).height() / 5 * 5 - 80,
 		autoOpen: false,
 		modal: true,
-		position: [($(window).width() / 10 * 1), 50],
+		position: [($(window).width() / 80 * 2.5), 20],
 		open: function () {
 			$('.areaTable').addClass('custom-overlay-popup-add-edit');
 			$('.dialogAddEdit').css('z-index', 1001);

@@ -1,6 +1,6 @@
 package com.tav.service.rest;
 
-import com.tav.service.dto.EvaluatePlan1DTO;
+import com.tav.service.dto.EvaluatePlan6DTO;
 import com.tav.service.dto.SearchCommonFinalDTO;
 import com.tav.service.dto.ObjectCommonSearchDTO;
 import javax.ws.rs.Consumes;
@@ -12,7 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-public interface EvaluatePlan1RsService {
+public interface EvaluatePlan6RsService {
 	@POST
 	@Path("/getAll/{offset}/{limit}")
 	@Consumes({MediaType.APPLICATION_JSON})
@@ -41,11 +41,11 @@ public interface EvaluatePlan1RsService {
 	@Path("/updateBO/")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response updateObj(EvaluatePlan1DTO evaluatePlan1DTO);
+	public Response updateObj(EvaluatePlan6DTO evaluatePlan6DTO);
 
 	@POST
 	@Path("/addDTO/")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response addDTO(EvaluatePlan1DTO evaluatePlan1DTO);
+	public Response addDTO(EvaluatePlan6DTO evaluatePlan6DTO);
 }

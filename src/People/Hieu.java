@@ -7,6 +7,7 @@ package People;
 
 import model.ColumnProperty;
 import model.TableInfo;
+import model.TableSet;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -295,7 +296,8 @@ public class Hieu {
         fileWriter.close();
     }
 
-    public static void genDialogAdd(TableInfo tableInfo, String folder) throws IOException {
+    public static void genDialogAdd(TableSet tableSet, String folder) throws IOException {
+        TableInfo tableInfo = tableSet.tableInfo;
         FileWriter fileWriter = new FileWriter(folder + "\\dialogAdd.jsp");
         fileWriter.write("<%@ page contentType=\"text/html;charset=UTF-8\" %>\n" +
                 "<%@ taglib prefix=\"spring\" uri=\"http://www.springframework.org/tags\" %>\n" +
@@ -347,16 +349,43 @@ public class Hieu {
                 "                    <span id=\"filestTmp_error\" class=\"note note-error\"></span>\n" +
                 "                </div>\n" +
                 "            </div>\n\n");
+        for(int count = 0; count < tableSet.subTables.size(); count++){
+            tableInfo = tableSet.subTables.get(count);
+            fileWriter.append(
+                    "<legend class=\"fs-legend-head\">\n" +
+                    "                <span class=\"iconFS\"></span>\n" +
+                    "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Bảng con</b></span>\n" +
+                    "            </legend>\n" +
+                    "            <div class=\"form-group-add row\">\n" +
+                    "                <table id=\"tblMstDivision\" class=\"table table-striped table-bordered table-hover smart-form dataTable no-footer\">\n" +
+                    "                    <thead>\n" +
+                    "                        <tr>\n" +
+                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">STT</th>\n");
+            for(int i = 1; i < tableInfo.columns.size(); i++){
+                if(tableInfo.columns.get(i).isShow()){
+                    fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + tableInfo.columns.get(i).getColDescription() + "</th>\n");
+                }
+
+            }
+            fileWriter.append(
+                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\"><a style=\"cursor: pointer; color:white !important;\" class=\"fa fa-plus fa-lg src\" onclick=\"onClickAddData();\"></a></th>\n" +
+                            "                        </tr>\n" +
+                            "                    </thead>\n" +
+                            "                    <tbody id=\"dataDetailInfo\" >\n" +
+                            "                    </tbody>\n" +
+                            "                </table>\n" +
+                            "            </div>\n");
+        }
         fileWriter.append("\t\t</fieldset>\n" +
                 "\t</form:form>\n" +
                 "</div>\n" +
                 "<script type=\"text/javascript\">\n" +
                 "\t$(\"#dialog-formAddNew\").dialog({\n" +
-                "\t\twidth: isMobile.any() ? $(window).width() : ($(window).width() / 5 * 4),\n" +
-                "\t\theight: $(window).height() / 5 * 4,\n" +
+                "\t\twidth: isMobile.any() ? $(window).width() : ($(window).width() / 20 * 19),\n" +
+                "\t\theight: $(window).height() / 5 * 5 - 80,\n" +
                 "\t\tautoOpen: false,\n" +
                 "\t\tmodal: true,\n" +
-                "\t\tposition: [($(window).width() / 10 * 1), 50],\n" +
+                "\t\tposition: [($(window).width() / 80 * 2.5), 20],\n" +
                 "\t\topen: function () {\n" +
                 "\t\t\t$('.areaTable').addClass('custom-overlay-popup-add-edit');\n" +
                 "\t\t\t$('.dialogAddEdit').css('z-index', 1001);\n" +
@@ -589,9 +618,18 @@ public class Hieu {
                 );
             }
         }
-        fileWriter.append(
-                "                String file = CommonFunction.uploadFileOnAdd(multipartRequest, \"filestTmp2\");\n" +
-                "                " + uncapitalize(tableInfo.tableName) + "DTO.setFile(file);");
+        String file = null;
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            if(tableInfo.columns.get(i).getColType().equals("File")){
+                file = tableInfo.columns.get(i).getColName();
+                break;
+            }
+        }
+        if(file != null) {
+            fileWriter.append(
+                    "                String file = CommonFunction.uploadFileOnAdd(multipartRequest, \"filestTmp\");\n" +
+                            "                " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(file) + "(file);\n");
+        }
         fileWriter.append(
                 "            serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.addObj("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
                         "            processServiceResult(serviceResult);\n" +
@@ -622,10 +660,19 @@ public class Hieu {
                 );
             }
         }
-        fileWriter.append(
-                "                String file = CommonFunction.uploadFileOnUpdate(multipartRequest, \"filestTmp\");\n" +
-                "                " + uncapitalize(tableInfo.tableName) + "DTO.setFile(file);"
-        );
+        file = null;
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            if(tableInfo.columns.get(i).getColType().equals("File")){
+                file = tableInfo.columns.get(i).getColName();
+                break;
+            }
+        }
+        if(file != null) {
+            fileWriter.append(
+                    "                String file = CommonFunction.uploadFileOnUpdate(multipartRequest, \"filestTmp\");\n" +
+                            "                " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(file) + "(file);\n"
+            );
+        }
         fileWriter.append(
                 "            serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.updateBO("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
                         "            processServiceResult(serviceResult);\n" +
@@ -655,9 +702,45 @@ public class Hieu {
                         "        JSONObject result = new JSONObject(serviceResult);\n" +
                         "        return result.toString();\n" +
                         "    }\n" +
-                        "\n" +
-                        "}\n");
-
+                        "\n");
+        file = null;
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            if(tableInfo.columns.get(i).getColType().equals("File")){
+                file = tableInfo.columns.get(i).getColName();
+                break;
+            }
+        }
+        if(file != null){
+            fileWriter.append(
+                    "\t@RequestMapping(value = \"/\" + ErpConstants.RequestMapping.DOWNLOAD_" + tableInfo.tableName.toUpperCase() + "_FILE, method = RequestMethod.GET)\n" +
+                    "    public void downloadFiles(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {\n" +
+                    "        String dataDirectory = CommonConstant.PATH_FOLDER_TOPIC_FILE;\n" +
+                    "        Long id = null;\n" +
+                    "        if (!Strings.isNullOrEmpty(request.getParameter(\"id\"))) {\n" +
+                    "            id = Long.parseLong(request.getParameter(\"id\"));\n" +
+                    "            " + tableInfo.tableName + "DTO objDTOTmp = " + uncapitalize(tableInfo.tableName) + "Data.getOneById(id);\n" +
+                    "            if (objDTOTmp != null) {\n" +
+                    "                String fileName = objDTOTmp .get" + capitalize(file) + "();\n" +
+                    "                response.setContentType(MediaType.APPLICATION_OCTET_STREAM);\n" +
+                    "                response.setHeader(\"Content-Transfer-Encoding\", \"binary\");\n" +
+                    "                response.setHeader(\"Content-Disposition\", \"attachment; filename=\" + CommonFunction.convertFileNameVietNam(fileName));\n" +
+                    "                Path file = Paths.get(dataDirectory, new String(fileName.getBytes(), \"UTF-8\"));\n" +
+                    "                if (Files.exists(file)) {\n" +
+                    "                    response.setContentType(\"application/vnd.ms-excel\");\n" +
+                    "                    response.addHeader(\"Content-Disposition\", \"attachment; filename=\" + CommonFunction.convertFileNameVietNam(fileName));\n" +
+                    "                    try {\n" +
+                    "                        Files.copy(file, response.getOutputStream());\n" +
+                    "                        response.getOutputStream().flush();\n" +
+                    "                    } catch (IOException ex) {\n" +
+                    "                        logger.error(ex);\n" +
+                    "                    }\n" +
+                    "                }\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "    }\n"
+            );
+        }
+        fileWriter.append("}\n");
         fileWriter.close();
     }
 }

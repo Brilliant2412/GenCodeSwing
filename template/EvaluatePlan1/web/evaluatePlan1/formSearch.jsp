@@ -22,7 +22,7 @@
                                 	</div>
 									<label class="col-lg-1 control-label">Cơ quan thẩm định</label>
 									<div class="col-lg-2 selectContainer">
-										<div id="cbexpertise_organSearch">
+										<div id="cbexpertise_organSearch"></div>
 									</div>
 									<label class="col-lg-1 control-label">Ngày lập kế hoạch</label>
 									<div class="col-lg-1 selectContainer">
@@ -31,6 +31,10 @@
 									<div class="col-lg-1">
 										<input type="text" class="dateCalendar" placeholder="Đến" id="expertise_dateSearchTo"> 
 									</div>
+								<label class="col-md-1 control-label" ></label>
+                                <div class="col-lg-2 selectContainer">
+                                    <button id="btnSearch" class="btn btn-success" type="button" style="width: 100%;">Tìm kiếm</button>
+                                </div>
 								</div>
 								<div class="form-group has-feedback">
 								<div class="form-group has-feedback">
@@ -41,6 +45,10 @@
 									<div class="col-lg-1">
 										<input type="number" class="form-control" placeholder="Đến" id="right_longSearchTo">
 									</div>
+								<label class="col-md-1 control-label" ></label>
+                                <div class="col-lg-2 selectContainer">
+                                    <button id="btnSearch" class="btn btn-success" type="button" style="width: 100%;">Tìm kiếm</button>
+                                </div>
 								</div>
                         </fieldset>
                         

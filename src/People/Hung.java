@@ -256,6 +256,13 @@ public class Hung {
         fileWriter.append("\t{text: \"Chức năng\", datafield: 'gid', edit: 1, sortable: false, clstitle: 'tlb_class_center'}\n");
         fileWriter.append("];\n\n");
 
+        fileWriter.append(
+                "downloadFileDocument = function (id) {\n" +
+                        "    location.href = \"/sys-web/download" + tableInfo.tableName + "file.html?id=\" + id;\n" +
+                        "};\n" +
+                        "\n"
+        );
+
         /*********************************************************************************************
          *                                do search funtion 1
          *********************************************************************************************/
@@ -704,6 +711,22 @@ public class Hung {
             }
             else fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+");\n");
 
+        }
+        String file = null;
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            if(tableInfo.columns.get(i).getColType().equals("File")){
+                file = tableInfo.columns.get(i).getColName();
+            }
+        }
+        if(file != null){
+            fileWriter.append(
+                    "                var html = '';\n" +
+                            "                    if (data.file !== null && data.file !== \"\") {\n" +
+                            "                        html = '<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument(' + data.gid + ')\"  style=\"cursor:pointer;color: blue;\"><span >' + (data.file + '').substring(0, 20) + '...' + '</span></a>';\n" +
+                            "                    } else {\n" +
+                            "                        html += '';\n" +
+                            "                    }\n"
+            );
         }
         fileWriter.append("\n\t\t\t\t\t$('#dialog-formAddNew').dialog({\n" +
                 "                        title: \"Cập nhật thông tin " + tableInfo.description + "\"\n" +

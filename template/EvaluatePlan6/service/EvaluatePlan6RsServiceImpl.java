@@ -1,7 +1,7 @@
 package com.tav.service.rest;
 
-import com.tav.service.business.EvaluatePlan1BusinessImpl;
-import com.tav.service.dto.EvaluatePlan1DTO;
+import com.tav.service.business.EvaluatePlan6BusinessImpl;
+import com.tav.service.dto.EvaluatePlan6DTO;
 import com.tav.service.dto.SearchCommonFinalDTO;
 import com.tav.service.dto.ObjectCommonSearchDTO;
 import com.tav.service.dto.ServiceResult;
@@ -10,14 +10,14 @@ import java.util.Date;
 import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class EvaluatePlan1RsServiceImpl implements EvaluatePlan1RsService{
+public class EvaluatePlan6RsServiceImpl implements EvaluatePlan6RsService{
 
 	@Autowired
-	private EvaluatePlan1BusinessImpl evaluatePlan1BusinessImpl;
+	private EvaluatePlan6BusinessImpl evaluatePlan6BusinessImpl;
 
 	@Override
 	public Response getAll(SearchCommonFinalDTO searchDTO, Integer offset, Integer limit) {
-		List<EvaluatePlan1DTO> lst = evaluatePlan1BusinessImpl.getAll(searchDTO, offset, limit);
+		List<EvaluatePlan6DTO> lst = evaluatePlan6BusinessImpl.getAll(searchDTO, offset, limit);
 		if (lst == null) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		} else {
@@ -27,19 +27,19 @@ public class EvaluatePlan1RsServiceImpl implements EvaluatePlan1RsService{
 
 	@Override
 	public Response getCount(SearchCommonFinalDTO searchDTO) {
-		int result = evaluatePlan1BusinessImpl.getCount(searchDTO);
+		int result = evaluatePlan6BusinessImpl.getCount(searchDTO);
 		return Response.ok(result).build();
 	}
 
 	@Override
 	public Response getOneById(Long id) {
-		EvaluatePlan1DTO result = evaluatePlan1BusinessImpl.getOneObjById(id);
+		EvaluatePlan6DTO result = evaluatePlan6BusinessImpl.getOneObjById(id);
 		return Response.ok(result).build();
 	}
 
 	@Override
 	public Response deleteList(ObjectCommonSearchDTO searchDTO) {
-		ServiceResult result = evaluatePlan1BusinessImpl.deleteList(searchDTO);
+		ServiceResult result = evaluatePlan6BusinessImpl.deleteList(searchDTO);
 		if ("FAIL".equals(result.getError())) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		} else {
@@ -48,14 +48,14 @@ public class EvaluatePlan1RsServiceImpl implements EvaluatePlan1RsService{
 	}
 
 	@Override
-	public Response updateObj(EvaluatePlan1DTO evaluatePlan1DTO) {
-		ServiceResult result = evaluatePlan1BusinessImpl.updateObj(evaluatePlan1DTO);
+	public Response updateObj(EvaluatePlan6DTO evaluatePlan6DTO) {
+		ServiceResult result = evaluatePlan6BusinessImpl.updateObj(evaluatePlan6DTO);
 		return Response.ok(result).build();
 	}
 
 	@Override
-	public Response addDTO(EvaluatePlan1DTO evaluatePlan1DTO) {
-		ServiceResult result = evaluatePlan1BusinessImpl.addDTO(evaluatePlan1DTO);
+	public Response addDTO(EvaluatePlan6DTO evaluatePlan6DTO) {
+		ServiceResult result = evaluatePlan6BusinessImpl.addDTO(evaluatePlan6DTO);
 		return Response.ok(result).build();
 	}
 
