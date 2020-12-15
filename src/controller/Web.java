@@ -5,6 +5,8 @@ import People.Hung;
 import People.Tung;
 import model.ColumnProperty;
 import model.TableInfo;
+import model.TableSet;
+
 import static controller.CodeGenerator.capitalize;
 import static controller.CodeGenerator.uncapitalize;
 
@@ -1115,11 +1117,11 @@ public class Web {
                 "</div>\n" +
                 "<script type=\"text/javascript\">\n" +
                 "\t$(\"#dialog-formView\").dialog({\n" +
-                "\t\twidth: isMobile.any() ? $(window).width() : ($(window).width() / 5 * 4),\n" +
-                "\t\theight: $(window).height() / 5 * 4,\n" +
+                "\t\twidth: isMobile.any() ? $(window).width() : ($(window).width() / 20 * 19),\n" +
+                "\t\theight: $(window).height() / 5 * 5 - 80,\n" +
                 "\t\tautoOpen: false,\n" +
                 "\t\tmodal: true,\n" +
-                "\t\tposition: [($(window).width() / 10 * 1), 50],\n" +
+                "\t\tposition: [($(window).width() / 80 * 2.5), 20],\n" +
                 "\t\topen: function () {\n" +
                 "\t\t\t$('.areaTable').addClass('custom-overlay-popup-add-edit');\n" +
                 "\t\t\t$('.dialogAddEdit').css('z-index', 1001);\n" +
@@ -1395,19 +1397,20 @@ public class Web {
         fileWriter.close();
     }
 
-    public static void genWeb(TableInfo tableInfo, String folder) throws IOException {
+    public static void genWeb(TableSet tableSet, String folder) throws IOException {
+        TableInfo tableInfo = tableSet.tableInfo;
         File dir = new File(folder);
         dir.mkdirs();
         File dir2 = new File(folder + "\\" + uncapitalize(tableInfo.tableName));
         dir2.mkdirs();
         genControllerParameters(tableInfo, folder);
-        genController(tableInfo, folder);
+        Hieu.genController(tableInfo, folder);
         genData(tableInfo, folder);
         genTitle(tableInfo, folder);
         genListjsp(tableInfo, dir2.getAbsolutePath());
         //genJs(tableInfo, folder);
         Hung.genJs(tableInfo, folder);
-        Hieu.genDialogAdd(tableInfo, dir2.getAbsolutePath());
+        Hieu.genDialogAdd(tableSet, dir2.getAbsolutePath());
         Hieu.genDTO_Web(tableInfo, folder);
         genView(tableInfo,dir2.getAbsolutePath());
         //genControllerSearch(tableInfo, folder);

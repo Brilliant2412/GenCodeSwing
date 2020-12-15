@@ -1100,4 +1100,173 @@ public class Tung {
                 "}");
         fileWriter.close();
     }
+
+    public static String checkDang_sub(String tenTruong, String moTa, String kieuDL, String kieuNhap){
+        String res = "";
+        if (kieuDL.equals("String")){
+            res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                    "\t\t\t\t<div class=\"col-lg-2\">\n"+
+                    "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\" class=\"form-control\"/>\n" +
+                    "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                    "\t\t\t\t</div>\n";
+        }else if (kieuDL.equals("Long") || kieuDL.equals("Double")){
+            if (kieuNhap.equals("Combobox")){
+                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                        "\t\t\t\t<div class=\"col-lg-2\">\n" +
+                        "\t\t\t\t\t<div id=\"cb"+tenTruong+"\"></div> \n" +
+                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" class=\"text_hidden\"  />\n" +
+                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                        "\t\t\t\t</div>\n";
+            }else{
+                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                        "\t\t\t\t<div class=\"col-lg-2\">\n" +
+                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
+                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>                           \n" +
+                        "\t\t\t\t</div>\n";
+            }
+        }else if (kieuDL.equals("Date")){
+            res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                    "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
+                    "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
+                    "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                    "\t\t\t\t</div>\n";
+        }
+        return res;
+    }
+
+    public static void gensubTableJSP(TableInfo tableInfo, String folder) throws  IOException
+    {
+        FileWriter fileWriter = new FileWriter(folder + "\\subTable.jsp");
+        fileWriter.write("<%@page contentType=\"text/html\" pageEncoding=\"UTF-8\"%>\n" +
+                "<%@ taglib prefix=\"spring\" uri=\"http://www.springframework.org/tags\" %>\n" +
+                "<%@ taglib uri=\"http://java.sun.com/jsp/jstl/core\" prefix=\"c\" %>\n" +
+                "<%@ taglib uri=\"http://java.sun.com/jsp/jstl/functions\" prefix=\"fn\" %>\n" +
+                "<%@ taglib uri=\"http://www.springframework.org/tags/form\" prefix=\"form\"%>  \n" +
+                "<%@ taglib prefix=\"fmt\" uri=\"http://java.sun.com/jsp/jstl/fmt\" %>\n" +
+                "<script src=\"${pageContext.request.contextPath}/share/core/js/"+uncapitalize(tableInfo.tableName)+"SubTable.js\"/>\n" +
+                "<div class=\"ui-widget-overlay1 ui-front custom-overlay\" style=\"z-index: 1 !important\"></div>\n" +
+                "<div id=\"dialog-formAddTopicMember\" style=\"z-index: 9998 !important\"> \n" +
+                "    <form:form id=\"subTableForm\" modelAttribute=\"subTableForm\" class=\"form-horizontal\">\n" +
+                "        <input type=\"hidden\" id=\"isedit1\" name=\"isedit1\" value=\"0\"/>\n" +
+                "        <input type=\"hidden\" id=\"isDeleteFile_subdoc\" name=\"\" value=\"0\"/>\n" +
+                "        <fieldset>\n" +
+                "            <br/>\n" +
+                "            <legend class=\"fs-legend-head\" style=\"margin-bottom: 0px;\">\n" +
+                "                <span class=\"iconFS\"></span>\n" +
+                "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Bảng con</b></span>\n" +
+                "                <div class=\"col-md-5\" style=\"float:right;font-size: 12px;\">\n" +
+                "                    <label class=\"col-md-2 control-label\">Người tạo</label>\n" +
+                "                    <div class=\"col-md-4\">\n" +
+                "                        <input class=\"form-control\" placeholder=\"\"  id=\"user_create1_subdoc\" type=\"text\" readonly=\"true\" />\n" +
+                "                        <span id=\"documentary_number_error\" class=\"note note-error\"></span>\n" +
+                "                    </div>\n" +
+                "                    <div class=\"col-md-4\">\n" +
+                "                        <input class=\"form-control\" placeholder=\"\"  id=\"create_time111_subdoc\" type=\"text\" readonly=\"true\" />\n" +
+                "                        <span id=\"documentary_number_error\" class=\"note note-error\"></span>\n" +
+                "                    </div>\n" +
+                "                </div>\n" +
+                "            </legend>\n");
+
+        int k =tableInfo.columns.size()-1;
+        int r = k/4;
+        int q = k%4;
+        for (int i = 0;i<r;i++){
+            fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
+            for (int j =0;j<=3;j++){
+                String res = checkDang_sub(tableInfo.columns.get(4*i+j+1).getColName(),
+                        tableInfo.columns.get(4*i+j+1).getColDescription(),
+                        tableInfo.columns.get(4*i+j+1).getColType(),
+                        tableInfo.columns.get(4*i+j+1).getInputType()
+                );
+                fileWriter.append(res);
+            }
+            fileWriter.append("\t\t\t</div>\n\n");
+        }
+        if (q != 0){
+            fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
+            for (int i = r*4+1;i<=k;i++){
+                String res = checkDang_sub(tableInfo.columns.get(i).getColName(),
+                        tableInfo.columns.get(i).getColDescription(),
+                        tableInfo.columns.get(i).getColType(),
+                        tableInfo.columns.get(i).getInputType()
+                );
+                fileWriter.append(res);
+            }
+            fileWriter.append("\t\t\t</div>\n\n");
+        }
+        int c_file = 0;
+        for (int i = 0; i <tableInfo.columns.size(); i++) {
+            ColumnProperty columnProperty = tableInfo.columns.get(i);
+            if(columnProperty.getInputType().toLowerCase().equals("file"))
+            {
+                if (c_file==0) {
+                    fileWriter.append("<div class=\"form-group-add row\">\n" +
+                            "                <label class=\"col-lg-1 control-label  lb_input\">" + columnProperty.getColDescription() + "</label>\n" +
+                            "                <div class=\"col-md-11\" id=\"fileTopicFilesTmpSubTable\">\n" +
+                            "                    <input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable\" id=\"filestTmpSubTable\" type=\"file\"/>\n" +
+                            "                    <span id=\"filestTmpSubTable_error\" class=\"note note-error\"></span>\n" +
+                            "                </div>\n" +
+                            "            </div>\n");
+                    c_file++;
+                }
+                else
+                {
+                    fileWriter.append("<div class=\"form-group-add row\">\n" +
+                            "                <label class=\"col-lg-1 control-label  lb_input\">" + columnProperty.getColDescription() + "</label>\n" +
+                            "                <div class=\"col-md-11\" id=\"fileTopicFilesTmpSubTable"+c_file+"\">\n" +
+                            "                    <input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable"+c_file+"\" id=\"filestTmpSubTable"+c_file+"\" type=\"file\"/>\n" +
+                            "                    <span id=\"filestTmpSubTable"+c_file+"_error\" class=\"note note-error\"></span>\n" +
+                            "                </div>\n" +
+                            "            </div>\n");
+                }
+            }
+
+        }
+        fileWriter.append("</fieldset>\n" +
+                "    </form:form>\n" +
+                "</div>\n" +
+                "<script type=\"text/javascript\">\n" +
+                "    $(\"#dialog-formAddTopicMember\").dialog({\n" +
+                "        width: isMobile.any() ? $(window).width() : ($(window).width() / 5 * 3),\n" +
+                "        height: $(window).height() / 12 * 8,\n" +
+                "        autoOpen: false,\n" +
+                "        modal: true,\n" +
+                "        position: [$(window).height() / 5 * 2, 70],\n" +
+                "        close: function () {\n" +
+                "            $('.ui-widget-overlay1').removeClass('ui-widget-overlay');\n" +
+                "            $('.ui-widget-overlay1').removeClass('custom-overlay');\n" +
+                "            $('.ui-widget-overlay1').css('z-index', \"1 !important\");\n" +
+                "        },\n" +
+                "        open: function () {\n" +
+                "            $('.ui-widget-overlay1').addClass('ui-widget-overlay');\n" +
+                "            $('.ui-widget-overlay1').css('z-index', \"99999 !important\");\n" +
+                "            $(\"#tabs\").tabs({\n" +
+                "                active: 0\n" +
+                "            });\n" +
+                "        },\n" +
+                "        buttons: [{\n" +
+                "                html: \"<fmt:message key='button.close' />\",\n" +
+                "                \"class\": \"btn btn-default\",\n" +
+                "                click: function () {\n" +
+                "                    $(this).dialog('close');\n" +
+                "                }\n" +
+                "            }, {\n" +
+                "                html: \"<fmt:message key='button.update' />\",\n" +
+                "                \"class\": \"btn btn-primary\",\n" +
+                "                \"id\": \"btnAddRole1\",\n" +
+                "                click: function () {\n" +
+                "                    var item = $('#isedit1').val();\n" +
+                "                    if (item === '0') {\n" +
+                "                        saveTopicMember();\n" +
+                "                    } else {\n" +
+                "                        editTopicMember();\n" +
+                "                    }\n" +
+                "                }\n" +
+                "            }]\n" +
+                "    });\n" +
+                "</script>\n");
+        fileWriter.close();
+    }
+
+
 }
