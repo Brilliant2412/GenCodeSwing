@@ -5,6 +5,8 @@ import People.Hung;
 import People.Tung;
 import model.ColumnProperty;
 import model.TableInfo;
+import model.TableSet;
+
 import static controller.CodeGenerator.capitalize;
 import static controller.CodeGenerator.uncapitalize;
 
@@ -130,79 +132,79 @@ public class Web {
                 "            Integer offset = --currentPage * limit;\n" +
                 "            JsonDataGrid dataGrid = new JsonDataGrid();\n" +
                 "            SearchCommonFinalDTO searchDTO = new SearchCommonFinalDTO();\n");
+                
 
 
 
+                int count_cb =0;
+                int count_db =0;
+                int count_long =0;
+                int count_date =0;
 
-        int count_cb =0;
-        int count_db =0;
-        int count_long =0;
-        int count_date =0;
-
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isSearch())
-            {
-                if (colProp.getColType().equals("Long") )
-                {
-                    if (colProp.getInputType().equals("Combobox"))
+                for (int i = 0; i < tableInfo.columns.size(); i++) {
+                    ColumnProperty colProp = tableInfo.columns.get(i);
+                    if (colProp.isSearch())
                     {
-                        count_cb++;
+                        if (colProp.getColType().equals("Long") )
+                        {
+                            if (colProp.getInputType().equals("Combobox"))
+                            {
+                                count_cb++;
+                            }
+                            else
+                            {
+                                count_long++;
+                            }
+                        }
+                        if (colProp.getColType().equals("Double"))
+                        {
+                            count_db++;
+                        }
+                        if (colProp.getColType().equals("Date"))
+                        {
+                            count_date++;
+                        }
+
                     }
-                    else
-                    {
-                        count_long++;
-                    }
+
                 }
-                if (colProp.getColType().equals("Double"))
-                {
-                    count_db++;
+                fileWriter.append("            searchDTO.setStringKeyWord(request.getParameter(\"key\"));\n");
+
+                for (int i = 0; i < count_cb; i++) {
+
+                    fileWriter.append("\tif (request.getParameter(\"listLong"+(i+1)+"\") != null) {\n" +
+                            "                searchDTO.setListLong"+(i+1)+"(ConvertData.convertStringToListLong(request.getParameter(\"listLong"+(i+1)+"\")));\n" +
+                            "            }\n");
+
                 }
-                if (colProp.getColType().equals("Date"))
-                {
-                    count_date++;
+                for (int i = 0; i < 2*count_db; i+=2) {
+                    fileWriter.append("\ttry{\n" +
+                            "                searchDTO.setDouble"+(i+1)+"(Double.parseDouble(request.getParameter(\"double"+(i+1)+"\")));\n" +
+                            "                searchDTO.setDouble"+(i+2)+"(Double.parseDouble(request.getParameter(\"double"+(i+2)+"\")));\n" +
+                            "            }catch(Exception ex){}\n");
+
                 }
 
-            }
+                for (int i = 0; i < 2*count_long; i+=2) {
+                    fileWriter.append("\ttry{\n" +
+                            "                searchDTO.setLong"+(i+1)+"(Long.parseLong(request.getParameter(\"long"+(i+1)+"\")));\n" +
+                            "                searchDTO.setLong"+(i+2)+"(Long.parseLong(request.getParameter(\"long"+(i+2)+"\")));\n" +
+                            "            }catch(Exception ex){}\n");
 
-        }
-        fileWriter.append("            searchDTO.setStringKeyWord(request.getParameter(\"key\"));\n");
+                }
 
-        for (int i = 0; i < count_cb; i++) {
+                for (int i = 0; i < 2*count_date; i+=2) {
+                    fileWriter.append("            searchDTO.setString"+(i+1)+"(request.getParameter(\"string"+(i+1)+"\"));\n" +
+                            "            searchDTO.setString"+(i+2)+"(request.getParameter(\"string"+(i+2)+"\"));");
 
-            fileWriter.append("\tif (request.getParameter(\"listLong"+(i+1)+"\") != null) {\n" +
-                    "                searchDTO.setListLong"+(i+1)+"(ConvertData.convertStringToListLong(request.getParameter(\"listLong"+(i+1)+"\")));\n" +
-                    "            }\n");
-
-        }
-        for (int i = 0; i < 2*count_db; i+=2) {
-            fileWriter.append("\ttry{\n" +
-                    "                searchDTO.setDouble"+(i+1)+"(Double.parseDouble(request.getParameter(\"double"+(i+1)+"\")));\n" +
-                    "                searchDTO.setDouble"+(i+2)+"(Double.parseDouble(request.getParameter(\"double"+(i+2)+"\")));\n" +
-                    "            }catch(Exception ex){}\n");
-
-        }
-
-        for (int i = 0; i < 2*count_long; i+=2) {
-            fileWriter.append("\ttry{\n" +
-                    "                searchDTO.setLong"+(i+1)+"(Long.parseLong(request.getParameter(\"long"+(i+1)+"\")));\n" +
-                    "                searchDTO.setLong"+(i+2)+"(Long.parseLong(request.getParameter(\"long"+(i+2)+"\")));\n" +
-                    "            }catch(Exception ex){}\n");
-
-        }
-
-        for (int i = 0; i < 2*count_date; i+=2) {
-            fileWriter.append("            searchDTO.setString"+(i+1)+"(request.getParameter(\"string"+(i+1)+"\"));\n" +
-                    "            searchDTO.setString"+(i+2)+"(request.getParameter(\"string"+(i+2)+"\"));");
-
-        }
+                }
 
 
 
 
-
-
-        fileWriter.append("            List<"+ tableInfo.tableName+"DTO> lst = new ArrayList<>();\n" +
+        
+                        
+            fileWriter.append("            List<"+ tableInfo.tableName+"DTO> lst = new ArrayList<>();\n" +
                 "            Integer totalRecords = 0;\n" +
                 "            totalRecords = "+uncapitalize(tableInfo.tableName)+"Data.getCount(searchDTO);\n" +
                 "            if (totalRecords > 0) {\n" +
@@ -517,9 +519,9 @@ public class Web {
                         "    return false;\n" +
                         "};\n\n"
         );
-
-
-
+        
+        
+        
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getColType().equals("Date")){
@@ -538,7 +540,7 @@ public class Web {
                 );
             }
         }
-
+        
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getColType().equals("Date")){
@@ -570,7 +572,7 @@ public class Web {
                 );
             }
         }
-
+        
         fileWriter.append(
                 "$(function () {\n" +
                         "\tdoSearch();\n" +
@@ -1115,11 +1117,11 @@ public class Web {
                 "</div>\n" +
                 "<script type=\"text/javascript\">\n" +
                 "\t$(\"#dialog-formView\").dialog({\n" +
-                "\t\twidth: isMobile.any() ? $(window).width() : ($(window).width() / 5 * 4),\n" +
-                "\t\theight: $(window).height() / 5 * 4,\n" +
+                "\t\twidth: isMobile.any() ? $(window).width() : ($(window).width() / 20 * 19),\n" +
+                "\t\theight: $(window).height() / 5 * 5 - 80,\n" +
                 "\t\tautoOpen: false,\n" +
                 "\t\tmodal: true,\n" +
-                "\t\tposition: [($(window).width() / 10 * 1), 50],\n" +
+                "\t\tposition: [($(window).width() / 80 * 2.5), 20],\n" +
                 "\t\topen: function () {\n" +
                 "\t\t\t$('.areaTable').addClass('custom-overlay-popup-add-edit');\n" +
                 "\t\t\t$('.dialogAddEdit').css('z-index', 1001);\n" +
@@ -1395,23 +1397,24 @@ public class Web {
         fileWriter.close();
     }
 
-    public static void genWeb(TableInfo tableInfo, String folder) throws IOException {
+    public static void genWeb(TableSet tableSet, String folder) throws IOException {
+        TableInfo tableInfo = tableSet.tableInfo;
         File dir = new File(folder);
         dir.mkdirs();
         File dir2 = new File(folder + "\\" + uncapitalize(tableInfo.tableName));
         dir2.mkdirs();
         genControllerParameters(tableInfo, folder);
-        genController(tableInfo, folder);
+        Hieu.genController(tableInfo, folder);
         genData(tableInfo, folder);
         genTitle(tableInfo, folder);
         genListjsp(tableInfo, dir2.getAbsolutePath());
         //genJs(tableInfo, folder);
         Hung.genJs(tableInfo, folder);
-        Hieu.genDialogAdd(tableInfo, dir2.getAbsolutePath());
+        Hieu.genDialogAdd(tableSet, dir2.getAbsolutePath());
         Hieu.genDTO_Web(tableInfo, folder);
         genView(tableInfo,dir2.getAbsolutePath());
         //genControllerSearch(tableInfo, folder);
         //Tung.genJsSearch(tableInfo,folder);
-        //Tung.gensubTableJSP(tableInfo,folder);
+        Tung.genformSearch(tableInfo,dir2.getAbsolutePath());
     }
 }

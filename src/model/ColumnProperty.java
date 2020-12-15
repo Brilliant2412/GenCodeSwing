@@ -164,3 +164,4 @@ public class ColumnProperty {
         this.validateMessage = validateMessage;
     }
 }
+
