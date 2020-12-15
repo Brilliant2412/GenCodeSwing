@@ -1,0 +1,10 @@
+<jaxrs:server id="evaluatePlan6RsServiceRest"
+address="/evaluatePlan6RsServiceRest">
+		<jaxrs:providers>
+			<ref bean="jsonProvider" />
+		</jaxrs:providers>
+		<jaxrs:serviceBeans>
+			<bean id="evaluatePlan6RsServiceClass"
+class="com.tav.service.rest.EvaluatePlan6RsServiceImpl"/>
+		</jaxrs:serviceBeans>
+	</jaxrs:server>
