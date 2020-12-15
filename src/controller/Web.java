@@ -130,79 +130,79 @@ public class Web {
                 "            Integer offset = --currentPage * limit;\n" +
                 "            JsonDataGrid dataGrid = new JsonDataGrid();\n" +
                 "            SearchCommonFinalDTO searchDTO = new SearchCommonFinalDTO();\n");
-                
 
 
 
-                int count_cb =0;
-                int count_db =0;
-                int count_long =0;
-                int count_date =0;
 
-                for (int i = 0; i < tableInfo.columns.size(); i++) {
-                    ColumnProperty colProp = tableInfo.columns.get(i);
-                    if (colProp.isSearch())
+        int count_cb =0;
+        int count_db =0;
+        int count_long =0;
+        int count_date =0;
+
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if (colProp.isSearch())
+            {
+                if (colProp.getColType().equals("Long") )
+                {
+                    if (colProp.getInputType().equals("Combobox"))
                     {
-                        if (colProp.getColType().equals("Long") )
-                        {
-                            if (colProp.getInputType().equals("Combobox"))
-                            {
-                                count_cb++;
-                            }
-                            else
-                            {
-                                count_long++;
-                            }
-                        }
-                        if (colProp.getColType().equals("Double"))
-                        {
-                            count_db++;
-                        }
-                        if (colProp.getColType().equals("Date"))
-                        {
-                            count_date++;
-                        }
-
+                        count_cb++;
                     }
-
+                    else
+                    {
+                        count_long++;
+                    }
                 }
-                fileWriter.append("            searchDTO.setStringKeyWord(request.getParameter(\"key\"));\n");
-
-                for (int i = 0; i < count_cb; i++) {
-
-                    fileWriter.append("\tif (request.getParameter(\"listLong"+(i+1)+"\") != null) {\n" +
-                            "                searchDTO.setListLong"+(i+1)+"(ConvertData.convertStringToListLong(request.getParameter(\"listLong"+(i+1)+"\")));\n" +
-                            "            }\n");
-
+                if (colProp.getColType().equals("Double"))
+                {
+                    count_db++;
                 }
-                for (int i = 0; i < 2*count_db; i+=2) {
-                    fileWriter.append("\ttry{\n" +
-                            "                searchDTO.setDouble"+(i+1)+"(Double.parseDouble(request.getParameter(\"double"+(i+1)+"\")));\n" +
-                            "                searchDTO.setDouble"+(i+2)+"(Double.parseDouble(request.getParameter(\"double"+(i+2)+"\")));\n" +
-                            "            }catch(Exception ex){}\n");
-
+                if (colProp.getColType().equals("Date"))
+                {
+                    count_date++;
                 }
 
-                for (int i = 0; i < 2*count_long; i+=2) {
-                    fileWriter.append("\ttry{\n" +
-                            "                searchDTO.setLong"+(i+1)+"(Long.parseLong(request.getParameter(\"long"+(i+1)+"\")));\n" +
-                            "                searchDTO.setLong"+(i+2)+"(Long.parseLong(request.getParameter(\"long"+(i+2)+"\")));\n" +
-                            "            }catch(Exception ex){}\n");
+            }
 
-                }
+        }
+        fileWriter.append("            searchDTO.setStringKeyWord(request.getParameter(\"key\"));\n");
 
-                for (int i = 0; i < 2*count_date; i+=2) {
-                    fileWriter.append("            searchDTO.setString"+(i+1)+"(request.getParameter(\"string"+(i+1)+"\"));\n" +
-                            "            searchDTO.setString"+(i+2)+"(request.getParameter(\"string"+(i+2)+"\"));");
+        for (int i = 0; i < count_cb; i++) {
 
-                }
+            fileWriter.append("\tif (request.getParameter(\"listLong"+(i+1)+"\") != null) {\n" +
+                    "                searchDTO.setListLong"+(i+1)+"(ConvertData.convertStringToListLong(request.getParameter(\"listLong"+(i+1)+"\")));\n" +
+                    "            }\n");
+
+        }
+        for (int i = 0; i < 2*count_db; i+=2) {
+            fileWriter.append("\ttry{\n" +
+                    "                searchDTO.setDouble"+(i+1)+"(Double.parseDouble(request.getParameter(\"double"+(i+1)+"\")));\n" +
+                    "                searchDTO.setDouble"+(i+2)+"(Double.parseDouble(request.getParameter(\"double"+(i+2)+"\")));\n" +
+                    "            }catch(Exception ex){}\n");
+
+        }
+
+        for (int i = 0; i < 2*count_long; i+=2) {
+            fileWriter.append("\ttry{\n" +
+                    "                searchDTO.setLong"+(i+1)+"(Long.parseLong(request.getParameter(\"long"+(i+1)+"\")));\n" +
+                    "                searchDTO.setLong"+(i+2)+"(Long.parseLong(request.getParameter(\"long"+(i+2)+"\")));\n" +
+                    "            }catch(Exception ex){}\n");
+
+        }
+
+        for (int i = 0; i < 2*count_date; i+=2) {
+            fileWriter.append("            searchDTO.setString"+(i+1)+"(request.getParameter(\"string"+(i+1)+"\"));\n" +
+                    "            searchDTO.setString"+(i+2)+"(request.getParameter(\"string"+(i+2)+"\"));");
+
+        }
 
 
 
 
-        
-                        
-            fileWriter.append("            List<"+ tableInfo.tableName+"DTO> lst = new ArrayList<>();\n" +
+
+
+        fileWriter.append("            List<"+ tableInfo.tableName+"DTO> lst = new ArrayList<>();\n" +
                 "            Integer totalRecords = 0;\n" +
                 "            totalRecords = "+uncapitalize(tableInfo.tableName)+"Data.getCount(searchDTO);\n" +
                 "            if (totalRecords > 0) {\n" +
@@ -517,9 +517,9 @@ public class Web {
                         "    return false;\n" +
                         "};\n\n"
         );
-        
-        
-        
+
+
+
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getColType().equals("Date")){
@@ -538,7 +538,7 @@ public class Web {
                 );
             }
         }
-        
+
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getColType().equals("Date")){
@@ -570,7 +570,7 @@ public class Web {
                 );
             }
         }
-        
+
         fileWriter.append(
                 "$(function () {\n" +
                         "\tdoSearch();\n" +
@@ -1412,6 +1412,6 @@ public class Web {
         genView(tableInfo,dir2.getAbsolutePath());
         //genControllerSearch(tableInfo, folder);
         //Tung.genJsSearch(tableInfo,folder);
-        Tung.genformSearch(tableInfo,dir2.getAbsolutePath());
+        //Tung.gensubTableJSP(tableInfo,folder);
     }
 }
