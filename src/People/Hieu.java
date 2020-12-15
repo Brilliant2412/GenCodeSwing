@@ -618,9 +618,18 @@ public class Hieu {
                 );
             }
         }
-        fileWriter.append(
-                "                String file = CommonFunction.uploadFileOnAdd(multipartRequest, \"filestTmp\");\n" +
-                "                " + uncapitalize(tableInfo.tableName) + "DTO.setFile(file);\n");
+        String file = null;
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            if(tableInfo.columns.get(i).getColType().equals("File")){
+                file = tableInfo.columns.get(i).getColName();
+                break;
+            }
+        }
+        if(file != null) {
+            fileWriter.append(
+                    "                String file = CommonFunction.uploadFileOnAdd(multipartRequest, \"filestTmp\");\n" +
+                            "                " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(file) + "(file);\n");
+        }
         fileWriter.append(
                 "            serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.addObj("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
                         "            processServiceResult(serviceResult);\n" +
@@ -651,10 +660,19 @@ public class Hieu {
                 );
             }
         }
-        fileWriter.append(
-                "                String file = CommonFunction.uploadFileOnUpdate(multipartRequest, \"filestTmp\");\n" +
-                "                " + uncapitalize(tableInfo.tableName) + "DTO.setFile(file);\n"
-        );
+        file = null;
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            if(tableInfo.columns.get(i).getColType().equals("File")){
+                file = tableInfo.columns.get(i).getColName();
+                break;
+            }
+        }
+        if(file != null) {
+            fileWriter.append(
+                    "                String file = CommonFunction.uploadFileOnUpdate(multipartRequest, \"filestTmp\");\n" +
+                            "                " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(file) + "(file);\n"
+            );
+        }
         fileWriter.append(
                 "            serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.updateBO("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
                         "            processServiceResult(serviceResult);\n" +
@@ -684,9 +702,45 @@ public class Hieu {
                         "        JSONObject result = new JSONObject(serviceResult);\n" +
                         "        return result.toString();\n" +
                         "    }\n" +
-                        "\n" +
-                        "}\n");
-
+                        "\n");
+        file = null;
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            if(tableInfo.columns.get(i).getColType().equals("File")){
+                file = tableInfo.columns.get(i).getColName();
+                break;
+            }
+        }
+        if(file != null){
+            fileWriter.append(
+                    "\t@RequestMapping(value = \"/\" + ErpConstants.RequestMapping.DOWNLOAD_" + tableInfo.tableName.toUpperCase() + "_FILE, method = RequestMethod.GET)\n" +
+                    "    public void downloadFiles(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {\n" +
+                    "        String dataDirectory = CommonConstant.PATH_FOLDER_TOPIC_FILE;\n" +
+                    "        Long id = null;\n" +
+                    "        if (!Strings.isNullOrEmpty(request.getParameter(\"id\"))) {\n" +
+                    "            id = Long.parseLong(request.getParameter(\"id\"));\n" +
+                    "            " + tableInfo.tableName + "DTO objDTOTmp = " + uncapitalize(tableInfo.tableName) + "Data.getOneById(id);\n" +
+                    "            if (objDTOTmp != null) {\n" +
+                    "                String fileName = objDTOTmp .get" + capitalize(file) + "();\n" +
+                    "                response.setContentType(MediaType.APPLICATION_OCTET_STREAM);\n" +
+                    "                response.setHeader(\"Content-Transfer-Encoding\", \"binary\");\n" +
+                    "                response.setHeader(\"Content-Disposition\", \"attachment; filename=\" + CommonFunction.convertFileNameVietNam(fileName));\n" +
+                    "                Path file = Paths.get(dataDirectory, new String(fileName.getBytes(), \"UTF-8\"));\n" +
+                    "                if (Files.exists(file)) {\n" +
+                    "                    response.setContentType(\"application/vnd.ms-excel\");\n" +
+                    "                    response.addHeader(\"Content-Disposition\", \"attachment; filename=\" + CommonFunction.convertFileNameVietNam(fileName));\n" +
+                    "                    try {\n" +
+                    "                        Files.copy(file, response.getOutputStream());\n" +
+                    "                        response.getOutputStream().flush();\n" +
+                    "                    } catch (IOException ex) {\n" +
+                    "                        logger.error(ex);\n" +
+                    "                    }\n" +
+                    "                }\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "    }\n"
+            );
+        }
+        fileWriter.append("}\n");
         fileWriter.close();
     }
 }
