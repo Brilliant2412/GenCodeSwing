@@ -138,7 +138,8 @@ public class Hieu {
         fileWriter.close();
     }
 
-    public static void genDTO(TableInfo tableInfo, String folder) throws IOException{
+    public static void genDTO(TableSet tableSet, String folder) throws IOException{
+        TableInfo tableInfo = tableSet.tableInfo;
         FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "DTO.java");
         fileWriter.write(
                 "package com.tav.service.dto;\n\n" +
@@ -166,6 +167,10 @@ public class Hieu {
             if(!colProp.getFKTable().equals("") || colType.equals("Date")){
                 fileWriter.append("\tprivate String " + colProp.getColName() + "ST;\n");
             }
+        }
+        fileWriter.append("\n");
+        for(int i = 0; i < tableSet.subTables.size(); i++){
+            fileWriter.append("\tList<CommonSubTableDTO> " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable;\n");
         }
         fileWriter.append("\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
@@ -230,7 +235,8 @@ public class Hieu {
         fileWriter.close();
     }
 
-    public static void genDTO_Web(TableInfo tableInfo, String folder) throws IOException {
+    public static void genDTO_Web(TableSet tableSet, String folder) throws IOException {
+        TableInfo tableInfo = tableSet.tableInfo;
         FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "DTO.java");
         fileWriter.write(
                 "package com.tav.web.dto;\n\n" +
@@ -249,6 +255,10 @@ public class Hieu {
             if(!colProp.getFKTable().equals("") || colProp.getColType().equals("Date")){
                 fileWriter.append("\tprivate String " + colProp.getColName() + "ST;\n");
             }
+        }
+        fileWriter.append("\n");
+        for(int i = 0; i < tableSet.subTables.size(); i++){
+            fileWriter.append("\tList<CommonSubTableDTO> " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable;\n");
         }
         fileWriter.append("\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
@@ -352,12 +362,12 @@ public class Hieu {
         for(int count = 0; count < tableSet.subTables.size(); count++){
             tableInfo = tableSet.subTables.get(count);
             fileWriter.append(
-                    "<legend class=\"fs-legend-head\">\n" +
+                    "\t\t\t<legend class=\"fs-legend-head\">\n" +
                     "                <span class=\"iconFS\"></span>\n" +
                     "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Bảng con</b></span>\n" +
                     "            </legend>\n" +
                     "            <div class=\"form-group-add row\">\n" +
-                    "                <table id=\"tblMstDivision\" class=\"table table-striped table-bordered table-hover smart-form dataTable no-footer\">\n" +
+                    "                <table id=\"" + uncapitalize(tableInfo.tableName) + "_tblMstDivision\" class=\"table table-striped table-bordered table-hover smart-form dataTable no-footer\">\n" +
                     "                    <thead>\n" +
                     "                        <tr>\n" +
                     "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">STT</th>\n");
@@ -368,10 +378,10 @@ public class Hieu {
 
             }
             fileWriter.append(
-                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\"><a style=\"cursor: pointer; color:white !important;\" class=\"fa fa-plus fa-lg src\" onclick=\"onClickAddData();\"></a></th>\n" +
+                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\"><a style=\"cursor: pointer; color:white !important;\" class=\"fa fa-plus fa-lg src\" onclick=\"" + uncapitalize(tableInfo.tableName) + "_onClickAddData();\"></a></th>\n" +
                             "                        </tr>\n" +
                             "                    </thead>\n" +
-                            "                    <tbody id=\"dataDetailInfo\" >\n" +
+                            "                    <tbody id=\"" + uncapitalize(tableInfo.tableName) + "_dataDetailInfo\" >\n" +
                             "                    </tbody>\n" +
                             "                </table>\n" +
                             "            </div>\n");

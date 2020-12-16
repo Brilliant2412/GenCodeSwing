@@ -1100,7 +1100,6 @@ public class Tung {
                 "}");
         fileWriter.close();
     }
-
     public static String checkDang_sub(String tenTruong, String moTa, String kieuDL, String kieuNhap){
         String res = "";
         if (kieuDL.equals("String")){
@@ -1207,7 +1206,7 @@ public class Tung {
                             "                    <span id=\"filestTmpSubTable_error\" class=\"note note-error\"></span>\n" +
                             "                </div>\n" +
                             "            </div>\n");
-                    c_file++;
+
                 }
                 else
                 {
@@ -1219,6 +1218,7 @@ public class Tung {
                             "                </div>\n" +
                             "            </div>\n");
                 }
+                c_file++;
             }
 
         }
@@ -1267,6 +1267,492 @@ public class Tung {
                 "</script>\n");
         fileWriter.close();
     }
+    public static void genController_SUB(TableInfo tableInfo, String folder) throws IOException {
+        FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "ControllerSUB.java");
+        fileWriter.write("package com.tav.web.controller;\n" +
+                "\n" +
+                "import com.google.common.base.Strings;\n" +
+                "import com.tav.web.common.DateUtil;" +
+                "import com.google.gson.Gson;\n" +
+                "import com.google.gson.JsonObject;\n" +
+                "import com.tav.common.web.form.JsonDataGrid;\n" +
+                "import com.tav.web.bo.ServiceResult;\n" +
+                "import com.tav.web.bo.UserSession;\n" +
+                "import com.tav.web.bo.ValidationResult;\n" +
+                "import com.tav.web.common.CommonConstant;\n" +
+                "import com.tav.web.common.CommonFunction;\n" +
+                "import com.tav.web.common.ConvertData;\n" +
+                "import com.tav.web.common.ErpConstants;\n" +
+                "import com.tav.web.common.StringUtil;\n" +
+                "import com.tav.web.data."+ tableInfo.tableName+"Data;\n" +
+                "import com.tav.web.dto."+ tableInfo.tableName+"DTO;\n" +
+                "import com.tav.web.dto.ImportErrorMessage;\n" +
+                "import java.util.Date;\n" +
+                "import com.tav.web.dto.SearchCommonFinalDTO;\n" +
+                "import com.tav.web.dto.ObjectCommonSearchDTO;\n" +
+                "import java.io.BufferedOutputStream;\n" +
+                "import java.io.File;\n" +
+                "import java.io.FileInputStream;\n" +
+                "import java.io.FileNotFoundException;\n" +
+                "import java.io.FileOutputStream;\n" +
+                "import java.io.IOException;\n" +
+                "import java.nio.file.Files;\n" +
+                "import java.nio.file.Path;\n" +
+                "import java.nio.file.Paths;\n" +
+                "import java.text.ParseException;\n" +
+                "import java.text.SimpleDateFormat;\n" +
+                "import java.util.ArrayList;\n" +
+                "import java.util.HashMap;\n" +
+                "import java.util.Iterator;\n" +
+                "import java.util.List;\n" +
+                "import java.util.regex.Pattern;\n" +
+                "import javax.servlet.http.HttpServletRequest;\n" +
+                "import javax.servlet.http.HttpServletResponse;\n" +
+                "import javax.servlet.http.HttpSession;\n" +
+                "import javax.ws.rs.core.MediaType;\n" +
+                "import org.apache.poi.hssf.usermodel.HSSFWorkbook;\n" +
+                "import org.apache.poi.ss.usermodel.Cell;\n" +
+                "import org.apache.poi.ss.usermodel.DataFormatter;\n" +
+                "import org.apache.poi.ss.usermodel.Row;\n" +
+                "import org.apache.poi.ss.usermodel.Sheet;\n" +
+                "import org.apache.poi.ss.usermodel.Workbook;\n" +
+                "import org.apache.poi.xssf.usermodel.XSSFWorkbook;\n" +
+                "import org.json.JSONObject;\n" +
+                "import org.springframework.beans.factory.annotation.Autowired;\n" +
+                "import org.springframework.stereotype.Controller;\n" +
+                "import org.springframework.ui.Model;\n" +
+                "import org.springframework.web.bind.annotation.ModelAttribute;\n" +
+                "import org.springframework.web.bind.annotation.RequestMapping;\n" +
+                "import org.springframework.web.bind.annotation.RequestMethod;\n" +
+                "import org.springframework.web.bind.annotation.ResponseBody;\n" +
+                "import org.springframework.web.multipart.MultipartFile;\n" +
+                "import org.springframework.web.multipart.MultipartHttpServletRequest;\n" +
+                "import org.springframework.web.servlet.ModelAndView;\n");
 
+        fileWriter.append("\n" +
+                "@Controller\n" +
+                "public class "+ tableInfo.tableName+"Controller extends SubBaseController {\n" +
+                "\n" +
+                "    @Autowired\n" +
+                "    private "+ tableInfo.tableName+"Data "+uncapitalize(tableInfo.tableName)+"Data;\n" +
+                "\n" +
+                "    @RequestMapping(\"/\" + ErpConstants.RequestMapping."+ tableInfo.title.toUpperCase()+")\n" +
+                "    public ModelAndView agent(Model model, HttpServletRequest request) {\n" +
+                "        return new ModelAndView(\""+uncapitalize(tableInfo.tableName)+"\");\n" +
+                "    }\n" +
+                "\n" +
+                "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.GET_ALL_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.GET)\n" +
+                "    @ResponseBody\n" +
+                "    public JsonDataGrid getAll(HttpServletRequest request) {\n" +
+                "        try {\n" +
+                "            // get info paging\n" +
+                "            Integer currentPage = getCurrentPage();\n" +
+                "            Integer limit = getTotalRecordPerPage();\n" +
+                "            Integer offset = --currentPage * limit;\n" +
+                "            JsonDataGrid dataGrid = new JsonDataGrid();\n" +
+                "            SearchCommonFinalDTO searchDTO = new SearchCommonFinalDTO();\n");
+
+
+
+
+        int count_cb =0;
+        int count_db =0;
+        int count_long =0;
+        int count_date =0;
+
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if (colProp.isSearch())
+            {
+                if (colProp.getColType().equals("Long") )
+                {
+                    if (colProp.getInputType().equals("Combobox"))
+                    {
+                        count_cb++;
+                    }
+                    else
+                    {
+                        count_long++;
+                    }
+                }
+                if (colProp.getColType().equals("Double"))
+                {
+                    count_db++;
+                }
+                if (colProp.getColType().equals("Date"))
+                {
+                    count_date++;
+                }
+
+            }
+
+        }
+        fileWriter.append("            searchDTO.setStringKeyWord(request.getParameter(\"key\"));\n");
+
+        for (int i = 0; i < count_cb; i++) {
+
+            fileWriter.append("\tif (request.getParameter(\"listLong"+(i+1)+"\") != null) {\n" +
+                    "                searchDTO.setListLong"+(i+1)+"(ConvertData.convertStringToListLong(request.getParameter(\"listLong"+(i+1)+"\")));\n" +
+                    "            }\n");
+
+        }
+        for (int i = 0; i < 2*count_db; i+=2) {
+            fileWriter.append("\ttry{\n" +
+                    "                searchDTO.setDouble"+(i+1)+"(Double.parseDouble(request.getParameter(\"double"+(i+1)+"\")));\n" +
+                    "                searchDTO.setDouble"+(i+2)+"(Double.parseDouble(request.getParameter(\"double"+(i+2)+"\")));\n" +
+                    "            }catch(Exception ex){}\n");
+
+        }
+
+        for (int i = 0; i < 2*count_long; i+=2) {
+            fileWriter.append("\ttry{\n" +
+                    "                searchDTO.setLong"+(i+1)+"(Long.parseLong(request.getParameter(\"long"+(i+1)+"\")));\n" +
+                    "                searchDTO.setLong"+(i+2)+"(Long.parseLong(request.getParameter(\"long"+(i+2)+"\")));\n" +
+                    "            }catch(Exception ex){}\n");
+
+        }
+
+        for (int i = 0; i < 2*count_date; i+=2) {
+            fileWriter.append("            searchDTO.setString"+(i+1)+"(request.getParameter(\"string"+(i+1)+"\"));\n" +
+                    "            searchDTO.setString"+(i+2)+"(request.getParameter(\"string"+(i+2)+"\"));");
+
+        }
+
+
+
+
+
+
+        fileWriter.append("            List<"+ tableInfo.tableName+"DTO> lst = new ArrayList<>();\n" +
+                "            Integer totalRecords = 0;\n" +
+                "            totalRecords = "+uncapitalize(tableInfo.tableName)+"Data.getCount(searchDTO);\n" +
+                "            if (totalRecords > 0) {\n" +
+                "                lst = "+uncapitalize(tableInfo.tableName)+"Data.getAll(searchDTO, offset, limit);\n" +
+                "            }\n" +
+                "            dataGrid.setCurPage(getCurrentPage());\n" +
+                "            dataGrid.setTotalRecords(totalRecords);\n" +
+                "            dataGrid.setData(lst);\n" +
+                "            return dataGrid;\n" +
+                "        } catch (Exception e) {\n" +
+                "            logger.error(e.getMessage(), e);\n" +
+                "            return null;\n" +
+                "        }\n" +
+                "    }\n" +
+                "\n" +
+                "    @RequestMapping(value = \"/\" + ErpConstants.RequestMapping.GET_"+ tableInfo.title.toUpperCase()+"_BY_ID, method = RequestMethod.GET)\n" +
+                "    public @ResponseBody\n" +
+                "    "+ tableInfo.tableName+"DTO getOneById(HttpServletRequest request) {\n" +
+                "        Long id = Long.parseLong(request.getParameter(\"gid\"));\n" +
+                "        return "+uncapitalize(tableInfo.tableName)+"Data.getOneById(id);\n" +
+                "    }\n" +
+                "\n" +
+                "    //add\n" +
+                "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.ADD_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)\n" +
+                "    @ResponseBody\n" +
+                "    public String addOBJ(@ModelAttribute(\"" + uncapitalize(tableInfo.tableName) + "Form\") "+ tableInfo.tableName+"DTO "+uncapitalize(tableInfo.tableName)+"DTO, MultipartHttpServletRequest multipartRequest,\n" +
+                "            HttpServletRequest request) throws ParseException {\n" +
+                "\n" +
+                "        JSONObject result;\n" +
+                "        String error = validateForm("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
+                "        ServiceResult serviceResult;\n" +
+                "        if (error != null) {\n" +
+                "            return error;\n" +
+                "        } else {\n");
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if(colProp.getColType().equals("Date")){
+                fileWriter.append(
+                        "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
+                                "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
+                                "            }\n"
+                );
+            }
+        }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        fileWriter.append("\t\tList<CommonSubTableDTO> lstSubTable = new ArrayList<>();\n" +
+                "                try {\n" +
+                "                    if ("+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table() != null && !"+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table().isEmpty()) {\n" +
+                "                        for (CommonSubTableDTO item : "+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table()) {\n");
+
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty columnProperty = tableInfo.columns.get(i);
+            if (columnProperty.getColType().equals("Date"))
+            {
+                fileWriter.append("\t\t\t\t\t\tif (!StringUtil.isEmpty(item.get"+capitalize(columnProperty.getColName())+"())) {\n" +
+                        "                                item.set"+capitalize(columnProperty.getColName())+"(DateUtil.formatDate(item.get"+capitalize(columnProperty.getColName())+"()));\n" +
+                        "                            }\n");
+            }
+        }
+
+        fileWriter.append("\t\tif (");
+        int temp = 0;
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if (colProp.isValidate()) {
+                temp++;
+                if (colProp.getColType().equals("Long")) {
+                    if (temp == 1) {
+                        fileWriter.append("(item.get"+capitalize(colProp.getColName())+"() != null && item.get"+capitalize(colProp.getColName())+" > 0)\n");
+                    } else {
+                        fileWriter.append("\t\t\t||(item.get"+capitalize(colProp.getColName())+"() != null && item.get"+capitalize(colProp.getColName())+" > 0)\n");
+                    }
+                }
+                if (colProp.getColType().equals("String") || colProp.getColType().equals("Date"))
+                {
+                    if (temp == 1) {
+                        fileWriter.append("!Strings.isNullOrEmpty(item.get"+capitalize(colProp.getColName())+"())");
+                    } else {
+                        fileWriter.append("\t\t\t||!Strings.isNullOrEmpty(item.get"+capitalize(colProp.getColName())+"())");
+                    }
+                }
+                fileWriter.append("\n");
+            }
+
+        }
+
+        fileWriter.append("\t\t\t) {\n" +
+                "                                lstDetailInfo.add(item);\n" +
+                "                            }\n" +
+                "\n" +
+                "                        }\n" +
+                "                    }\n" +
+                "                    scheduleDTO.setLst_detail_info(lstDetailInfo);\n" +
+                "                } catch (Exception ex) {\n" +
+                "                }\n");
+
+
+
+        ////////////////////////////////////////////////
+
+
+
+        fileWriter.append(
+                "            serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.addObj("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
+                        "            processServiceResult(serviceResult);\n" +
+                        "            result = new JSONObject(serviceResult);\n" +
+                        "        }\n" +
+                        "        return result.toString();\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    //update\n" +
+                        "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.UPDATE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST, produces = ErpConstants.LANGUAGE)\n" +
+                        "    @ResponseBody\n" +
+                        "    public String updateOBJ(@ModelAttribute(\"" + uncapitalize(tableInfo.tableName) + "Form\") "+ tableInfo.tableName+"DTO "+uncapitalize(tableInfo.tableName)+"DTO, MultipartHttpServletRequest multipartRequest,\n" +
+                        "            HttpServletRequest request) throws ParseException {\n" +
+                        "\n" +
+                        "        JSONObject result;\n" +
+                        "        String error = validateForm("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
+                        "        ServiceResult serviceResult;\n" +
+                        "        if (error != null) {\n" +
+                        "            return error;\n" +
+                        "        } else {\n");
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if(colProp.getColType().equals("Date")){
+                fileWriter.append(
+                        "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
+                                "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
+                                "            }\n"
+                );
+            }
+        }
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        fileWriter.append("\tList<CommonSubTableDTO> lstSubTable = new ArrayList<>();\n" +
+                "                try {\n" +
+                "                    if ("+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table() != null && !"+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table().isEmpty()) {\n" +
+                "                        for (CommonSubTableDTO item : "+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table()) {\n");
+
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty columnProperty = tableInfo.columns.get(i);
+            if (columnProperty.getColType().equals("Date"))
+            {
+                fileWriter.append("\t\t\t\tif (!StringUtil.isEmpty(item.get"+capitalize(columnProperty.getColName())+"())) {\n" +
+                        "                                item.set"+capitalize(columnProperty.getColName())+"(DateUtil.formatDate(item.get"+capitalize(columnProperty.getColName())+"()));\n" +
+                        "                            }\n");
+            }
+        }
+
+        fileWriter.append("\t if (    ");
+        int temp1 = 0;
+        for (int i = 0; i < tableInfo.columns.size(); i++) {
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if (colProp.isValidate()) {
+                temp1++;
+                if (colProp.getColType().equals("Long")) {
+                    if (temp1 == 1) {
+                        fileWriter.append("(item.get"+capitalize(colProp.getColName())+"() != null && item.get"+capitalize(colProp.getColName())+" > 0)\n");
+                    } else {
+                        fileWriter.append("\t\t\t||(item.get"+capitalize(colProp.getColName())+"() != null && item.get"+capitalize(colProp.getColName())+" > 0)\n");
+                    }
+                }
+                if (colProp.getColType().equals("String") || colProp.getColType().equals("Date"))
+                {
+                    if (temp1 == 1) {
+                        fileWriter.append("!Strings.isNullOrEmpty(item.get"+capitalize(colProp.getColName())+"())");
+                    } else {
+                        fileWriter.append("\t\t\t||!Strings.isNullOrEmpty(item.get"+capitalize(colProp.getColName())+"())");
+                    }
+                }
+                fileWriter.append("\n");
+            }
+
+        }
+
+        fileWriter.append(") \n" +
+                "\t\t\t{\n" +
+                "                                lstDetailInfo.add(item);\n" +
+                "                        }\n" +
+                "\n" +
+                "                        }\n" +
+                "                    }\n" +
+                "                    scheduleDTO.setLst_detail_info(lstDetailInfo);\n" +
+                "                } catch (Exception ex) {\n" +
+                "                }\n");
+
+
+
+        ////////////////////////////////////////////////
+
+
+
+
+        fileWriter.append(
+                "            serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.updateBO("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
+                        "            processServiceResult(serviceResult);\n" +
+                        "            result = new JSONObject(serviceResult);\n" +
+                        "        }\n" +
+                        "        return result.toString();\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    //validate\n" +
+                        "    private String validateForm("+ tableInfo.tableName+"DTO cbChaDTO) {\n" +
+                        "        List<ValidationResult> lsError = new ArrayList<>();\n" +
+                        "        if (lsError.size() > 0) {\n" +
+                        "            Gson gson = new Gson();\n" +
+                        "            return gson.toJson(lsError);\n" +
+                        "        }\n" +
+                        "        return null;\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.DELETE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST,\n" +
+                        "            produces = \"text/html;charset=utf-8\")\n" +
+                        "    public @ResponseBody\n" +
+                        "    String deleteObj(@ModelAttribute(\"objectCommonSearchDTO\") ObjectCommonSearchDTO objectCommonSearchDTO,\n" +
+                        "            HttpServletRequest request) {\n" +
+                        "        HttpSession session = request.getSession();\n" +
+                        "        ServiceResult serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.deleteObj(objectCommonSearchDTO);\n" +
+                        "        processServiceResult(serviceResult);\n" +
+                        "        JSONObject result = new JSONObject(serviceResult);\n" +
+                        "        return result.toString();\n" +
+                        "    }\n" +
+                        "\n" +
+                        "}\n");
+
+        fileWriter.close();
+    }
+
+    public static void genBusinessImpl_SUB(TableInfo tableInfo, String folder) throws IOException{
+        FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "BusinessImplSUB.java");
+        fileWriter.write("package com.tav.service.business;\n" +
+                "\n" +
+                "import com.tav.service.base.db.business.BaseFWBusinessImpl;\n" +
+                "import com.tav.service.bo."+ tableInfo.tableName +"BO;\n" +
+                "import com.tav.service.common.Constants;\n" +
+                "import com.tav.service.dao."+ tableInfo.tableName +"DAO;\n" +
+                "import com.tav.service.dao.ObjectReationDAO;\n" +
+                "import com.tav.service.dto."+ tableInfo.tableName + "DTO;\n" +
+                "import com.tav.service.dto.ObjectCommonSearchDTO;\n" +
+                "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
+                "import com.tav.service.dto.ObjectSearchDTO;\n" +
+                "import com.tav.service.dto.ServiceResult;\n" +
+                "import java.util.ArrayList;\n" +
+                "import java.util.List;\n" +
+                "import java.util.Date;\n" +
+                "import org.springframework.beans.factory.annotation.Autowired;\n" +
+                "import org.springframework.context.annotation.Scope;\n" +
+                "import org.springframework.context.annotation.ScopedProxyMode;\n" +
+                "import org.springframework.stereotype.Service;\n");
+        fileWriter.append("\n@Service(\""+uncapitalize(tableInfo.tableName)+"BusinessImpl\")"+
+                "\n@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)\n");
+        fileWriter.append("public class "+tableInfo.tableName+"BusinessImpl extends\n"+
+                "\t\tBaseFWBusinessImpl<"+tableInfo.tableName+"DAO, "+ tableInfo.tableName+"DTO, "+tableInfo.tableName+"BO> implements "+tableInfo.tableName+"Business {\n"
+        );
+        fileWriter.append("\n\t@Autowired\n"+
+                "\tprivate " +tableInfo.tableName+"DAO " + uncapitalize(tableInfo.tableName) +"DAO;\n"
+        );
+
+        fileWriter.append("@Autowired\n" +
+                "    private CommonSubTableDAO commonSubTableDAO;\n");
+
+        fileWriter.append("\n\t@Override\n"+
+                "\tpublic "+ tableInfo.tableName+"DAO" + " gettDAO() { return "+ uncapitalize(tableInfo.tableName) +"DAO; }\n"
+        );
+        fileWriter.append("\n\tpublic List<"+ tableInfo.tableName+"DTO>" + " getAll(SearchCommonFinalDTO searchDTOTmp, Integer offset, Integer limit) {\n"+
+                "\t\tList<"+ tableInfo.tableName+"DTO>" + " lstDTO = "+ uncapitalize(tableInfo.tableName) +"DAO"+".getAll(searchDTOTmp, offset, limit);\n" +
+                "\t\treturn lstDTO;\n\t}\n"
+        );
+        fileWriter.append("\n\tpublic Integer getCount(SearchCommonFinalDTO searchDTO) { return "+
+                uncapitalize(tableInfo.tableName)+"DAO.getCount(searchDTO); }\n"
+        );
+        String gid = tableInfo.columns.get(0).getColName();
+        String gidType = tableInfo.columns.get(0).getColType();
+        fileWriter.append("\n\t//GET ONE\n\tpublic "+ tableInfo.tableName+"DTO getOneObjById("+gidType +" " +gid+") {\n"+
+                "\t\t"+ tableInfo.tableName+"DTO dto = "+ uncapitalize(tableInfo.tableName) +"DAO"+".getOneObjById("+gid+");\n"+
+                "\t\treturn dto;\n\t}\n"
+        );
+        fileWriter.append("\n\t//add\n"+
+                "\tpublic ServiceResult addDTO("+ tableInfo.tableName+"DTO "+ uncapitalize(tableInfo.tableName) +"DTO) {\n"+
+                "\t\t"+ tableInfo.tableName+"BO bo = "+ uncapitalize(tableInfo.tableName)+"DAO"+".addDTO("+ uncapitalize(tableInfo.tableName)+"DTO);\n"+
+                "\t\tServiceResult serviceResult = new ServiceResult();\n"+
+                "\t\tserviceResult.setId(bo.get"+capitalize(gid).trim()+"());\n");
+
+        fileWriter.append("\t\tList<CommonSubTableDTO> lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table();\n" +
+                "        if (lstSubTable != null && !lstSubTable .isEmpty()) {\n" +
+                "            lstSubTable .stream().forEach((item) -> {\n" +
+                "                item.setMain_id("+uncapitalize(tableInfo.tableName)+"BO.getGid());\n" +
+                "                item.setTable_name(\""+tableInfo.tableName+"\");\n" +
+                "                item.setField_name(\"Subtable\");\n" +
+                "                commonSubTableDAO.addDTO(item);\n"  +
+                "            });\n" +
+                "        }\n"
+        );
+
+        fileWriter.append(
+                "\t\treturn serviceResult;\n"+
+                "\t}\n"
+        );
+        fileWriter.append("\n\t//update\n"+
+                "\tpublic ServiceResult updateObj("+ tableInfo.tableName+"DTO "+ uncapitalize(tableInfo.tableName)+"DTO) {\n"+
+                "\t\tServiceResult result;\n"+
+                "\t\t"+ tableInfo.tableName+"BO bo = "+ uncapitalize(tableInfo.tableName)+"DAO"+".addDTO("+ uncapitalize(tableInfo.tableName)+"DTO);\n"+
+                "\t\tresult = new ServiceResult();\n" );
+        fileWriter.append("\t\tcommonSubTableDAO.deleteListObjByTableName(searchDTO);\n");
+        fileWriter.append("\t\tList<CommonSubTableDTO> lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table();\n" +
+                "        \tif (lstSubTable != null && !lstSubTable .isEmpty()) {\n" +
+                "            lstSubTable .stream().forEach((item) -> {\n" +
+                "                item.setMain_id("+uncapitalize(tableInfo.tableName)+"BO.getGid());\n" +
+                "                item.setTable_name(\""+tableInfo.tableName+"\");\n" +
+                "                item.setField_name(\"Subtable\");\n" +
+                "                commonSubTableDAO.addDTO(item);\n"+
+                "            });\n" +
+                        "        \t}\n"
+                );
+
+        fileWriter.append(
+                "\t\treturn result;\n"+
+                "\t}\n"
+        );
+        fileWriter.append("\n\t//delete\n"+
+                "\tpublic ServiceResult deleteList(ObjectCommonSearchDTO searchDTO) {\n"+
+                "\t\tServiceResult result = "+ uncapitalize(tableInfo.tableName) +"DAO"+".deleteList(searchDTO.getLstFirst());\n"+
+                "\t\treturn result;\n"+
+                "\t}\n"
+        );
+        fileWriter.append("\n}");
+        fileWriter.close();
+    }
 
 }
