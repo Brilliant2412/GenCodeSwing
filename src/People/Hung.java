@@ -936,7 +936,7 @@ public class Hung {
     }
 
     public static void genSubTableJs(TableInfo tableInfo,String folder) throws IOException {
-        FileWriter fileWriter = new FileWriter(folder +"\\"+tableInfo.tableName +"subTable.js");
+        FileWriter fileWriter = new FileWriter(folder +"\\"+tableInfo.tableName.toLowerCase() +"subTable.js");
         fileWriter.write("var indexTopicMember = 2;\n" +
                 "var strFile = \"\";\n" +
                 "var gid = 0;\n" );
@@ -1497,7 +1497,7 @@ public class Hung {
             for (int i = 0;i<tableInfo.columns.size();i++){
                 if (tableInfo.columns.get(i).getInputType().equals("file")){
                     fileWriter.append("                if($('#isDeleteFile_subdoc').val() === '0'){\n" +
-                            "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + "+tableInfo.columns.get(i).getColName()+" + '\\')\"  style=\"cursor:pointer; color: blue;\"><span >' + (st_ref6 + '').substring(0, 30) + '...' + '</span></a>');\n" +
+                            "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + "+tableInfo.columns.get(i).getColName()+" + '\\')\"  style=\"cursor:pointer; color: blue;\"><span >' + ("+tableInfo.columns.get(i).getColName()+" + '').substring(0, 30) + '...' + '</span></a>');\n" +
                             "                }\n" +
                             "                else{\n" +
                             "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('');\n" +
