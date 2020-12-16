@@ -937,53 +937,17 @@ public class Hung {
 
     public static void genSubTableJs(TableInfo tableInfo,String folder) throws IOException {
         FileWriter fileWriter = new FileWriter(folder +"\\"+tableInfo.tableName.toLowerCase() +"subTable.js");
-        fileWriter.write("var indexTopicMember = 2;\n" +
+        fileWriter.write("var "+uncapitalize(tableInfo.tableName) +"indexTopicMember = 2;\n" +
                 "var strFile = \"\";\n" +
                 "var gid = 0;\n" );
-
-        /*********************************************************************************************
-         *                                getInfoDocumentGobyID
-         *********************************************************************************************/
-        fileWriter.append("function getInfoDocumentGoById(Id) {\n" +
-                "    var contact = [];\n" +
-                "    $.ajax({\n" +
-                "        async: false,\n" +
-                "        data: {gid: Id},\n" +
-                "        url: \"getDocumentGoById.json\",\n" +
-                "        success: function (data) {\n" +
-                "            if (data !== null) {\n" +
-                "                contact.push(data.abstracts, data.doc_dateST);\n" +
-                "            }\n" +
-                "        }\n" +
-                "    });\n" +
-                "    return contact;\n" +
-                "};\n" +
-                "function getInfoDocumentToById(Id) {\n" +
-                "    var contact = [];\n" +
-                "    $.ajax({\n" +
-                "        async: false,\n" +
-                "        data: {gid: Id},\n" +
-                "        url: \"getonedocumentarybyidbyid.json\",\n" +
-                "        success: function (data) {\n" +
-                "            if (data !== null) {\n" +
-                "                contact.push(data.release_organ,\n" +
-                "                        data.contents,\n" +
-                "                        data.documentary_number,\n" +
-                "                        data.documentary_dateST\n" +
-                "                        );\n" +
-                "            }\n" +
-                "        }\n" +
-                "    });\n" +
-                "    return contact;\n" +
-                "};\n");
         /*********************************************************************************************
          *                                 onClickAddData func
          *********************************************************************************************/
-        fileWriter.append("function onClickAddData() {\n" +
+        fileWriter.append("function "+uncapitalize(tableInfo.tableName)+"onClickAddData() {\n" +
                 "    vt_form.reset($('#subTableForm'));\n" +
-                "    $(\"#isedit1\").val(\"0\");\n" +
+                "    $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val(\"0\");\n" +
                 "    document.getElementById('div_btn_delete_file').style.display = \"none\";\n" +
-                "    $(\"#isDeleteFile_subdoc\").val(\"0\");\n" +
+                "    $(\"#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc\").val(\"0\");\n" +
                 "    vt_form.clearError();\n");
 
         boolean checkfile = false;
@@ -991,7 +955,7 @@ public class Hung {
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("Combobox")){
                 ColumnProperty colProp = tableInfo.columns.get(i);
-                fileWriter.append("\tvt_combobox.buildCombobox(\"cb" + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
+                fileWriter.append("\tvt_combobox.buildCombobox(\"cb"+uncapitalize(tableInfo.tableName) + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
             }
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
@@ -1010,20 +974,20 @@ public class Hung {
         //STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
-                fileWriter.append("\t$(\"#"+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n");
+                fileWriter.append("\t$(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n");
             }
         }
 
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("\t$(\"#"+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n");
+                fileWriter.append("\t$(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n");
             }
         }
         //DATE PICKER
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("\n\t$(\"#"+tableInfo.columns.get(i).getColName()+"\").datepicker({\n" +
+                fileWriter.append("\n\t$(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").datepicker({\n" +
                         "        duration: \"fast\",\n" +
                         "        changeMonth: true,\n" +
                         "        changeYear: true,\n" +
@@ -1050,31 +1014,31 @@ public class Hung {
         fileWriter.append("$(document).on(\"click\", \".remove-cha-bomb\", function () {\n" +
                 "    var id = $(this).attr(\"data-id\");\n" +
                 "    $(\"#dataChaBomb_\" + id).remove();\n" +
-                "    reloadSttMember();\n" +
-                "    reloadMemberIndex();\n" +
-                "    indexTopicMember--;\n" +
+                "    "+uncapitalize(tableInfo.tableName)+"reloadSttMember();\n" +
+                "    "+uncapitalize(tableInfo.tableName)+"reloadMemberIndex();\n" +
+                "    "+uncapitalize(tableInfo.tableName)+"indexTopicMember--;\n" +
                 "});\n");
         /*********************************************************************************************
          *                                 setValueToFormSubTable for combobox
          *********************************************************************************************/
-        fileWriter.append("setValueToFormSubTable = function () {\n");
+        fileWriter.append(uncapitalize(tableInfo.tableName)+"setValueToFormSubTable = function () {\n");
 
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long")){
                 ColumnProperty colProp = tableInfo.columns.get(i);
-                fileWriter.append("\t$('input[name=\""+colProp.getColName()+"\"]').val(item);\n" +
-                        "\titem = $('#cb"+colProp.getColName()+"Combobox').val();\n");
+                fileWriter.append("\t$('input[name=\""+uncapitalize(tableInfo.tableName)+colProp.getColName()+"\"]').val(item);\n" +
+                        "\titem = $('#cb"+uncapitalize(tableInfo.tableName)+colProp.getColName()+"Combobox').val();\n");
             }
         }
         fileWriter.append("};\n");
         /*********************************************************************************************
          *                                 saveTopicMember
          *********************************************************************************************/
-        fileWriter.append("\nfunction saveTopicMember() {\n" +
+        fileWriter.append("\nfunction "+uncapitalize(tableInfo.tableName)+"saveTopicMember() {\n" +
                 "\n" +
                 "    vt_form.clearError();\n" +
                 "    setValueToFormSubTable();\n" +
-                "    if (vt_form.validate1(\"#subTableForm\", null, objSubTable.validateRule)) {\n" +
+                "    if (vt_form.validate1(\"#subTableForm\", null, "+uncapitalize(tableInfo.tableName)+"SubTable.validateRule)) {\n" +
                 "        //lưu file\n" +
                 "        $.ajax({\n" +
                 "            traditional: true,\n" +
@@ -1101,20 +1065,20 @@ public class Hung {
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
-                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#cb"+tableInfo.columns.get(i).getColName()+"Combobox\").val();\n" +
-                        "                var "+tableInfo.columns.get(i).getColName()+"Text = $(\"#cb"+tableInfo.columns.get(i).getColName()+"Combobox>option:selected\").html();\n");
+                fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#cb"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Combobox\").val();\n" +
+                        "                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Text = $(\"#cb"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Combobox>option:selected\").html();\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
-                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#"+tableInfo.columns.get(i).getColName()+"\").val();\n");
+                fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#"+tableInfo.columns.get(i).getColName()+"\").val();\n");
+                fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
         int demxuongdong = 0;
@@ -1123,13 +1087,13 @@ public class Hung {
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
                 demxuongdong++;
-                fileWriter.append(tableInfo.columns.get(i).getColName()+", "+tableInfo.columns.get(i).getColName()+"Text, ");
+                fileWriter.append(uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+", "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Text, ");
             }
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
                 demxuongdong++;
-                fileWriter.append(tableInfo.columns.get(i).getColName()+", ");
+                fileWriter.append(uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+", ");
                 if (demxuongdong == 11){
                     fileWriter.append("\n");
                 }
@@ -1137,15 +1101,15 @@ public class Hung {
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append(tableInfo.columns.get(i).getColName()+", ");
+                fileWriter.append(uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+", ");
             }
         }
         fileWriter.append("1)\n"+
                 "                        );"
         );
-        fileWriter.append("\n                reloadMemberIndex();\n" +
-                "                indexTopicMember++;\n" +
-                "                reloadSttMember();\n" +
+        fileWriter.append("\n                "+uncapitalize(tableInfo.tableName)+"reloadMemberIndex();\n" +
+                "                "+uncapitalize(tableInfo.tableName)+"indexTopicMember++;\n" +
+                "                "+uncapitalize(tableInfo.tableName)+"reloadSttMember();\n" +
                 "                $(\"#dialog-formAddTopicMember\").dialog(\"close\");\n" +
                 "            });\n" +
                 "        });\n" +
@@ -1156,7 +1120,7 @@ public class Hung {
         /*********************************************************************************************
          *                                 reloadSttMember
          *********************************************************************************************/
-        fileWriter.append("function reloadSttMember() {\n" +
+        fileWriter.append("function "+uncapitalize(tableInfo.tableName)+"reloadSttMember() {\n" +
                 "    var count = 0;\n" +
                 "    $(\"#dataDetailInfo tr\").each(function () {\n" +
                 "        count++;\n" +
@@ -1167,7 +1131,7 @@ public class Hung {
         /*********************************************************************************************
          *                                 reloadMemberIndex
          *********************************************************************************************/
-        fileWriter.append("function reloadMemberIndex() {\n" +
+        fileWriter.append("function "+uncapitalize(tableInfo.tableName)+"reloadMemberIndex() {\n" +
                 "    var count = 2;\n" +
                 "    $('.dataChaBomb-child').each(function (i, obj) {\n" +
                 "        count++;\n");
@@ -1175,23 +1139,23 @@ public class Hung {
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
-                fileWriter.append("        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n" +
-                        "        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n");
+                fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n" +
+                        "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n");
             }
         }
 
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
-                fileWriter.append("        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n" +
-                        "        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n");
+                fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n" +
+                        "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n" +
-                        "        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n");
+                fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n" +
+                        "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n");
             }
 
         }
@@ -1201,7 +1165,7 @@ public class Hung {
          *                                 addNewDataToTable
          *********************************************************************************************/
         demxuongdong = 0;
-        fileWriter.append("\nfunction addNewDataToTable(count, id, ");
+        fileWriter.append("\nfunction "+uncapitalize(tableInfo.tableName)+"addNewDataToTable(count, id, ");
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
                 demxuongdong++;
@@ -1226,26 +1190,26 @@ public class Hung {
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
-                fileWriter.append("    "+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : \"\";\n");
+                fileWriter.append("    "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : \"\";\n");
             }
         }
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
-                fileWriter.append("    "+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : 0;\n");
+                fileWriter.append("    "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : 0;\n");
             }
         }
         fileWriter.append("\n\tgid = id;\n");
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("    "+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : \"\";\n");
+                fileWriter.append("    "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : \"\";\n");
             }
         }
         // COMBOBOX TEXT
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
-                fileWriter.append("\tvar txt"+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" > 0 ? ("+tableInfo.columns.get(i).getColName()+"Text + '').trim() : \"\";\n");
+                fileWriter.append("\tvar txt"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" > 0 ? ("+tableInfo.columns.get(i).getColName()+"Text + '').trim() : \"\";\n");
             }
         }
         // html + nhung thang hien ra
@@ -1261,9 +1225,9 @@ public class Hung {
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true && !tableInfo.columns.get(i).getInputType().equals("file")){
                 if (countS %2 == 1){
-                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
                 }else{
-                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
                 }
                 countS--;
             }
@@ -1273,9 +1237,9 @@ public class Hung {
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
                 if (countS%2 == 1){
-                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
                 }else{
-                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
                 }
                 countS--;
             }
@@ -1284,7 +1248,7 @@ public class Hung {
         // combobox text
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
-                fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML(txt"+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML(txt"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
             }
         }
 
@@ -1292,8 +1256,8 @@ public class Hung {
         fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML('');");
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("file")){
-                fileWriter.append("\n    if ("+tableInfo.columns.get(i).getColName()+" !== null && "+tableInfo.columns.get(i).getColName()+" !== \"\") {\n" +
-                        "        html += '<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + "+tableInfo.columns.get(i).getColName()+" + '\\')\"  style=\"cursor:pointer;color: blue;\"><span >' + ("+tableInfo.columns.get(i).getColName()+" + '').substring(0, 30) + '...' + '</span></a></td>'; //\n" +
+                fileWriter.append("\n    if ("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" !== null && "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" !== \"\") {\n" +
+                        "        html += '<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + '\\')\"  style=\"cursor:pointer;color: blue;\"><span >' + ("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + '').substring(0, 30) + '...' + '</span></a></td>'; //\n" +
                         "    } else {\n" +
                         "        html += \"</td>\";\n" +
                         "    }\n");
@@ -1304,19 +1268,19 @@ public class Hung {
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")) {
-                fileWriter.append("    html += \"<input class='" + tableInfo.columns.get(i).getColName() + "' type='hidden' value='\" + " + tableInfo.columns.get(i).getColName() + " + \"' name='lst_detail_info[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName() + "' />\";\n");
+                fileWriter.append("    html += \"<input class='" +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + "' type='hidden' value='\" + " +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + " + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstDetailInfo[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName() + "' />\";\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
-                fileWriter.append("    html += \"<input type='hidden' class='"+tableInfo.columns.get(i).getColName()+"' value='\" + "+tableInfo.columns.get(i).getColName()+" + \"' name='lst_detail_info[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"' />\";\n");
+                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='_lstDetailInfo[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"' />\";\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("    html += \"<input type='hidden' class='"+tableInfo.columns.get(i).getColName()+"' value='\" + "+tableInfo.columns.get(i).getColName()+" + \"' name='lst_detail_info[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"' />\";");
+                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='_lstDetailInfo[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"' />\";");
             }
         }
         fileWriter.append("\n    if (isEdit === 1) {\n" +
@@ -1329,7 +1293,7 @@ public class Hung {
                 "    return html;\n" +
                 "}\n");
 
-        fileWriter.append("downloadFileDocumentSubtable = function (filename) {\n" +
+        fileWriter.append(uncapitalize(tableInfo.tableName)+"downloadFileDocumentSubtable = function (filename) {\n" +
                 "    location.href = \"/TopicFiles/\" + filename;\n" +
                 "};\n");
         fileWriter.append("//edit dialog \n");
@@ -1346,26 +1310,26 @@ public class Hung {
         //tableInfo.columns.get(i).getColName()
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")) {
-                fileWriter.append("    var "+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+tableInfo.columns.get(i).getColName()+"\").val();\n");
+                fileWriter.append("    var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
-                fileWriter.append("    var "+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+tableInfo.columns.get(i).getColName()+"\").val();\n");
+                fileWriter.append("    var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")) {
-                fileWriter.append("    var "+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+tableInfo.columns.get(i).getColName()+"\").val();\n");
+                fileWriter.append("    var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
         //build combobox
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("Combobox")){
                 ColumnProperty colProp = tableInfo.columns.get(i);
-                fileWriter.append("\tvt_combobox.buildCombobox(\"cb" + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", "+colProp.getColName()+", \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
+                fileWriter.append("\tvt_combobox.buildCombobox(\"cb"+uncapitalize(tableInfo.tableName) + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", "+colProp.getColName()+", \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
             }
         }
         fileWriter.append("\n" +
@@ -1375,13 +1339,13 @@ public class Hung {
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")) {
-                fileWriter.append("\n    $(\"#"+tableInfo.columns.get(i).getColName()+"\").val("+tableInfo.columns.get(i).getColName()+");");
+                fileWriter.append("\n    $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");");
             }
         }
         //date picker
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")) {
-                fileWriter.append("\n    $(\"#"+tableInfo.columns.get(i).getColName()+"\").datepicker({\n" +
+                fileWriter.append("\n    $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").datepicker({\n" +
                         "        duration: \"fast\",\n" +
                         "        changeMonth: true,\n" +
                         "        changeYear: true,\n" +
@@ -1398,7 +1362,7 @@ public class Hung {
                 "    $('input[type=\"file\"]').change(function (e) {\n" +
                 "        strFile = e.target.files[0].name;\n" +
                 "    });\n" +
-                "    $(\"#isedit1\").val(id);\n" +
+                "    $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val(id);\n" +
                 "    $('#dialog-formAddTopicMember').dialog('open');\n" +
                 "    $('#dialog-formAddTopicMember').parent().addClass(\"dialogAddEditMemberTopic\");\n" +
                 "    $('.dialogAddEditMemberTopic').find('.ui-dialog-title').empty().append(\"Chỉnh sửa thông tin\");\n" +
@@ -1407,7 +1371,7 @@ public class Hung {
         /*********************************************************************************************
          *                                 editTopicMember
          *********************************************************************************************/
-        fileWriter.append("function editTopicMember() {\n" +
+        fileWriter.append("function "+uncapitalize(tableInfo.tableName)+"editTopicMember() {\n" +
                 "    vt_form.clearError();\n" +
                 "    setValueToFormSubTable();\n" +
                 "    //lưu file\n" +
@@ -1436,32 +1400,32 @@ public class Hung {
                 "        }).success(function (result) {\n"
 
         );
-        fileWriter.append("            if (vt_form.validate1(\"#subTableForm\", null, objSubTable.validateRule)) {\n" +
-                "                var id = $(\"#isedit1\").val();\n");
+        fileWriter.append("            if (vt_form.validate1(\"#subTableForm\", null, "+uncapitalize(tableInfo.tableName)+"SubTable.validateRule)) {\n" +
+                "                var id = $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val();\n");
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
-                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#cb"+tableInfo.columns.get(i).getColName()+"Combobox\").val();\n" +
-                        "                var "+tableInfo.columns.get(i).getColName()+"Text = $(\"#cb"+tableInfo.columns.get(i).getColName()+"Combobox>option:selected\").html();\n");
+                fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#cb"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Combobox\").val();\n" +
+                        "                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Text = $(\"#cb"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Combobox>option:selected\").html();\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
-                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#"+tableInfo.columns.get(i).getColName()+"\").val();\n");
+                fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#"+tableInfo.columns.get(i).getColName()+"\").val();\n");
+                fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
 
         // COMBOBOXTEXT
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
-                fileWriter.append("                var txt"+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" > 0 ? ("+tableInfo.columns.get(i).getColName()+"Text + '').trim() : \"\";\n");
+                fileWriter.append("                var txt"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" > 0 ? ("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Text + '').trim() : \"\";\n");
             }
         }
 
@@ -1471,7 +1435,7 @@ public class Hung {
         int nth_child = 2;
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true && !tableInfo.columns.get(i).getInputType().equals("file")){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+tableInfo.columns.get(i).getColName()+");\n");
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
                 nth_child++;
             }
         }
@@ -1479,7 +1443,7 @@ public class Hung {
         //date
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+tableInfo.columns.get(i).getColName()+");\n");
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
                 nth_child++;
             }
         }
@@ -1487,7 +1451,7 @@ public class Hung {
         // combobox text
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+tableInfo.columns.get(i).getColName()+");\n");
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
                 nth_child++;
             }
         }
@@ -1497,7 +1461,7 @@ public class Hung {
             for (int i = 0;i<tableInfo.columns.size();i++){
                 if (tableInfo.columns.get(i).getInputType().equals("file")){
                     fileWriter.append("                if($('#isDeleteFile_subdoc').val() === '0'){\n" +
-                            "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + "+tableInfo.columns.get(i).getColName()+" + '\\')\"  style=\"cursor:pointer; color: blue;\"><span >' + ("+tableInfo.columns.get(i).getColName()+" + '').substring(0, 30) + '...' + '</span></a>');\n" +
+                            "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + '\\')\"  style=\"cursor:pointer; color: blue;\"><span >' + ("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + '').substring(0, 30) + '...' + '</span></a>');\n" +
                             "                }\n" +
                             "                else{\n" +
                             "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('');\n" +
@@ -1509,13 +1473,13 @@ public class Hung {
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+tableInfo.columns.get(i).getColName()+"\").val("+tableInfo.columns.get(i).getColName()+");\n");
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String") && !tableInfo.columns.get(i).getInputType().equals("file")){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+tableInfo.columns.get(i).getColName()+"\").val("+tableInfo.columns.get(i).getColName()+");\n");
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
 
@@ -1524,25 +1488,25 @@ public class Hung {
             for (int i = 0;i<tableInfo.columns.size();i++){
                 if (tableInfo.columns.get(i).getInputType().equals("file")){
                     fileWriter.append("                if($('#isDeleteFile_subdoc').val() === '0'){\n" +
-                            "                    $(\"#dataChaBomb_\" + id).find(\"."+tableInfo.columns.get(i).getColName()+"\").val("+tableInfo.columns.get(i).getColName()+");\n" +
+                            "                    $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n" +
                             "                }\n" +
                             "                else{\n" +
-                            "                    $(\"#dataChaBomb_\" + id).find(\"."+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n" +
+                            "                    $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n" +
                             "                }\n");
                 }
             }
         }
-
+        //+uncapitalize(tableInfo.tableName)+
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+tableInfo.columns.get(i).getColName()+"\").val("+tableInfo.columns.get(i).getColName()+");\n");
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
 
-        fileWriter.append("\n                reloadMemberIndex();\n" +
-                "                indexTopicMember++;\n" +
-                "                reloadSttMember();\n" +
+        fileWriter.append("\n                "+uncapitalize(tableInfo.tableName)+"reloadMemberIndex();\n" +
+                "                "+uncapitalize(tableInfo.tableName)+"indexTopicMember++;\n" +
+                "                "+uncapitalize(tableInfo.tableName)+"reloadSttMember();\n" +
                 "                $(\"#dialog-formAddTopicMember\").dialog(\"close\");\n" +
                 "            }\n" +
                 "        });\n");
@@ -1572,7 +1536,7 @@ public class Hung {
         /*********************************************************************************************
          *                                 Validate
          *********************************************************************************************/
-        fileWriter.append("var objSubTable = {\n" +
+        fileWriter.append("var "+uncapitalize(tableInfo.tableName)+"SubTable = {\n" +
                 "    validateRule: {\n" +
                 "        rules: {\n");
         int validateLast = 0;
@@ -1585,11 +1549,11 @@ public class Hung {
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isValidate() == true){
                 if (i!= validateLast){
-                    fileWriter.append("\t\t\t"+tableInfo.columns.get(i).getColName()+": {\n" +
+                    fileWriter.append("\t\t\t"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+": {\n" +
                             "                required: true\n" +
                             "            },\n");
                 }else{
-                    fileWriter.append("\t\t\t"+tableInfo.columns.get(i).getColName()+": {\n" +
+                    fileWriter.append("\t\t\t"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+": {\n" +
                             "                required: true\n" +
                             "            }\n" +
                             "        },\n");
@@ -1601,11 +1565,11 @@ public class Hung {
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isValidate() == true){
                 if (i!= validateLast){
-                    fileWriter.append("\t\t\t"+tableInfo.columns.get(i).getColName()+": {\n" +
+                    fileWriter.append("\t\t\t"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+": {\n" +
                             "                 required: \""+tableInfo.columns.get(i).getValidateMessage()+"\"" +
                             "            \n\t\t\t},\n");
                 }else{
-                    fileWriter.append("\t\t\t"+tableInfo.columns.get(i).getColName()+": {\n" +
+                    fileWriter.append("\t\t\t"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+": {\n" +
                             "                 required: \""+tableInfo.columns.get(i).getValidateMessage()+"\"" +
                             "            \n\t\t\t}" +
                             "           \n\t\t}\n"+
@@ -1619,12 +1583,12 @@ public class Hung {
         if (checkfile == true){
             for (int i = 0;i<tableInfo.columns.size();i++){
                 if (tableInfo.columns.get(i).getInputType().equals("file")){
-                    fileWriter.append("\nonClickBtnDeleteFile = function(){\n" +
+                    fileWriter.append(uncapitalize(tableInfo.tableName)+"onClickBtnDeleteFile = function(){\n" +
                             "    var html = '';\n" +
-                            "    html += '<input class=\"form-control\" placeholder=\"\" name=\""+tableInfo.columns.get(i).getColName()+"\" id=\""+tableInfo.columns.get(i).getColName()+"\" type=\"file\">';\n" +
+                            "    html += '<input class=\"form-control\" placeholder=\"\" name=\""+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\" id=\""+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\" type=\"file\">';\n" +
                             "    html += '<span id=\""+tableInfo.columns.get(i).getColName()+"_error\" class=\"note note-error\"></span>';\n" +
                             "    $(\"#cbfile_attach\").html(html);\n" +
-                            "    $('#isDeleteFile_subdoc').val('1');\n" +
+                            "    $('#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc').val('1');\n" +
                             "};\n");
                 }
             }
