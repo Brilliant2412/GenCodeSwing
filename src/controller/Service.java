@@ -5,6 +5,7 @@ import model.TableInfo;
 import static controller.CodeGenerator.capitalize;
 import static controller.CodeGenerator.uncapitalize;
 import People.*;
+import model.TableSet;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -1548,18 +1549,19 @@ public class Service {
         }
     }
 
-    public static void genService(TableInfo tableInfo, String folder) throws IOException {
+    public static void genService(TableSet tableSet, String folder) throws IOException {
+        TableInfo tableInfo = tableSet.tableInfo;
         File dir = new File(folder);
         dir.mkdirs();
         Hieu.genBO(tableInfo, folder);
-        Hieu.genDTO(tableInfo, folder);
+        Hieu.genDTO(tableSet, folder);
         //genDAO(tableInfo, folder);
         genBusiness(tableInfo, folder);
         genBusinessImpl(tableInfo, folder);
         genRsService(tableInfo, folder);
         genRsServiceImpl(tableInfo, folder);
         genBean(tableInfo, folder);
-        genDAOSearch(tableInfo, folder);
+        //genDAOSearch(tableInfo, folder);
         genDAO1(tableInfo, folder);
         //Tung.genDAO1(tableInfo, folder);
 
