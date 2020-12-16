@@ -909,4 +909,727 @@ public class Hung {
             fileWriter.close();
     
     }
+
+    public static int dem(TableInfo tableInfo){
+        int dem = 0;
+        //string
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true){
+                dem++;
+            }
+        }
+
+        // combobox
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
+                dem++;
+            }
+        }
+        //date
+
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
+                dem++;
+            }
+        }
+        return dem;
+    }
+
+    public static void genSubTableJs(TableInfo tableInfo,String folder) throws IOException {
+        FileWriter fileWriter = new FileWriter(folder +"\\"+tableInfo.tableName.toLowerCase() +"subTable.js");
+        fileWriter.write("var indexTopicMember = 2;\n" +
+                "var strFile = \"\";\n" +
+                "var gid = 0;\n" );
+
+        /*********************************************************************************************
+         *                                getInfoDocumentGobyID
+         *********************************************************************************************/
+        fileWriter.append("function getInfoDocumentGoById(Id) {\n" +
+                "    var contact = [];\n" +
+                "    $.ajax({\n" +
+                "        async: false,\n" +
+                "        data: {gid: Id},\n" +
+                "        url: \"getDocumentGoById.json\",\n" +
+                "        success: function (data) {\n" +
+                "            if (data !== null) {\n" +
+                "                contact.push(data.abstracts, data.doc_dateST);\n" +
+                "            }\n" +
+                "        }\n" +
+                "    });\n" +
+                "    return contact;\n" +
+                "};\n" +
+                "function getInfoDocumentToById(Id) {\n" +
+                "    var contact = [];\n" +
+                "    $.ajax({\n" +
+                "        async: false,\n" +
+                "        data: {gid: Id},\n" +
+                "        url: \"getonedocumentarybyidbyid.json\",\n" +
+                "        success: function (data) {\n" +
+                "            if (data !== null) {\n" +
+                "                contact.push(data.release_organ,\n" +
+                "                        data.contents,\n" +
+                "                        data.documentary_number,\n" +
+                "                        data.documentary_dateST\n" +
+                "                        );\n" +
+                "            }\n" +
+                "        }\n" +
+                "    });\n" +
+                "    return contact;\n" +
+                "};\n");
+        /*********************************************************************************************
+         *                                 onClickAddData func
+         *********************************************************************************************/
+        fileWriter.append("function onClickAddData() {\n" +
+                "    vt_form.reset($('#subTableForm'));\n" +
+                "    $(\"#isedit1\").val(\"0\");\n" +
+                "    document.getElementById('div_btn_delete_file').style.display = \"none\";\n" +
+                "    $(\"#isDeleteFile_subdoc\").val(\"0\");\n" +
+                "    vt_form.clearError();\n");
+
+        boolean checkfile = false;
+        // COMBOBOX
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("Combobox")){
+                ColumnProperty colProp = tableInfo.columns.get(i);
+                fileWriter.append("\tvt_combobox.buildCombobox(\"cb" + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
+            }
+        }
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("file")){
+                checkfile = true;
+                break;
+            }
+        }
+        if (checkfile == true){
+            fileWriter.append("\t$(\"#fileTopicFilesTmpSubTable\").html(\"\");\n" +
+                    "\tvar html = \"\";\n" +
+                    "\thtml += '<input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable\" id=\"filestTmpSubTable\" type=\"file\"/>';\n" +
+                    "\thtml += '<span id=\"filestTmpSubTable_error\" class=\"note note-error\"></span>';\n" +
+                    "\t$(\"#cbfile_fileTopicFilesTmpSubTable\").html(html);\n");
+        }
+        //STRING
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String")){
+                fileWriter.append("\t$(\"#"+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n");
+            }
+        }
+
+        //DATE
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")){
+                fileWriter.append("\t$(\"#"+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n");
+            }
+        }
+        //DATE PICKER
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")){
+                fileWriter.append("\n\t$(\"#"+tableInfo.columns.get(i).getColName()+"\").datepicker({\n" +
+                        "        duration: \"fast\",\n" +
+                        "        changeMonth: true,\n" +
+                        "        changeYear: true,\n" +
+                        "        dateFormat: 'dd/mm/yy',\n" +
+                        "        constrainInput: true,\n" +
+                        "        disabled: false,\n" +
+                        "        yearRange: \"-10:+50\",\n" +
+                        "        onSelect: function (selected) {\n" +
+                        "        }\n" +
+                        "    });\n");
+            }
+        }
+
+
+
+
+        fileWriter.append("    $('#dialog-formAddTopicMember').dialog('open');\n" +
+                "    $('#dialog-formAddTopicMember').parent().addClass(\"dialogAddEditMemberTopic\");\n" +
+                "    $('.dialogAddEditMemberTopic').find('.ui-dialog-title').empty().append(\"Thêm mới bảng con\");\n");
+        fileWriter.append("\n}\n");
+        /*********************************************************************************************
+         *                                 on click remove
+         *********************************************************************************************/
+        fileWriter.append("$(document).on(\"click\", \".remove-cha-bomb\", function () {\n" +
+                "    var id = $(this).attr(\"data-id\");\n" +
+                "    $(\"#dataChaBomb_\" + id).remove();\n" +
+                "    reloadSttMember();\n" +
+                "    reloadMemberIndex();\n" +
+                "    indexTopicMember--;\n" +
+                "});\n");
+        /*********************************************************************************************
+         *                                 setValueToFormSubTable for combobox
+         *********************************************************************************************/
+        fileWriter.append("setValueToFormSubTable = function () {\n");
+
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long")){
+                ColumnProperty colProp = tableInfo.columns.get(i);
+                fileWriter.append("\t$('input[name=\""+colProp.getColName()+"\"]').val(item);\n" +
+                        "\titem = $('#cb"+colProp.getColName()+"Combobox').val();\n");
+            }
+        }
+        fileWriter.append("};\n");
+        /*********************************************************************************************
+         *                                 saveTopicMember
+         *********************************************************************************************/
+        fileWriter.append("\nfunction saveTopicMember() {\n" +
+                "\n" +
+                "    vt_form.clearError();\n" +
+                "    setValueToFormSubTable();\n" +
+                "    if (vt_form.validate1(\"#subTableForm\", null, objSubTable.validateRule)) {\n" +
+                "        //lưu file\n" +
+                "        $.ajax({\n" +
+                "            traditional: true,\n" +
+                "            url: \"token.json\",\n" +
+                "            dataType: \"text\",\n" +
+                "            type: \"GET\"\n" +
+                "        }).success(function (result) {\n" +
+                "            var formdataTmp = new FormData();\n" +
+                "            var formData = new FormData(document.getElementById(\"subTableForm\"));\n" +
+                "            for (var pair of formData.entries()) {\n" +
+                "                formdataTmp.append(pair[0], pair[1]);\n" +
+                "            }\n" +
+                "            $.ajax({\n" +
+                "                async: false,\n" +
+                "                url: \"addFileSubTable.html\",\n" +
+                "                data: formdataTmp,\n" +
+                "                processData: false,\n" +
+                "                contentType: false,\n" +
+                "                enctype: 'multipart/form-data',\n" +
+                "                type: \"POST\",\n" +
+                "                headers: {\"X-XSRF-TOKEN\": result},\n" +
+                "                dataType: 'json'\n" +
+                "            }).success(function (result) {\n");
+        // COMBOBOX
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#cb"+tableInfo.columns.get(i).getColName()+"Combobox\").val();\n" +
+                        "                var "+tableInfo.columns.get(i).getColName()+"Text = $(\"#cb"+tableInfo.columns.get(i).getColName()+"Combobox>option:selected\").html();\n");
+            }
+        }
+        // STRING
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String")){
+                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#"+tableInfo.columns.get(i).getColName()+"\").val();\n");
+            }
+        }
+        //DATE
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")){
+                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#"+tableInfo.columns.get(i).getColName()+"\").val();\n");
+            }
+        }
+        int demxuongdong = 0;
+        fileWriter.append("\n                $(\"#dataDetailInfo\").append(\n" +
+                "                        addNewDataToTable(indexTopicMember, gid, ");
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+                demxuongdong++;
+                fileWriter.append(tableInfo.columns.get(i).getColName()+", "+tableInfo.columns.get(i).getColName()+"Text, ");
+            }
+        }
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String")){
+                demxuongdong++;
+                fileWriter.append(tableInfo.columns.get(i).getColName()+", ");
+                if (demxuongdong == 11){
+                    fileWriter.append("\n");
+                }
+            }
+        }
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")){
+                fileWriter.append(tableInfo.columns.get(i).getColName()+", ");
+            }
+        }
+        fileWriter.append("1)\n"+
+                "                        );"
+        );
+        fileWriter.append("\n                reloadMemberIndex();\n" +
+                "                indexTopicMember++;\n" +
+                "                reloadSttMember();\n" +
+                "                $(\"#dialog-formAddTopicMember\").dialog(\"close\");\n" +
+                "            });\n" +
+                "        });\n" +
+                "   }\n" +
+                "}\n");
+
+
+        /*********************************************************************************************
+         *                                 reloadSttMember
+         *********************************************************************************************/
+        fileWriter.append("function reloadSttMember() {\n" +
+                "    var count = 0;\n" +
+                "    $(\"#dataDetailInfo tr\").each(function () {\n" +
+                "        count++;\n" +
+                "        $(this).find(\"td:first-child\").html(count);\n" +
+                "    });\n" +
+                "}\n");
+
+        /*********************************************************************************************
+         *                                 reloadMemberIndex
+         *********************************************************************************************/
+        fileWriter.append("function reloadMemberIndex() {\n" +
+                "    var count = 2;\n" +
+                "    $('.dataChaBomb-child').each(function (i, obj) {\n" +
+                "        count++;\n");
+
+        // COMBOBOX
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+                fileWriter.append("        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n" +
+                        "        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n");
+            }
+        }
+
+        // STRING
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String")){
+                fileWriter.append("        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n" +
+                        "        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n");
+            }
+        }
+        //DATE
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")){
+                fileWriter.append("        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n" +
+                        "        $(this).find(\"."+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \"lst_sub_table[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"\");\n");
+            }
+
+        }
+        fileWriter.append("    });\n" +
+                "}\n");
+        /*********************************************************************************************
+         *                                 addNewDataToTable
+         *********************************************************************************************/
+        demxuongdong = 0;
+        fileWriter.append("\nfunction addNewDataToTable(count, id, ");
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+                demxuongdong++;
+                fileWriter.append(tableInfo.columns.get(i).getColName()+", "+tableInfo.columns.get(i).getColName()+"Text, ");
+            }
+        }
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String")){
+                demxuongdong++;
+                fileWriter.append(tableInfo.columns.get(i).getColName()+", ");
+                if (demxuongdong == 11){
+                    fileWriter.append("\n");
+                }
+            }
+        }
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")){
+                fileWriter.append(tableInfo.columns.get(i).getColName()+", ");
+            }
+        }
+        fileWriter.append("isEdit) {\n");
+        // STRING
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String")){
+                fileWriter.append("    "+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : \"\";\n");
+            }
+        }
+        // COMBOBOX
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+                fileWriter.append("    "+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : 0;\n");
+            }
+        }
+        fileWriter.append("\n\tgid = id;\n");
+        //DATE
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")){
+                fileWriter.append("    "+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : \"\";\n");
+            }
+        }
+        // COMBOBOX TEXT
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+                fileWriter.append("\tvar txt"+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" > 0 ? ("+tableInfo.columns.get(i).getColName()+"Text + '').trim() : \"\";\n");
+            }
+        }
+        // html + nhung thang hien ra
+        fileWriter.append("\n\tvar html = \"<tr class='dataChaBomb-child' id='dataChaBomb_\" + count + \"'>\";\n" +
+                "    html += \"<td align='center' valign='middle'>\" + (count - 2) + \"</td>\";\n");
+        //string
+        int countS = dem(tableInfo);
+        if (countS%2 == 1){
+
+        }else{
+            countS++;
+        }
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true && !tableInfo.columns.get(i).getInputType().equals("file")){
+                if (countS %2 == 1){
+                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                }else{
+                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                }
+                countS--;
+            }
+        }
+
+        //date
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
+                if (countS%2 == 1){
+                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                }else{
+                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                }
+                countS--;
+            }
+        }
+
+        // combobox text
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
+                fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML(txt"+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+            }
+        }
+
+
+        fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML('');");
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("file")){
+                fileWriter.append("\n    if ("+tableInfo.columns.get(i).getColName()+" !== null && "+tableInfo.columns.get(i).getColName()+" !== \"\") {\n" +
+                        "        html += '<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + "+tableInfo.columns.get(i).getColName()+" + '\\')\"  style=\"cursor:pointer;color: blue;\"><span >' + ("+tableInfo.columns.get(i).getColName()+" + '').substring(0, 30) + '...' + '</span></a></td>'; //\n" +
+                        "    } else {\n" +
+                        "        html += \"</td>\";\n" +
+                        "    }\n");
+            }
+        }
+
+        // INPUT
+        // COMBOBOX
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")) {
+                fileWriter.append("    html += \"<input class='" + tableInfo.columns.get(i).getColName() + "' type='hidden' value='\" + " + tableInfo.columns.get(i).getColName() + " + \"' name='lst_detail_info[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName() + "' />\";\n");
+            }
+        }
+        // STRING
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String")){
+                fileWriter.append("    html += \"<input type='hidden' class='"+tableInfo.columns.get(i).getColName()+"' value='\" + "+tableInfo.columns.get(i).getColName()+" + \"' name='lst_detail_info[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"' />\";\n");
+            }
+        }
+        //DATE
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")){
+                fileWriter.append("    html += \"<input type='hidden' class='"+tableInfo.columns.get(i).getColName()+"' value='\" + "+tableInfo.columns.get(i).getColName()+" + \"' name='lst_detail_info[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"' />\";");
+            }
+        }
+        fileWriter.append("\n    if (isEdit === 1) {\n" +
+                "        html += '<td align=\"center\"><a data-id=\"' + count + '\" class=\"remove-cha-bomb\" style=\"cursor:pointer;\"><span title=\"Xóa\" class=\"fa fa-trash-o  fa-lg\"></span></a> |';\n" +
+                "        html += '<a data-id=\"' + count + '\" class=\"edit-cha-bomb\" style=\"cursor:pointer;\"><span title=\"Chỉnh sửa\" class=\"fa fa-edit fa-lg\"></span></a>';\n" +
+                "        html += \"</td>\";\n" +
+                "    }\n" +
+                "\n" +
+                "    html += \"</tr>\";\n" +
+                "    return html;\n" +
+                "}\n");
+
+        fileWriter.append("downloadFileDocumentSubtable = function (filename) {\n" +
+                "    location.href = \"/TopicFiles/\" + filename;\n" +
+                "};\n");
+        fileWriter.append("//edit dialog \n");
+        /*********************************************************************************************
+         *                                 Edit dialog
+         *********************************************************************************************/
+        fileWriter.append("$(document).on(\"click\", \".edit-cha-bomb\", function () {\n" +
+                "    vt_form.clearReadOnlyInput($('#dialog-formAddTopicMember'));\n" +
+                "    $('#btnAddRole').removeAttr(\"btnAddRole1\");\n" +
+                "    document.getElementById('div_btn_delete_file').style.display = \"block\";\n" +
+                "    $(\"#isDeleteFile_subdoc\").val(\"0\");\n" +
+                "    var id = $(this).attr(\"data-id\");\n");
+        //Combobox
+        //tableInfo.columns.get(i).getColName()
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")) {
+                fileWriter.append("    var "+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+tableInfo.columns.get(i).getColName()+"\").val();\n");
+            }
+        }
+        // STRING
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String")){
+                fileWriter.append("    var "+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+tableInfo.columns.get(i).getColName()+"\").val();\n");
+            }
+        }
+        //DATE
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")) {
+                fileWriter.append("    var "+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+tableInfo.columns.get(i).getColName()+"\").val();\n");
+            }
+        }
+        //build combobox
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("Combobox")){
+                ColumnProperty colProp = tableInfo.columns.get(i);
+                fileWriter.append("\tvt_combobox.buildCombobox(\"cb" + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", "+colProp.getColName()+", \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
+            }
+        }
+        fileWriter.append("\n" +
+                "    $(\"#create_time111_subdoc\").val($('#create_time111').val());\n" +
+                "    $(\"#user_create1_subdoc\").val($('#user_create1').val());");
+
+        //DATE
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")) {
+                fileWriter.append("\n    $(\"#"+tableInfo.columns.get(i).getColName()+"\").val("+tableInfo.columns.get(i).getColName()+");");
+            }
+        }
+        //date picker
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")) {
+                fileWriter.append("\n    $(\"#"+tableInfo.columns.get(i).getColName()+"\").datepicker({\n" +
+                        "        duration: \"fast\",\n" +
+                        "        changeMonth: true,\n" +
+                        "        changeYear: true,\n" +
+                        "        dateFormat: 'dd/mm/yy',\n" +
+                        "        constrainInput: true,\n" +
+                        "        disabled: false,\n" +
+                        "        yearRange: \"-10:+50\",\n" +
+                        "        onSelect: function (selected) {\n" +
+                        "        }\n" +
+                        "    });");
+            }
+        }
+        fileWriter.append("\n"+
+                "    $('input[type=\"file\"]').change(function (e) {\n" +
+                "        strFile = e.target.files[0].name;\n" +
+                "    });\n" +
+                "    $(\"#isedit1\").val(id);\n" +
+                "    $('#dialog-formAddTopicMember').dialog('open');\n" +
+                "    $('#dialog-formAddTopicMember').parent().addClass(\"dialogAddEditMemberTopic\");\n" +
+                "    $('.dialogAddEditMemberTopic').find('.ui-dialog-title').empty().append(\"Chỉnh sửa thông tin\");\n" +
+                "    return false;\n" +
+                "});\n");
+        /*********************************************************************************************
+         *                                 editTopicMember
+         *********************************************************************************************/
+        fileWriter.append("function editTopicMember() {\n" +
+                "    vt_form.clearError();\n" +
+                "    setValueToFormSubTable();\n" +
+                "    //lưu file\n" +
+                "    $.ajax({\n" +
+                "        traditional: true,\n" +
+                "        url: \"token.json\",\n" +
+                "        dataType: \"text\",\n" +
+                "        type: \"GET\"\n" +
+                "    }).success(function (result) {\n" +
+                "\n" +
+                "        var formdataTmp = new FormData();\n" +
+                "        var formData = new FormData(document.getElementById(\"subTableForm\"));\n" +
+                "        for (var pair of formData.entries()) {\n" +
+                "            formdataTmp.append(pair[0], pair[1]);\n" +
+                "        }\n" +
+                "        $.ajax({\n" +
+                "            async: false,\n" +
+                "            url: \"updatefilessubtable.html\",\n" +
+                "            data: formdataTmp,\n" +
+                "            processData: false,\n" +
+                "            contentType: false,\n" +
+                "            enctype: 'multipart/form-data',\n" +
+                "            type: \"POST\",\n" +
+                "            headers: {\"X-XSRF-TOKEN\": result},\n" +
+                "            dataType: 'json'\n" +
+                "        }).success(function (result) {\n"
+
+        );
+        fileWriter.append("            if (vt_form.validate1(\"#subTableForm\", null, objSubTable.validateRule)) {\n" +
+                "                var id = $(\"#isedit1\").val();\n");
+        // COMBOBOX
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#cb"+tableInfo.columns.get(i).getColName()+"Combobox\").val();\n" +
+                        "                var "+tableInfo.columns.get(i).getColName()+"Text = $(\"#cb"+tableInfo.columns.get(i).getColName()+"Combobox>option:selected\").html();\n");
+            }
+        }
+        // STRING
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String")){
+                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#"+tableInfo.columns.get(i).getColName()+"\").val();\n");
+            }
+        }
+        //DATE
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")){
+                fileWriter.append("                var "+tableInfo.columns.get(i).getColName()+" = $(\"#"+tableInfo.columns.get(i).getColName()+"\").val();\n");
+            }
+        }
+
+        // COMBOBOXTEXT
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+                fileWriter.append("                var txt"+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" > 0 ? ("+tableInfo.columns.get(i).getColName()+"Text + '').trim() : \"\";\n");
+            }
+        }
+
+
+        // html + nhung thang hien ra ChaBombChild
+        //string
+        int nth_child = 2;
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true && !tableInfo.columns.get(i).getInputType().equals("file")){
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+tableInfo.columns.get(i).getColName()+");\n");
+                nth_child++;
+            }
+        }
+
+        //date
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+tableInfo.columns.get(i).getColName()+");\n");
+                nth_child++;
+            }
+        }
+
+        // combobox text
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+tableInfo.columns.get(i).getColName()+");\n");
+                nth_child++;
+            }
+        }
+
+        // check file
+        if (checkfile == true){
+            for (int i = 0;i<tableInfo.columns.size();i++){
+                if (tableInfo.columns.get(i).getInputType().equals("file")){
+                    fileWriter.append("                if($('#isDeleteFile_subdoc').val() === '0'){\n" +
+                            "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + "+tableInfo.columns.get(i).getColName()+" + '\\')\"  style=\"cursor:pointer; color: blue;\"><span >' + ("+tableInfo.columns.get(i).getColName()+" + '').substring(0, 30) + '...' + '</span></a>');\n" +
+                            "                }\n" +
+                            "                else{\n" +
+                            "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('');\n" +
+                            "                }\n");
+                }
+            }
+        }
+
+        // COMBOBOX
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+tableInfo.columns.get(i).getColName()+"\").val("+tableInfo.columns.get(i).getColName()+");\n");
+            }
+        }
+        // STRING
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String") && !tableInfo.columns.get(i).getInputType().equals("file")){
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+tableInfo.columns.get(i).getColName()+"\").val("+tableInfo.columns.get(i).getColName()+");\n");
+            }
+        }
+
+        //file neu co
+        if (checkfile == true){
+            for (int i = 0;i<tableInfo.columns.size();i++){
+                if (tableInfo.columns.get(i).getInputType().equals("file")){
+                    fileWriter.append("                if($('#isDeleteFile_subdoc').val() === '0'){\n" +
+                            "                    $(\"#dataChaBomb_\" + id).find(\"."+tableInfo.columns.get(i).getColName()+"\").val("+tableInfo.columns.get(i).getColName()+");\n" +
+                            "                }\n" +
+                            "                else{\n" +
+                            "                    $(\"#dataChaBomb_\" + id).find(\"."+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n" +
+                            "                }\n");
+                }
+            }
+        }
+
+        //DATE
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date")){
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+tableInfo.columns.get(i).getColName()+"\").val("+tableInfo.columns.get(i).getColName()+");\n");
+            }
+        }
+
+        fileWriter.append("\n                reloadMemberIndex();\n" +
+                "                indexTopicMember++;\n" +
+                "                reloadSttMember();\n" +
+                "                $(\"#dialog-formAddTopicMember\").dialog(\"close\");\n" +
+                "            }\n" +
+                "        });\n");
+        fileWriter.append("//        $.ajax({\n" +
+                "//        async: false,\n" +
+                "//                url: \"updatefilessubtable.html\",\n" +
+                "//                data: formdataTmp,\n" +
+                "//                processData: false,\n" +
+                "//                contentType: false,\n" +
+                "//                enctype: 'multipart/form-data',\n" +
+                "//                type: \"POST\",\n" +
+                "//                headers: {\"X-XSRF-TOKEN\": result},\n" +
+                "//                dataType: 'json',\n" +
+                "//                beforeSend: function (xhr) {\n" +
+                "//                vt_loading.showIconLoading();\n" +
+                "//                },\n" +
+                "//                success: function (data) {\n" +
+                "//                strFile = data;\n" +
+                "//                }, error: function (jqXHR, textStatus, errorThrown) {\n" +
+                "////                vt_loading.showAlertFail(\"Thêm mới không thành công\");\n" +
+                "//        }, complete: function (jqXHR, textStatus) {\n" +
+                "//        vt_loading.hideIconLoading();\n" +
+                "//        }\n" +
+                "//        });\n"+
+                "   });\n" +
+                "}\n");
+        /*********************************************************************************************
+         *                                 Validate
+         *********************************************************************************************/
+        fileWriter.append("var objSubTable = {\n" +
+                "    validateRule: {\n" +
+                "        rules: {\n");
+        int validateLast = 0;
+        for (int i = tableInfo.columns.size()-1;i>=0;i--){
+            if (tableInfo.columns.get(i).isValidate() == true){
+                validateLast = i;
+                break;
+            }
+        }
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).isValidate() == true){
+                if (i!= validateLast){
+                    fileWriter.append("\t\t\t"+tableInfo.columns.get(i).getColName()+": {\n" +
+                            "                required: true\n" +
+                            "            },\n");
+                }else{
+                    fileWriter.append("\t\t\t"+tableInfo.columns.get(i).getColName()+": {\n" +
+                            "                required: true\n" +
+                            "            }\n" +
+                            "        },\n");
+                }
+
+            }
+        }
+        fileWriter.append("        messages: {\n");
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).isValidate() == true){
+                if (i!= validateLast){
+                    fileWriter.append("\t\t\t"+tableInfo.columns.get(i).getColName()+": {\n" +
+                            "                 required: \""+tableInfo.columns.get(i).getValidateMessage()+"\"" +
+                            "            \n\t\t\t},\n");
+                }else{
+                    fileWriter.append("\t\t\t"+tableInfo.columns.get(i).getColName()+": {\n" +
+                            "                 required: \""+tableInfo.columns.get(i).getValidateMessage()+"\"" +
+                            "            \n\t\t\t}" +
+                            "           \n\t\t}\n"+
+                            "\t}\n"+
+                            "};\n"
+                    );
+                }
+            }
+        }
+        //file neu co
+        if (checkfile == true){
+            for (int i = 0;i<tableInfo.columns.size();i++){
+                if (tableInfo.columns.get(i).getInputType().equals("file")){
+                    fileWriter.append("\nonClickBtnDeleteFile = function(){\n" +
+                            "    var html = '';\n" +
+                            "    html += '<input class=\"form-control\" placeholder=\"\" name=\""+tableInfo.columns.get(i).getColName()+"\" id=\""+tableInfo.columns.get(i).getColName()+"\" type=\"file\">';\n" +
+                            "    html += '<span id=\""+tableInfo.columns.get(i).getColName()+"_error\" class=\"note note-error\"></span>';\n" +
+                            "    $(\"#cbfile_attach\").html(html);\n" +
+                            "    $('#isDeleteFile_subdoc').val('1');\n" +
+                            "};\n");
+                }
+            }
+        }
+
+        fileWriter.close();
+    }
 }

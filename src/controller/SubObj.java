@@ -1,5 +1,6 @@
 package controller;
 
+import People.Hung;
 import People.Tung;
 import model.TableInfo;
 
@@ -16,5 +17,6 @@ public class SubObj {
         File dir2 = new File(folder + "\\" + uncapitalize(tableInfo.tableName));
         dir2.mkdirs();
         Tung.gensubTableJSP(tableInfo, dir2.getAbsolutePath());
+        Hung.genSubTableJs(tableInfo,dir2.getAbsolutePath());
     }
 }
