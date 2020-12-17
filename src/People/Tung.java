@@ -1227,11 +1227,11 @@ public class Tung {
                 "</div>\n" +
                 "<script type=\"text/javascript\">\n" +
                 "    $(\"#dialog-formAddTopicMember\").dialog({\n" +
-                "        width: isMobile.any() ? $(window).width() : ($(window).width() / 5 * 3),\n" +
-                "        height: $(window).height() / 12 * 8,\n" +
+                "        width: isMobile.any() ? $(window).width() : ($(window).width() / 20 * 19),\n" +
+                "        height: $(window).height() / 5 * 5 - 80,\n" +
                 "        autoOpen: false,\n" +
                 "        modal: true,\n" +
-                "        position: [$(window).height() / 5 * 2, 70],\n" +
+                "        position: [($(window).width() / 80 * 2.5), 20],\n" +
                 "        close: function () {\n" +
                 "            $('.ui-widget-overlay1').removeClass('ui-widget-overlay');\n" +
                 "            $('.ui-widget-overlay1').removeClass('custom-overlay');\n" +
@@ -1469,17 +1469,17 @@ public class Tung {
             }
         }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        fileWriter.append("\t\tList<CommonSubTableDTO> lstSubTable = new ArrayList<>();\n" +
+        fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(tableInfo.tableName)+"_lstSubTable = new ArrayList<>();\n" +
                 "                try {\n" +
-                "                    if ("+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table() != null && !"+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table().isEmpty()) {\n" +
-                "                        for (CommonSubTableDTO item : "+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table()) {\n");
+                "                    if ("+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable() != null && !"+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable().isEmpty()) {\n" +
+                "                        for (CommonSubTableDTO item : "+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable()) {\n");
 
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
             if (columnProperty.getColType().equals("Date"))
             {
-                fileWriter.append("\t\t\t\t\t\tif (!StringUtil.isEmpty(item.get"+capitalize(columnProperty.getColName())+"())) {\n" +
-                        "                                item.set"+capitalize(columnProperty.getColName())+"(DateUtil.formatDate(item.get"+capitalize(columnProperty.getColName())+"()));\n" +
+                fileWriter.append("\t\t\t\t\t\tif (!StringUtil.isEmpty(item.get"+tableInfo.tableName+"_"+(columnProperty.getColName())+"())) {\n" +
+                        "                                item.set"+tableInfo.tableName+"_"+(columnProperty.getColName())+"(DateUtil.formatDate(item.get"+tableInfo.tableName+"_"+(columnProperty.getColName())+"()));\n" +
                         "                            }\n");
             }
         }
@@ -1492,17 +1492,17 @@ public class Tung {
                 temp++;
                 if (colProp.getColType().equals("Long")) {
                     if (temp == 1) {
-                        fileWriter.append("(item.get"+capitalize(colProp.getColName())+"() != null && item.get"+capitalize(colProp.getColName())+" > 0)\n");
+                        fileWriter.append("(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+tableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
                     } else {
-                        fileWriter.append("\t\t\t||(item.get"+capitalize(colProp.getColName())+"() != null && item.get"+capitalize(colProp.getColName())+" > 0)\n");
+                        fileWriter.append("\t\t\t||(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+tableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
                     }
                 }
                 if (colProp.getColType().equals("String") || colProp.getColType().equals("Date"))
                 {
                     if (temp == 1) {
-                        fileWriter.append("!Strings.isNullOrEmpty(item.get"+capitalize(colProp.getColName())+"())");
+                        fileWriter.append("!Strings.isNullOrEmpty(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"())");
                     } else {
-                        fileWriter.append("\t\t\t||!Strings.isNullOrEmpty(item.get"+capitalize(colProp.getColName())+"())");
+                        fileWriter.append("\t\t\t||!Strings.isNullOrEmpty(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"())");
                     }
                 }
                 fileWriter.append("\n");
@@ -1511,12 +1511,12 @@ public class Tung {
         }
 
         fileWriter.append("\t\t\t) {\n" +
-                "                                lstDetailInfo.add(item);\n" +
+                "                                "+uncapitalize(tableInfo.tableName)+"_lstSubTable.add(item);\n" +
                 "                            }\n" +
                 "\n" +
                 "                        }\n" +
                 "                    }\n" +
-                "                    scheduleDTO.setLst_detail_info(lstDetailInfo);\n" +
+                "                    "+uncapitalize(tableInfo.tableName)+"DTO.set"+tableInfo.tableName+"_lstSubTable("+uncapitalize(tableInfo.tableName)+"_lstSubTable);\n" +
                 "                } catch (Exception ex) {\n" +
                 "                }\n");
 
@@ -1560,22 +1560,22 @@ public class Tung {
 
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        fileWriter.append("\tList<CommonSubTableDTO> lstSubTable = new ArrayList<>();\n" +
+        fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(tableInfo.tableName)+"_lstSubTable = new ArrayList<>();\n" +
                 "                try {\n" +
-                "                    if ("+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table() != null && !"+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table().isEmpty()) {\n" +
-                "                        for (CommonSubTableDTO item : "+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table()) {\n");
+                "                    if ("+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable() != null && !"+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable().isEmpty()) {\n" +
+                "                        for (CommonSubTableDTO item : "+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable()) {\n");
 
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
             if (columnProperty.getColType().equals("Date"))
             {
-                fileWriter.append("\t\t\t\tif (!StringUtil.isEmpty(item.get"+capitalize(columnProperty.getColName())+"())) {\n" +
-                        "                                item.set"+capitalize(columnProperty.getColName())+"(DateUtil.formatDate(item.get"+capitalize(columnProperty.getColName())+"()));\n" +
+                fileWriter.append("\t\t\t\t\t\tif (!StringUtil.isEmpty(item.get"+tableInfo.tableName+"_"+(columnProperty.getColName())+"())) {\n" +
+                        "                                item.set"+tableInfo.tableName+"_"+(columnProperty.getColName())+"(DateUtil.formatDate(item.get"+tableInfo.tableName+"_"+(columnProperty.getColName())+"()));\n" +
                         "                            }\n");
             }
         }
 
-        fileWriter.append("\t if (    ");
+        fileWriter.append("\t\tif (");
         int temp1 = 0;
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
@@ -1583,17 +1583,17 @@ public class Tung {
                 temp1++;
                 if (colProp.getColType().equals("Long")) {
                     if (temp1 == 1) {
-                        fileWriter.append("(item.get"+capitalize(colProp.getColName())+"() != null && item.get"+capitalize(colProp.getColName())+" > 0)\n");
+                        fileWriter.append("(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+tableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
                     } else {
-                        fileWriter.append("\t\t\t||(item.get"+capitalize(colProp.getColName())+"() != null && item.get"+capitalize(colProp.getColName())+" > 0)\n");
+                        fileWriter.append("\t\t\t||(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+tableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
                     }
                 }
                 if (colProp.getColType().equals("String") || colProp.getColType().equals("Date"))
                 {
                     if (temp1 == 1) {
-                        fileWriter.append("!Strings.isNullOrEmpty(item.get"+capitalize(colProp.getColName())+"())");
+                        fileWriter.append("!Strings.isNullOrEmpty(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"())");
                     } else {
-                        fileWriter.append("\t\t\t||!Strings.isNullOrEmpty(item.get"+capitalize(colProp.getColName())+"())");
+                        fileWriter.append("\t\t\t||!Strings.isNullOrEmpty(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"())");
                     }
                 }
                 fileWriter.append("\n");
@@ -1601,14 +1601,13 @@ public class Tung {
 
         }
 
-        fileWriter.append(") \n" +
-                "\t\t\t{\n" +
-                "                                lstDetailInfo.add(item);\n" +
-                "                        }\n" +
+        fileWriter.append("\t\t\t) {\n" +
+                "                                "+uncapitalize(tableInfo.tableName)+"_lstSubTable.add(item);\n" +
+                "                            }\n" +
                 "\n" +
                 "                        }\n" +
                 "                    }\n" +
-                "                    scheduleDTO.setLst_detail_info(lstDetailInfo);\n" +
+                "                    "+uncapitalize(tableInfo.tableName)+"DTO.set"+tableInfo.tableName+"_lstSubTable("+uncapitalize(tableInfo.tableName)+"_lstSubTable);\n" +
                 "                } catch (Exception ex) {\n" +
                 "                }\n");
 
@@ -1684,7 +1683,7 @@ public class Tung {
                 "\tprivate " +tableInfo.tableName+"DAO " + uncapitalize(tableInfo.tableName) +"DAO;\n"
         );
 
-        fileWriter.append("@Autowired\n" +
+        fileWriter.append("\t@Autowired\n" +
                 "    private CommonSubTableDAO commonSubTableDAO;\n");
 
         fileWriter.append("\n\t@Override\n"+
@@ -1709,12 +1708,12 @@ public class Tung {
                 "\t\tServiceResult serviceResult = new ServiceResult();\n"+
                 "\t\tserviceResult.setId(bo.get"+capitalize(gid).trim()+"());\n");
 
-        fileWriter.append("\t\tList<CommonSubTableDTO> lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table();\n" +
-                "        if (lstSubTable != null && !lstSubTable .isEmpty()) {\n" +
-                "            lstSubTable .stream().forEach((item) -> {\n" +
+        fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(tableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"lstSubTable();\n" +
+                "        if ("+uncapitalize(tableInfo.tableName)+"_lstSubTable != null && !"+uncapitalize(tableInfo.tableName)+"_lstSubTable .isEmpty()) {\n" +
+                "            "+uncapitalize(tableInfo.tableName)+"_lstSubTable .stream().forEach((item) -> {\n" +
                 "                item.setMain_id("+uncapitalize(tableInfo.tableName)+"BO.getGid());\n" +
                 "                item.setTable_name(\""+tableInfo.tableName+"\");\n" +
-                "                item.setField_name(\"Subtable\");\n" +
+                "                item.setField_name(\""+tableInfo.tableName+"SubTable\");\n" +
                 "                commonSubTableDAO.addDTO(item);\n"  +
                 "            });\n" +
                 "        }\n"
@@ -1730,16 +1729,17 @@ public class Tung {
                 "\t\t"+ tableInfo.tableName+"BO bo = "+ uncapitalize(tableInfo.tableName)+"DAO"+".addDTO("+ uncapitalize(tableInfo.tableName)+"DTO);\n"+
                 "\t\tresult = new ServiceResult();\n" );
         fileWriter.append("\t\tcommonSubTableDAO.deleteListObjByTableName(searchDTO);\n");
-        fileWriter.append("\t\tList<CommonSubTableDTO> lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.getLst_sub_table();\n" +
-                "        \tif (lstSubTable != null && !lstSubTable .isEmpty()) {\n" +
-                "            lstSubTable .stream().forEach((item) -> {\n" +
+
+        fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(tableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"lstSubTable();\n" +
+                "        if ("+uncapitalize(tableInfo.tableName)+"_lstSubTable != null && !"+uncapitalize(tableInfo.tableName)+"_lstSubTable .isEmpty()) {\n" +
+                "            "+uncapitalize(tableInfo.tableName)+"_lstSubTable .stream().forEach((item) -> {\n" +
                 "                item.setMain_id("+uncapitalize(tableInfo.tableName)+"BO.getGid());\n" +
                 "                item.setTable_name(\""+tableInfo.tableName+"\");\n" +
-                "                item.setField_name(\"Subtable\");\n" +
-                "                commonSubTableDAO.addDTO(item);\n"+
+                "                item.setField_name(\""+tableInfo.tableName+"SubTable\");\n" +
+                "                commonSubTableDAO.addDTO(item);\n"  +
                 "            });\n" +
-                        "        \t}\n"
-                );
+                "        }\n"
+        );
 
         fileWriter.append(
                 "\t\treturn result;\n"+
