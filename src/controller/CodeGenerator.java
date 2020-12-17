@@ -57,7 +57,7 @@ public class CodeGenerator {
         pathOne = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"service";
         pathTwo = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"web";
         pathSubObjs = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"sub objects";
-        Service.genService(tableSet.tableInfo ,pathOne);
+        Service.genService(tableSet ,pathOne);
         Web.genWeb(tableSet, pathTwo);
         for(int i = 0; i < tableSet.subTables.size(); i++){
             SubObj.genSubObj(tableSet.subTables.get(i), pathSubObjs);
