@@ -1404,7 +1404,8 @@ public class Web {
         File dir2 = new File(folder + "\\" + uncapitalize(tableInfo.tableName));
         dir2.mkdirs();
         genControllerParameters(tableInfo, folder);
-        Hieu.genController(tableInfo, folder);
+        //Hieu.genController(tableInfo, folder);
+        Tung.genController(tableSet, folder);
         genData(tableInfo, folder);
         genTitle(tableInfo, folder);
         genListjsp(tableInfo, dir2.getAbsolutePath());

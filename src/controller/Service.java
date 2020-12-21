@@ -1239,9 +1239,13 @@ public class Service {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append("\t\t\t.addScalar(\"");
+            if(colProp.getColType().equals("File")){
+                fileWriter.append(colProp.getColName() + "\", StringType.INSTANCE)\n");
+            }
             if (colProp.getColType().equals("Date")) {
                 fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
-            } else {
+            }
+            else {
                 fileWriter.append(colProp.getColName() + "\", " + capitalize((colProp.getColType())) + "Type.INSTANCE)\n");
                 if (!colProp.getFKTable().equals("")) {
                     fileWriter.append("\t\t\t.addScalar(\"");

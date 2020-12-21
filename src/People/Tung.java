@@ -14,11 +14,68 @@ import java.io.FileWriter;
 import java.io.IOException;
 import model.ColumnProperty;
 import model.TableInfo;
+import model.TableSet;
+
 /**
  *
  * @author hungy
  */
 public class Tung {
+    private static void genSubTableController(TableSet tableSet, FileWriter fileWriter) throws IOException {
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(subTableInfo.tableName)+"_lstSubTable = new ArrayList<>();\n" +
+                    "       try {\n" +
+                    "           if ("+uncapitalize(subTableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"_lstSubTable() != null && !"+uncapitalize(subTableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"_lstSubTable().isEmpty()) {\n" +
+                    "               for (CommonSubTableDTO item : "+uncapitalize(subTableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"_lstSubTable()) {\n");
+
+            for (int i = 0; i < subTableInfo.columns.size(); i++) {
+                ColumnProperty columnProperty = subTableInfo.columns.get(i);
+                if (columnProperty.getColType().equals("Date"))
+                {
+                    fileWriter.append("\t\t\t\t\t\tif (!StringUtil.isEmpty(item.get"+ subTableInfo.tableName+"_"+(columnProperty.getColName())+"())) {\n" +
+                            "                                item.set"+ subTableInfo.tableName+"_"+(columnProperty.getColName())+"(DateUtil.formatDate(item.get"+ subTableInfo.tableName+"_"+(columnProperty.getColName())+"()));\n" +
+                            "                            }\n");
+                }
+            }
+
+            fileWriter.append("\t\tif (");
+            int temp = 0;
+            for (int i = 0; i < subTableInfo.columns.size(); i++) {
+                ColumnProperty colProp = subTableInfo.columns.get(i);
+                if (colProp.isValidate()) {
+                    temp++;
+                    if (colProp.getColType().equals("Long")) {
+                        if (temp == 1) {
+                            fileWriter.append("(item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
+                        } else {
+                            fileWriter.append("\t\t\t||(item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
+                        }
+                    }
+                    if (colProp.getColType().equals("String") || colProp.getColType().equals("Date"))
+                    {
+                        if (temp == 1) {
+                            fileWriter.append("!Strings.isNullOrEmpty(item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+"())");
+                        } else {
+                            fileWriter.append("\t\t\t||!Strings.isNullOrEmpty(item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+"())");
+                        }
+                    }
+                    fileWriter.append("\n");
+                }
+
+            }
+
+            fileWriter.append("\t\t\t) {\n" +
+                    "                                "+uncapitalize(subTableInfo.tableName)+"_lstSubTable.add(item);\n" +
+                    "                            }\n" +
+                    "\n" +
+                    "                        }\n" +
+                    "                    }\n" +
+                    "                    "+uncapitalize(subTableInfo.tableName)+"DTO.set"+ subTableInfo.tableName+"_lstSubTable("+uncapitalize(subTableInfo.tableName)+"_lstSubTable);\n" +
+                    "                } catch (Exception ex) {\n" +
+                    "                }\n");
+        }
+    }
+
     public static void genDAO1(TableInfo tableInfo, String folder) throws IOException {
 
         FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "DAO1.java");
@@ -1267,8 +1324,9 @@ public class Tung {
                 "</script>\n");
         fileWriter.close();
     }
-    public static void genController_SUB(TableInfo tableInfo, String folder) throws IOException {
-        FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "ControllerSUB.java");
+    public static void genController(TableSet tableSet, String folder) throws IOException {
+        TableInfo tableInfo = tableSet.tableInfo;
+        FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "Controller.java");
         fileWriter.write("package com.tav.web.controller;\n" +
                 "\n" +
                 "import com.google.common.base.Strings;\n" +
@@ -1289,6 +1347,7 @@ public class Tung {
                 "import com.tav.web.dto.ImportErrorMessage;\n" +
                 "import java.util.Date;\n" +
                 "import com.tav.web.dto.SearchCommonFinalDTO;\n" +
+                "import com.tav.web.dto.CommonSubTableDTO;\n" +
                 "import com.tav.web.dto.ObjectCommonSearchDTO;\n" +
                 "import java.io.BufferedOutputStream;\n" +
                 "import java.io.File;\n" +
@@ -1469,56 +1528,8 @@ public class Tung {
             }
         }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(tableInfo.tableName)+"_lstSubTable = new ArrayList<>();\n" +
-                "                try {\n" +
-                "                    if ("+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable() != null && !"+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable().isEmpty()) {\n" +
-                "                        for (CommonSubTableDTO item : "+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable()) {\n");
+        genSubTableController(tableSet, fileWriter);
 
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("Date"))
-            {
-                fileWriter.append("\t\t\t\t\t\tif (!StringUtil.isEmpty(item.get"+tableInfo.tableName+"_"+(columnProperty.getColName())+"())) {\n" +
-                        "                                item.set"+tableInfo.tableName+"_"+(columnProperty.getColName())+"(DateUtil.formatDate(item.get"+tableInfo.tableName+"_"+(columnProperty.getColName())+"()));\n" +
-                        "                            }\n");
-            }
-        }
-
-        fileWriter.append("\t\tif (");
-        int temp = 0;
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isValidate()) {
-                temp++;
-                if (colProp.getColType().equals("Long")) {
-                    if (temp == 1) {
-                        fileWriter.append("(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+tableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
-                    } else {
-                        fileWriter.append("\t\t\t||(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+tableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
-                    }
-                }
-                if (colProp.getColType().equals("String") || colProp.getColType().equals("Date"))
-                {
-                    if (temp == 1) {
-                        fileWriter.append("!Strings.isNullOrEmpty(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"())");
-                    } else {
-                        fileWriter.append("\t\t\t||!Strings.isNullOrEmpty(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"())");
-                    }
-                }
-                fileWriter.append("\n");
-            }
-
-        }
-
-        fileWriter.append("\t\t\t) {\n" +
-                "                                "+uncapitalize(tableInfo.tableName)+"_lstSubTable.add(item);\n" +
-                "                            }\n" +
-                "\n" +
-                "                        }\n" +
-                "                    }\n" +
-                "                    "+uncapitalize(tableInfo.tableName)+"DTO.set"+tableInfo.tableName+"_lstSubTable("+uncapitalize(tableInfo.tableName)+"_lstSubTable);\n" +
-                "                } catch (Exception ex) {\n" +
-                "                }\n");
 
 
 
@@ -1560,59 +1571,7 @@ public class Tung {
 
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(tableInfo.tableName)+"_lstSubTable = new ArrayList<>();\n" +
-                "                try {\n" +
-                "                    if ("+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable() != null && !"+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable().isEmpty()) {\n" +
-                "                        for (CommonSubTableDTO item : "+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"_lstSubTable()) {\n");
-
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("Date"))
-            {
-                fileWriter.append("\t\t\t\t\t\tif (!StringUtil.isEmpty(item.get"+tableInfo.tableName+"_"+(columnProperty.getColName())+"())) {\n" +
-                        "                                item.set"+tableInfo.tableName+"_"+(columnProperty.getColName())+"(DateUtil.formatDate(item.get"+tableInfo.tableName+"_"+(columnProperty.getColName())+"()));\n" +
-                        "                            }\n");
-            }
-        }
-
-        fileWriter.append("\t\tif (");
-        int temp1 = 0;
-        for (int i = 0; i < tableInfo.columns.size(); i++) {
-            ColumnProperty colProp = tableInfo.columns.get(i);
-            if (colProp.isValidate()) {
-                temp1++;
-                if (colProp.getColType().equals("Long")) {
-                    if (temp1 == 1) {
-                        fileWriter.append("(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+tableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
-                    } else {
-                        fileWriter.append("\t\t\t||(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+tableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
-                    }
-                }
-                if (colProp.getColType().equals("String") || colProp.getColType().equals("Date"))
-                {
-                    if (temp1 == 1) {
-                        fileWriter.append("!Strings.isNullOrEmpty(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"())");
-                    } else {
-                        fileWriter.append("\t\t\t||!Strings.isNullOrEmpty(item.get"+tableInfo.tableName+"_"+(colProp.getColName())+"())");
-                    }
-                }
-                fileWriter.append("\n");
-            }
-
-        }
-
-        fileWriter.append("\t\t\t) {\n" +
-                "                                "+uncapitalize(tableInfo.tableName)+"_lstSubTable.add(item);\n" +
-                "                            }\n" +
-                "\n" +
-                "                        }\n" +
-                "                    }\n" +
-                "                    "+uncapitalize(tableInfo.tableName)+"DTO.set"+tableInfo.tableName+"_lstSubTable("+uncapitalize(tableInfo.tableName)+"_lstSubTable);\n" +
-                "                } catch (Exception ex) {\n" +
-                "                }\n");
-
-
-
+        genSubTableController(tableSet, fileWriter);
         ////////////////////////////////////////////////
 
 

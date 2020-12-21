@@ -54,6 +54,7 @@ public class HieuExcel extends javax.swing.JFrame {
         objCheckBoxs = new ArrayList<>();
         subObjCheckBoxs = new ArrayList<>();
         numSubObjs = new Vector<>();
+        tfieldBrowseFile.setDragEnabled(true);
 //        panelObject.scrollRectToVisible(panelObject.getVisibleRect());
 //        panelSubObject.scrollRectToVisible(panelObject.getVisibleRect());
     }

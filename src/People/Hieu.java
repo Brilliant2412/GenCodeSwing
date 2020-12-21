@@ -149,6 +149,7 @@ public class Hieu {
                         "import com.vividsolutions.jts.geom.Geometry;\n" +
                         "import com.vividsolutions.jts.geom.Point;\n" +
                         "import java.util.Date;\n" +
+                        "import java.util.List;\n" +
                         "import javax.xml.bind.annotation.XmlRootElement;\n\n" +
 
                         "@XmlRootElement(name = \"" + tableInfo.tableName + "DTO\")\n" +
@@ -170,9 +171,14 @@ public class Hieu {
         }
         fileWriter.append("\n");
         for(int i = 0; i < tableSet.subTables.size(); i++){
-            fileWriter.append("\tList<CommonSubTableDTO> " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable;\n");
+            fileWriter.append("\tprivate List<CommonSubTableDTO> " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable;\n\n");
+            fileWriter.append("\tpublic List<CommonSubTableDTO> get" + tableSet.subTables.get(i).tableName + "_lstSubTable(){\n" +
+                    "\t\t return " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable;\n" +
+                    "\t}\n\n");
+            fileWriter.append("\tpublic void set" + tableSet.subTables.get(i).tableName + "_lstSubTable(List<CommonSubTableDTO> " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable){\n" +
+                    "\t\tthis." + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable = " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable" + ";\n" +
+                    "\t}\n\n");
         }
-        fileWriter.append("\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             String colType;
@@ -240,8 +246,9 @@ public class Hieu {
         FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "DTO.java");
         fileWriter.write(
                 "package com.tav.web.dto;\n\n" +
+                    "import java.util.List;\n" +
 
-                        "public class " + tableInfo.tableName + "DTO{\n"
+                    "public class " + tableInfo.tableName + "DTO{\n"
         );
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
@@ -258,9 +265,14 @@ public class Hieu {
         }
         fileWriter.append("\n");
         for(int i = 0; i < tableSet.subTables.size(); i++){
-            fileWriter.append("\tList<CommonSubTableDTO> " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable;\n");
+            fileWriter.append("\tprivate List<CommonSubTableDTO> " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable;\n\n");
+            fileWriter.append("\tpublic List<CommonSubTableDTO> get" + tableSet.subTables.get(i).tableName + "_lstSubTable(){\n" +
+                    "\t\t return " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable;\n" +
+                    "\t}\n\n");
+            fileWriter.append("\tpublic void set" + tableSet.subTables.get(i).tableName + "_lstSubTable(List<CommonSubTableDTO> " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable){\n" +
+                    "\t\tthis." + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable = " + uncapitalize(tableSet.subTables.get(i).tableName) + "_lstSubTable" + ";\n" +
+                    "\t}\n\n");
         }
-        fileWriter.append("\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append(
