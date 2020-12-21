@@ -12,6 +12,8 @@ import static controller.Service.genSELECT;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import model.ColumnProperty;
 import model.TableInfo;
 import model.TableSet;
@@ -1157,12 +1159,12 @@ public class Tung {
                 "}");
         fileWriter.close();
     }
-    public static String checkDang_sub(String tenTruong, String moTa, String kieuDL, String kieuNhap){
+    public static String checkDang_sub(String tenTruong, String moTa, String kieuDL, String kieuNhap,String tenbang){
         String res = "";
         if (kieuDL.equals("String")){
             res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                     "\t\t\t\t<div class=\"col-lg-2\">\n"+
-                    "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\" class=\"form-control\"/>\n" +
+                    "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"text\" class=\"form-control\"/>\n" +
                     "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
                     "\t\t\t\t</div>\n";
         }else if (kieuDL.equals("Long") || kieuDL.equals("Double")){
@@ -1170,20 +1172,20 @@ public class Tung {
                 res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                         "\t\t\t\t<div class=\"col-lg-2\">\n" +
                         "\t\t\t\t\t<div id=\"cb"+tenTruong+"\"></div> \n" +
-                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" class=\"text_hidden\"  />\n" +
+                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+uncapitalize(tenbang)+tenTruong+"\" class=\"text_hidden\"  />\n" +
                         "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
                         "\t\t\t\t</div>\n";
             }else{
                 res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                         "\t\t\t\t<div class=\"col-lg-2\">\n" +
-                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
+                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
                         "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>                           \n" +
                         "\t\t\t\t</div>\n";
             }
         }else if (kieuDL.equals("Date")){
             res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                     "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
-                    "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
+                    "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"text\"/>\n" +
                     "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
                     "\t\t\t\t</div>\n";
         }
@@ -1203,8 +1205,8 @@ public class Tung {
                 "<div class=\"ui-widget-overlay1 ui-front custom-overlay\" style=\"z-index: 1 !important\"></div>\n" +
                 "<div id=\"dialog-formAddTopicMember\" style=\"z-index: 9998 !important\"> \n" +
                 "    <form:form id=\"subTableForm\" modelAttribute=\"subTableForm\" class=\"form-horizontal\">\n" +
-                "        <input type=\"hidden\" id=\"isedit1\" name=\"isedit1\" value=\"0\"/>\n" +
-                "        <input type=\"hidden\" id=\"isDeleteFile_subdoc\" name=\"\" value=\"0\"/>\n" +
+                "        <input type=\"hidden\" id=\""+uncapitalize(tableInfo.tableName)+"isedit1\" name=\"isedit1\" value=\"0\"/>\n" +
+                "        <input type=\"hidden\" id=\""+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc\" name=\"\" value=\"0\"/>\n" +
                 "        <fieldset>\n" +
                 "            <br/>\n" +
                 "            <legend class=\"fs-legend-head\" style=\"margin-bottom: 0px;\">\n" +
@@ -1222,17 +1224,25 @@ public class Tung {
                 "                    </div>\n" +
                 "                </div>\n" +
                 "            </legend>\n");
-
-        int k =tableInfo.columns.size()-1;
+        ArrayList<ColumnProperty> columns_except_file = new ArrayList<>();
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("file")){
+                continue;
+            }else{
+                columns_except_file.add(tableInfo.columns.get(i));
+            }
+        }
+        int k = columns_except_file.size()-1;
         int r = k/4;
         int q = k%4;
         for (int i = 0;i<r;i++){
             fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
             for (int j =0;j<=3;j++){
-                String res = checkDang_sub(tableInfo.columns.get(4*i+j+1).getColName(),
-                        tableInfo.columns.get(4*i+j+1).getColDescription(),
-                        tableInfo.columns.get(4*i+j+1).getColType(),
-                        tableInfo.columns.get(4*i+j+1).getInputType()
+                String res = checkDang_sub(columns_except_file.get(4*i+j+1).getColName(),
+                        columns_except_file.get(4*i+j+1).getColDescription(),
+                        columns_except_file.get(4*i+j+1).getColType(),
+                        columns_except_file.get(4*i+j+1).getInputType(),
+                        tableInfo.tableName
                 );
                 fileWriter.append(res);
             }
@@ -1241,10 +1251,11 @@ public class Tung {
         if (q != 0){
             fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
             for (int i = r*4+1;i<=k;i++){
-                String res = checkDang_sub(tableInfo.columns.get(i).getColName(),
-                        tableInfo.columns.get(i).getColDescription(),
-                        tableInfo.columns.get(i).getColType(),
-                        tableInfo.columns.get(i).getInputType()
+                String res = checkDang_sub(columns_except_file.get(i).getColName(),
+                        columns_except_file.get(i).getColDescription(),
+                        columns_except_file.get(i).getColType(),
+                        columns_except_file.get(i).getInputType().toLowerCase(),
+                        tableInfo.tableName
                 );
                 fileWriter.append(res);
             }
@@ -1256,7 +1267,7 @@ public class Tung {
             if(columnProperty.getInputType().toLowerCase().equals("file"))
             {
                 if (c_file==0) {
-                    fileWriter.append("<div class=\"form-group-add row\">\n" +
+                    fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n" +
                             "                <label class=\"col-lg-1 control-label  lb_input\">" + columnProperty.getColDescription() + "</label>\n" +
                             "                <div class=\"col-md-11\" id=\"fileTopicFilesTmpSubTable\">\n" +
                             "                    <input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable\" id=\"filestTmpSubTable\" type=\"file\"/>\n" +
@@ -1267,7 +1278,7 @@ public class Tung {
                 }
                 else
                 {
-                    fileWriter.append("<div class=\"form-group-add row\">\n" +
+                    fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n" +
                             "                <label class=\"col-lg-1 control-label  lb_input\">" + columnProperty.getColDescription() + "</label>\n" +
                             "                <div class=\"col-md-11\" id=\"fileTopicFilesTmpSubTable"+c_file+"\">\n" +
                             "                    <input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable"+c_file+"\" id=\"filestTmpSubTable"+c_file+"\" type=\"file\"/>\n" +
@@ -1279,7 +1290,7 @@ public class Tung {
             }
 
         }
-        fileWriter.append("</fieldset>\n" +
+        fileWriter.append("\t\t</fieldset>\n" +
                 "    </form:form>\n" +
                 "</div>\n" +
                 "<script type=\"text/javascript\">\n" +
@@ -1312,11 +1323,11 @@ public class Tung {
                 "                \"class\": \"btn btn-primary\",\n" +
                 "                \"id\": \"btnAddRole1\",\n" +
                 "                click: function () {\n" +
-                "                    var item = $('#isedit1').val();\n" +
+                "                    var item = $('#"+uncapitalize(tableInfo.tableName)+"isedit1').val();\n" +
                 "                    if (item === '0') {\n" +
-                "                        saveTopicMember();\n" +
+                "                        "+uncapitalize(tableInfo.tableName)+"saveTopicMember();\n" +
                 "                    } else {\n" +
-                "                        editTopicMember();\n" +
+                "                        "+uncapitalize(tableInfo.tableName)+"editTopicMember();\n" +
                 "                    }\n" +
                 "                }\n" +
                 "            }]\n" +

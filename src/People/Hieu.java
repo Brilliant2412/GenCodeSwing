@@ -400,6 +400,7 @@ public class Hieu {
         }
         fileWriter.append("\t\t</fieldset>\n" +
                 "\t</form:form>\n" +
+                "\t<jsp:include page=\"subTable.jsp\" />"+
                 "</div>\n" +
                 "<script type=\"text/javascript\">\n" +
                 "\t$(\"#dialog-formAddNew\").dialog({\n" +

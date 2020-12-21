@@ -936,7 +936,7 @@ public class Hung {
     }
 
     public static void genSubTableJs(TableInfo tableInfo,String folder) throws IOException {
-        FileWriter fileWriter = new FileWriter(folder +"\\"+tableInfo.tableName.toLowerCase() +"subTable.js");
+        FileWriter fileWriter = new FileWriter(folder +"\\"+uncapitalize(tableInfo.tableName) +"SubTable.js");
         fileWriter.write("var "+uncapitalize(tableInfo.tableName) +"indexTopicMember = 2;\n" +
                 "var strFile = \"\";\n" +
                 "var gid = 0;\n" );
@@ -946,7 +946,7 @@ public class Hung {
         fileWriter.append("function "+uncapitalize(tableInfo.tableName)+"onClickAddData() {\n" +
                 "    vt_form.reset($('#subTableForm'));\n" +
                 "    $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val(\"0\");\n" +
-                "    document.getElementById('div_btn_delete_file').style.display = \"none\";\n" +
+                "    //document.getElementById('div_btn_delete_file').style.display = \"none\";\n" +
                 "    $(\"#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc\").val(\"0\");\n" +
                 "    vt_form.clearError();\n");
 
@@ -969,7 +969,7 @@ public class Hung {
                     "\tvar html = \"\";\n" +
                     "\thtml += '<input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable\" id=\"filestTmpSubTable\" type=\"file\"/>';\n" +
                     "\thtml += '<span id=\"filestTmpSubTable_error\" class=\"note note-error\"></span>';\n" +
-                    "\t$(\"#cbfile_fileTopicFilesTmpSubTable\").html(html);\n");
+                    "\t$(\"#fileTopicFilesTmpSubTable\").html(html);\n");
         }
         //STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
@@ -1022,12 +1022,12 @@ public class Hung {
          *                                 setValueToFormSubTable for combobox
          *********************************************************************************************/
         fileWriter.append(uncapitalize(tableInfo.tableName)+"setValueToFormSubTable = function () {\n");
-
+        fileWriter.append("    var item;\n");
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long")){
                 ColumnProperty colProp = tableInfo.columns.get(i);
-                fileWriter.append("\t$('input[name=\""+uncapitalize(tableInfo.tableName)+colProp.getColName()+"\"]').val(item);\n" +
-                        "\titem = $('#cb"+uncapitalize(tableInfo.tableName)+colProp.getColName()+"Combobox').val();\n");
+                fileWriter.append("\titem = $('#cb"+uncapitalize(tableInfo.tableName)+colProp.getColName()+"Combobox').val();\n"+
+                        "\t$('input[name=\""+uncapitalize(tableInfo.tableName)+colProp.getColName()+"\"]').val(item);\n");
             }
         }
         fileWriter.append("};\n");
@@ -1037,10 +1037,10 @@ public class Hung {
         fileWriter.append("\nfunction "+uncapitalize(tableInfo.tableName)+"saveTopicMember() {\n" +
                 "\n" +
                 "    vt_form.clearError();\n" +
-                "    setValueToFormSubTable();\n" +
+                "    "+uncapitalize(tableInfo.tableName)+"setValueToFormSubTable();\n" +
                 "    if (vt_form.validate1(\"#subTableForm\", null, "+uncapitalize(tableInfo.tableName)+"SubTable.validateRule)) {\n" +
                 "        //lưu file\n" +
-                "        $.ajax({\n" +
+                "/*        $.ajax({\n" +
                 "            traditional: true,\n" +
                 "            url: \"token.json\",\n" +
                 "            dataType: \"text\",\n" +
@@ -1061,7 +1061,7 @@ public class Hung {
                 "                type: \"POST\",\n" +
                 "                headers: {\"X-XSRF-TOKEN\": result},\n" +
                 "                dataType: 'json'\n" +
-                "            }).success(function (result) {\n");
+                "            }).success(function (result) {*/\n");
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
@@ -1082,8 +1082,8 @@ public class Hung {
             }
         }
         int demxuongdong = 0;
-        fileWriter.append("\n                $(\"#dataDetailInfo\").append(\n" +
-                "                        addNewDataToTable(indexTopicMember, gid, ");
+        fileWriter.append("\n                $(\"#"+uncapitalize(tableInfo.tableName)+"_dataDetailInfo\").append(\n" +
+                "                        "+uncapitalize(tableInfo.tableName)+"addNewDataToTable("+uncapitalize(tableInfo.tableName)+"indexTopicMember, gid, ");
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
                 demxuongdong++;
@@ -1111,8 +1111,8 @@ public class Hung {
                 "                "+uncapitalize(tableInfo.tableName)+"indexTopicMember++;\n" +
                 "                "+uncapitalize(tableInfo.tableName)+"reloadSttMember();\n" +
                 "                $(\"#dialog-formAddTopicMember\").dialog(\"close\");\n" +
-                "            });\n" +
-                "        });\n" +
+                "//            });\n" +
+                "//        });\n" +
                 "   }\n" +
                 "}\n");
 
@@ -1222,35 +1222,59 @@ public class Hung {
         }else{
             countS++;
         }
+
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true && !tableInfo.columns.get(i).getInputType().equals("file")){
-                if (countS %2 == 1){
-                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
-                }else{
-                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+            if (tableInfo.columns.get(i).isShow() == true){
+                if (tableInfo.columns.get(i).getColType().equals("String")  && !tableInfo.columns.get(i).getInputType().equals("file")){
+                    if (countS %2 == 1){
+                        fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                    }else{
+                        fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                    }
+                    countS--;
+                }else if (tableInfo.columns.get(i).getColType().equals("Date")){
+                    if (countS%2 == 1){
+                        fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                    }else{
+                        fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                    }
+                    countS--;
+                }else if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long")){
+                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML(txt"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+                    countS--;
                 }
-                countS--;
             }
         }
 
-        //date
-        for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
-                if (countS%2 == 1){
-                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
-                }else{
-                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
-                }
-                countS--;
-            }
-        }
+//        for (int i = 0;i<tableInfo.columns.size();i++){
+//            if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true && !tableInfo.columns.get(i).getInputType().equals("file")){
+//                if (countS %2 == 1){
+//                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+//                }else{
+//                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+//                }
+//                countS--;
+//            }
+//        }
+//
+//        //date
+//        for (int i = 0;i<tableInfo.columns.size();i++){
+//            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
+//                if (countS%2 == 1){
+//                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+//                }else{
+//                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+//                }
+//                countS--;
+//            }
+//        }
 
-        // combobox text
-        for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
-                fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML(txt"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
-            }
-        }
+//        // combobox text
+//        for (int i = 0;i<tableInfo.columns.size();i++){
+//            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
+//                fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML(txt"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
+//            }
+//        }
 
 
         fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML('');");
@@ -1303,8 +1327,8 @@ public class Hung {
         fileWriter.append("$(document).on(\"click\", \".edit-cha-bomb\", function () {\n" +
                 "    vt_form.clearReadOnlyInput($('#dialog-formAddTopicMember'));\n" +
                 "    $('#btnAddRole').removeAttr(\"btnAddRole1\");\n" +
-                "    document.getElementById('div_btn_delete_file').style.display = \"block\";\n" +
-                "    $(\"#isDeleteFile_subdoc\").val(\"0\");\n" +
+                "    //document.getElementById('div_btn_delete_file').style.display = \"block\";\n" +
+                "    $(\"#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc\").val(\"0\");\n" +
                 "    var id = $(this).attr(\"data-id\");\n");
         //Combobox
         //tableInfo.columns.get(i).getColName()
@@ -1335,6 +1359,12 @@ public class Hung {
         fileWriter.append("\n" +
                 "    $(\"#create_time111_subdoc\").val($('#create_time111').val());\n" +
                 "    $(\"#user_create1_subdoc\").val($('#user_create1').val());");
+        //String
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String")) {
+                fileWriter.append("\n    $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");");
+            }
+        }
 
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
@@ -1373,7 +1403,7 @@ public class Hung {
          *********************************************************************************************/
         fileWriter.append("function "+uncapitalize(tableInfo.tableName)+"editTopicMember() {\n" +
                 "    vt_form.clearError();\n" +
-                "    setValueToFormSubTable();\n" +
+                "    "+uncapitalize(tableInfo.tableName)+"setValueToFormSubTable();\n" +
                 "    //lưu file\n" +
                 "    $.ajax({\n" +
                 "        traditional: true,\n" +
@@ -1460,7 +1490,7 @@ public class Hung {
         if (checkfile == true){
             for (int i = 0;i<tableInfo.columns.size();i++){
                 if (tableInfo.columns.get(i).getInputType().equals("file")){
-                    fileWriter.append("                if($('#isDeleteFile_subdoc').val() === '0'){\n" +
+                    fileWriter.append("                if($('#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc').val() === '0'){\n" +
                             "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + '\\')\"  style=\"cursor:pointer; color: blue;\"><span >' + ("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + '').substring(0, 30) + '...' + '</span></a>');\n" +
                             "                }\n" +
                             "                else{\n" +
@@ -1487,7 +1517,7 @@ public class Hung {
         if (checkfile == true){
             for (int i = 0;i<tableInfo.columns.size();i++){
                 if (tableInfo.columns.get(i).getInputType().equals("file")){
-                    fileWriter.append("                if($('#isDeleteFile_subdoc').val() === '0'){\n" +
+                    fileWriter.append("                if($('#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc').val() === '0'){\n" +
                             "                    $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n" +
                             "                }\n" +
                             "                else{\n" +
