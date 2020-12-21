@@ -1325,6 +1325,7 @@ public class Hung {
          *                                 Edit dialog
          *********************************************************************************************/
         fileWriter.append("$(document).on(\"click\", \".edit-cha-bomb\", function () {\n" +
+                "    $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val(\"\");\n"+
                 "    vt_form.clearReadOnlyInput($('#dialog-formAddTopicMember'));\n" +
                 "    $('#btnAddRole').removeAttr(\"btnAddRole1\");\n" +
                 "    //document.getElementById('div_btn_delete_file').style.display = \"block\";\n" +
