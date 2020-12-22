@@ -839,7 +839,7 @@ public class Hung {
         fileWriter.close();
     }
     
-    static void genView(TableInfo tableInfo, String folder) throws IOException {
+    public static void genView(TableInfo tableInfo, String folder) throws IOException {
         FileWriter fileWriter = new FileWriter(folder + "\\View.jsp");
         fileWriter.write("<%@ page contentType=\"text/html;charset=UTF-8\" %>\n" +
                     "<%@ taglib prefix=\"spring\" uri=\"http://www.springframework.org/tags\" %>\n" +
