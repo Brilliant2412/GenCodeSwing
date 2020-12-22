@@ -37,7 +37,7 @@ public class TableInfo {
         columns = new ArrayList<>();
         while (rowIterator.hasNext()){
             row = rowIterator.next();
-            if(row.getRowNum() >= 5 && !row.getCell(1).toString().equals("")){
+            if(row.getCell(1) != null && row.getRowNum() >= 5 && !row.getCell(1).toString().equals("")){
                 ColumnProperty colProp = new ColumnProperty();
                 colProp.setColName(row.getCell(1).toString().trim());
                 colProp.setColType(row.getCell(3).toString().trim());

@@ -27,15 +27,15 @@ public class Tung {
         for(TableInfo subTableInfo : tableSet.subTables){
             fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(subTableInfo.tableName)+"_lstSubTable = new ArrayList<>();\n" +
                     "       try {\n" +
-                    "           if ("+uncapitalize(subTableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"_lstSubTable() != null && !"+uncapitalize(subTableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"_lstSubTable().isEmpty()) {\n" +
-                    "               for (CommonSubTableDTO item : "+uncapitalize(subTableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"_lstSubTable()) {\n");
+                    "           if ("+uncapitalize(tableSet.tableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"_lstSubTable() != null && !"+uncapitalize(tableSet.tableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"_lstSubTable().isEmpty()) {\n" +
+                    "               for (CommonSubTableDTO item : "+uncapitalize(tableSet.tableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"_lstSubTable()) {\n");
 
             for (int i = 0; i < subTableInfo.columns.size(); i++) {
-                ColumnProperty columnProperty = subTableInfo.columns.get(i);
-                if (columnProperty.getColType().equals("Date"))
+                ColumnProperty colProp = subTableInfo.columns.get(i);
+                if (colProp.getColType().equals("Date"))
                 {
-                    fileWriter.append("\t\t\t\t\t\tif (!StringUtil.isEmpty(item.get"+ subTableInfo.tableName+"_"+(columnProperty.getColName())+"())) {\n" +
-                            "                                item.set"+ subTableInfo.tableName+"_"+(columnProperty.getColName())+"(DateUtil.formatDate(item.get"+ subTableInfo.tableName+"_"+(columnProperty.getColName())+"()));\n" +
+                    fileWriter.append("\t\t\t\t\t\tif (!StringUtil.isEmpty(item.get" + capitalize(colProp.getColName()) + "())) {\n" +
+                            "                                item.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(item.get" + capitalize(colProp.getColName()) + "()));\n" +
                             "                            }\n");
                 }
             }
@@ -48,17 +48,17 @@ public class Tung {
                     temp++;
                     if (colProp.getColType().equals("Long")) {
                         if (temp == 1) {
-                            fileWriter.append("(item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
+                            fileWriter.append("(item.get" + capitalize(colProp.getColName()) + "() != null && item.get" + capitalize(colProp.getColName()) + "() > 0)\n");
                         } else {
-                            fileWriter.append("\t\t\t||(item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+"() != null && item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+" > 0)\n");
+                            fileWriter.append("\t\t\t||(item.get" + capitalize(colProp.getColName()) + "() != null && item.get" + capitalize(colProp.getColName()) + "() > 0)\n");
                         }
                     }
                     if (colProp.getColType().equals("String") || colProp.getColType().equals("Date"))
                     {
                         if (temp == 1) {
-                            fileWriter.append("!Strings.isNullOrEmpty(item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+"())");
+                            fileWriter.append("!Strings.isNullOrEmpty(item.get" + capitalize(colProp.getColName()) + "())");
                         } else {
-                            fileWriter.append("\t\t\t||!Strings.isNullOrEmpty(item.get"+ subTableInfo.tableName+"_"+(colProp.getColName())+"())");
+                            fileWriter.append("\t\t\t||!Strings.isNullOrEmpty(item.get" + capitalize(colProp.getColName()) + "())");
                         }
                     }
                     fileWriter.append("\n");
@@ -72,7 +72,7 @@ public class Tung {
                     "\n" +
                     "                        }\n" +
                     "                    }\n" +
-                    "                    "+uncapitalize(subTableInfo.tableName)+"DTO.set"+ subTableInfo.tableName+"_lstSubTable("+uncapitalize(subTableInfo.tableName)+"_lstSubTable);\n" +
+                    "                    "+uncapitalize(tableSet.tableInfo.tableName)+"DTO.set"+ subTableInfo.tableName+"_lstSubTable("+uncapitalize(subTableInfo.tableName)+"_lstSubTable);\n" +
                     "                } catch (Exception ex) {\n" +
                     "                }\n");
         }
@@ -1164,29 +1164,29 @@ public class Tung {
         if (kieuDL.equals("String")){
             res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                     "\t\t\t\t<div class=\"col-lg-2\">\n"+
-                    "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"text\" class=\"form-control\"/>\n" +
-                    "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                    "\t\t\t\t\t<input name=\"" + uncapitalize(tenbang) + tenTruong + "\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"text\" class=\"form-control\"/>\n" +
+                    "\t\t\t\t\t<span id=\"" + uncapitalize(tenbang) + tenTruong + "_error\" class=\"note note-error\"></span>\n" +
                     "\t\t\t\t</div>\n";
         }else if (kieuDL.equals("Long") || kieuDL.equals("Double")){
             if (kieuNhap.equals("Combobox")){
                 res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                         "\t\t\t\t<div class=\"col-lg-2\">\n" +
-                        "\t\t\t\t\t<div id=\"cb"+tenTruong+"\"></div> \n" +
-                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+uncapitalize(tenbang)+tenTruong+"\" class=\"text_hidden\"  />\n" +
-                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                        "\t\t\t\t\t<div id=\"cb" + uncapitalize(tenbang) + tenTruong + "\"></div> \n" +
+                        "\t\t\t\t\t<input name=\"" + uncapitalize(tenbang) + tenTruong + "\" id=\""+uncapitalize(tenbang)+tenTruong+"\" class=\"text_hidden\"  />\n" +
+                        "\t\t\t\t\t<span id=\"" + uncapitalize(tenbang) + tenTruong + "_error\" class=\"note note-error\"></span>\n" +
                         "\t\t\t\t</div>\n";
             }else{
                 res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                         "\t\t\t\t<div class=\"col-lg-2\">\n" +
-                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
-                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>                           \n" +
+                        "\t\t\t\t\t<input name=\"" + uncapitalize(tenbang) + tenTruong + "\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
+                        "\t\t\t\t\t<span id=\"" + uncapitalize(tenbang) + tenTruong + "_error\" class=\"note note-error\"></span>                           \n" +
                         "\t\t\t\t</div>\n";
             }
         }else if (kieuDL.equals("Date")){
             res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                     "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
-                    "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"text\"/>\n" +
-                    "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                    "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\"" + uncapitalize(tenbang) + tenTruong + "\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"text\"/>\n" +
+                    "\t\t\t\t\t<span id=\"" + uncapitalize(tenbang) + tenTruong + "_error\" class=\"note note-error\"></span>\n" +
                     "\t\t\t\t</div>\n";
         }
         return res;
@@ -1623,8 +1623,9 @@ public class Tung {
         fileWriter.close();
     }
 
-    public static void genBusinessImpl_SUB(TableInfo tableInfo, String folder) throws IOException{
-        FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "BusinessImplSUB.java");
+    public static void genBusinessImpl(TableSet tableSet, String folder) throws IOException{
+        TableInfo tableInfo = tableSet.tableInfo;
+        FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "BusinessImpl.java");
         fileWriter.write("package com.tav.service.business;\n" +
                 "\n" +
                 "import com.tav.service.base.db.business.BaseFWBusinessImpl;\n" +
@@ -1637,6 +1638,8 @@ public class Tung {
                 "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
                 "import com.tav.service.dto.ObjectSearchDTO;\n" +
                 "import com.tav.service.dto.ServiceResult;\n" +
+                "import com.tav.service.dto.CommonSubTableDTO;\n" +
+                "import com.tav.service.dao.CommonSubTableDAO;\n" +
                 "import java.util.ArrayList;\n" +
                 "import java.util.List;\n" +
                 "import java.util.Date;\n" +
@@ -1678,16 +1681,18 @@ public class Tung {
                 "\t\tServiceResult serviceResult = new ServiceResult();\n"+
                 "\t\tserviceResult.setId(bo.get"+capitalize(gid).trim()+"());\n");
 
-        fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(tableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"lstSubTable();\n" +
-                "        if ("+uncapitalize(tableInfo.tableName)+"_lstSubTable != null && !"+uncapitalize(tableInfo.tableName)+"_lstSubTable .isEmpty()) {\n" +
-                "            "+uncapitalize(tableInfo.tableName)+"_lstSubTable .stream().forEach((item) -> {\n" +
-                "                item.setMain_id("+uncapitalize(tableInfo.tableName)+"BO.getGid());\n" +
-                "                item.setTable_name(\""+tableInfo.tableName+"\");\n" +
-                "                item.setField_name(\""+tableInfo.tableName+"SubTable\");\n" +
-                "                commonSubTableDAO.addDTO(item);\n"  +
-                "            });\n" +
-                "        }\n"
-        );
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(subTableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"lstSubTable();\n" +
+                    "        if ("+uncapitalize(subTableInfo.tableName)+"_lstSubTable != null && !"+uncapitalize(tableInfo.tableName)+"_lstSubTable.isEmpty()) {\n" +
+                    "            "+uncapitalize(subTableInfo.tableName)+"_lstSubTable.stream().forEach((item) -> {\n" +
+                    "                item.setMain_id(bo.getGid());\n" +
+                    "                item.setTable_name(\""+tableInfo.tableName.toUpperCase()+"\");\n" +
+                    "                item.setField_name(\"" + tableInfo.tableName + "_" + subTableInfo.tableName + "\");\n" +
+                    "                commonSubTableDAO.addDTO(item);\n"  +
+                    "            });\n" +
+                    "        }\n"
+            );
+        }
 
         fileWriter.append(
                 "\t\treturn serviceResult;\n"+
@@ -1700,16 +1705,18 @@ public class Tung {
                 "\t\tresult = new ServiceResult();\n" );
         fileWriter.append("\t\tcommonSubTableDAO.deleteListObjByTableName(searchDTO);\n");
 
-        fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(tableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+tableInfo.tableName+"lstSubTable();\n" +
-                "        if ("+uncapitalize(tableInfo.tableName)+"_lstSubTable != null && !"+uncapitalize(tableInfo.tableName)+"_lstSubTable .isEmpty()) {\n" +
-                "            "+uncapitalize(tableInfo.tableName)+"_lstSubTable .stream().forEach((item) -> {\n" +
-                "                item.setMain_id("+uncapitalize(tableInfo.tableName)+"BO.getGid());\n" +
-                "                item.setTable_name(\""+tableInfo.tableName+"\");\n" +
-                "                item.setField_name(\""+tableInfo.tableName+"SubTable\");\n" +
-                "                commonSubTableDAO.addDTO(item);\n"  +
-                "            });\n" +
-                "        }\n"
-        );
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(subTableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+ subTableInfo.tableName + "lstSubTable();\n" +
+                    "        if ("+uncapitalize(subTableInfo.tableName)+"_lstSubTable != null && !"+uncapitalize(subTableInfo.tableName)+"_lstSubTable.isEmpty()) {\n" +
+                    "            "+uncapitalize(subTableInfo.tableName)+"_lstSubTable.stream().forEach((item) -> {\n" +
+                    "                item.setMain_id("+uncapitalize(tableInfo.tableName)+"DTO.getGid());\n" +
+                    "                item.setTable_name(\"" + tableInfo.tableName.toUpperCase() + "\");\n" +
+                    "                item.setField_name(\"" + tableInfo.tableName + "_" + subTableInfo.tableName + "\");\n" +
+                    "                commonSubTableDAO.addDTO(item);\n"  +
+                    "            });\n" +
+                    "        }\n"
+            );
+        }
 
         fileWriter.append(
                 "\t\treturn result;\n"+

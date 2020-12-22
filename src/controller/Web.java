@@ -1416,6 +1416,7 @@ public class Web {
         genView(tableInfo,dir2.getAbsolutePath());
         //genControllerSearch(tableInfo, folder);
         //Tung.genJsSearch(tableInfo,folder);
-        Tung.genformSearch(tableInfo,dir2.getAbsolutePath());
+        Hung.genformSearch(tableInfo,dir2.getAbsolutePath());
+        Hieu.genSubTableController(tableSet, folder);
     }
 }

@@ -88,7 +88,6 @@ public class Hung {
                 "                        <fieldset>\n");
 
         ArrayList<ColumnProperty> res_search = columns_search(tableInfo);
-        System.out.println(res_search.size());
         int k = res_search.size()-1;
         int r = k / 4;
         int q = k%4;
@@ -1157,23 +1156,23 @@ public class Hung {
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
-                fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n" +
-                        "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n");
+                fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n" +
+                        "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n");
             }
         }
 
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
-                fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n" +
-                        "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n");
+                fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n" +
+                        "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n" +
-                        "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\");\n");
+                fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n" +
+                        "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n");
             }
 
         }
@@ -1316,13 +1315,13 @@ public class Hung {
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
-                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='_lstDetailInfo[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"' />\";\n");
+                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='_lstDetailInfo[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='_lstDetailInfo[\" + (count - 1) + \"]."+tableInfo.columns.get(i).getColName()+"' />\";");
+                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='_lstDetailInfo[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";");
             }
         }
         fileWriter.append("\n    if (isEdit === 1) {\n" +
@@ -1372,7 +1371,7 @@ public class Hung {
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("Combobox")){
                 ColumnProperty colProp = tableInfo.columns.get(i);
-                fileWriter.append("\tvt_combobox.buildCombobox(\"cb"+uncapitalize(tableInfo.tableName) + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", "+colProp.getColName()+", \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
+                fileWriter.append("\tvt_combobox.buildCombobox(\"cb"+uncapitalize(tableInfo.tableName) + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", " + uncapitalize(tableInfo.tableName) +colProp.getColName()+", \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
             }
         }
         fileWriter.append("\n" +

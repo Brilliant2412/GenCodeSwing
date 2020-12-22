@@ -371,36 +371,35 @@ public class Hieu {
                 "                    <span id=\"filestTmp_error\" class=\"note note-error\"></span>\n" +
                 "                </div>\n" +
                 "            </div>\n\n");
-        for(int count = 0; count < tableSet.subTables.size(); count++){
-            tableInfo = tableSet.subTables.get(count);
+        for(TableInfo subTableInfo : tableSet.subTables){
             fileWriter.append(
                     "\t\t\t<legend class=\"fs-legend-head\">\n" +
-                    "                <span class=\"iconFS\"></span>\n" +
-                    "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Bảng con</b></span>\n" +
-                    "            </legend>\n" +
-                    "            <div class=\"form-group-add row\">\n" +
-                    "                <table id=\"" + uncapitalize(tableInfo.tableName) + "_tblMstDivision\" class=\"table table-striped table-bordered table-hover smart-form dataTable no-footer\">\n" +
-                    "                    <thead>\n" +
-                    "                        <tr>\n" +
-                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">STT</th>\n");
-            for(int i = 1; i < tableInfo.columns.size(); i++){
-                if(tableInfo.columns.get(i).isShow()){
-                    fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + tableInfo.columns.get(i).getColDescription() + "</th>\n");
+                            "                <span class=\"iconFS\"></span>\n" +
+                            "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Bảng con</b></span>\n" +
+                            "            </legend>\n" +
+                            "            <div class=\"form-group-add row\">\n" +
+                            "                <table id=\"" + uncapitalize(subTableInfo.tableName) + "_tblMstDivision\" class=\"table table-striped table-bordered table-hover smart-form dataTable no-footer\">\n" +
+                            "                    <thead>\n" +
+                            "                        <tr>\n" +
+                            "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">STT</th>\n");
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                if(subTableInfo.columns.get(i).isShow()){
+                    fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + subTableInfo.columns.get(i).getColDescription() + "</th>\n");
                 }
 
             }
             fileWriter.append(
-                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\"><a style=\"cursor: pointer; color:white !important;\" class=\"fa fa-plus fa-lg src\" onclick=\"" + uncapitalize(tableInfo.tableName) + "onClickAddData();\"></a></th>\n" +
+                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\"><a style=\"cursor: pointer; color:white !important;\" class=\"fa fa-plus fa-lg src\" onclick=\"" + uncapitalize(subTableInfo.tableName) + "onClickAddData();\"></a></th>\n" +
                             "                        </tr>\n" +
                             "                    </thead>\n" +
-                            "                    <tbody id=\"" + uncapitalize(tableInfo.tableName) + "_dataDetailInfo\" >\n" +
+                            "                    <tbody id=\"" + uncapitalize(subTableInfo.tableName) + "_dataDetailInfo\" >\n" +
                             "                    </tbody>\n" +
                             "                </table>\n" +
                             "            </div>\n");
         }
         fileWriter.append("\t\t</fieldset>\n" +
                 "\t</form:form>\n" +
-                "\t<jsp:include page=\"subTable.jsp\" />"+
+                "\t<jsp:include page=\"subTable.jsp\" />\n" +
                 "</div>\n" +
                 "<script type=\"text/javascript\">\n" +
                 "\t$(\"#dialog-formAddNew\").dialog({\n" +
@@ -764,6 +763,60 @@ public class Hieu {
             );
         }
         fileWriter.append("}\n");
+        fileWriter.close();
+    }
+
+    public static void genSubTableController(TableSet tableSet, String folder) throws IOException {
+        FileWriter fileWriter = new FileWriter(folder + "\\subTableController.txt");
+        TableInfo tableInfo = tableSet.tableInfo;
+        fileWriter.write(
+                "\t@RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.GET_ALL_" + tableInfo.tableName.toUpperCase() + "_SUB_TABLE}, method = RequestMethod.GET)\n" +
+                    "    @ResponseBody\n" +
+                    "    public List<CommonSubTableDTO> getAllSubTable(HttpServletRequest request) {\n" +
+                    "        try {\n" +
+                    "            // get info paging\n" +
+                    "            SearchCommonFinalDTO searchDTO = new SearchCommonFinalDTO();\n" +
+                    "            searchDTO.setString1(\"" + tableInfo.tableName.toUpperCase() + "\");\n");
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append("            searchDTO.setString2(\"" + tableInfo.tableName.toUpperCase() + "_" + subTableInfo.tableName + "\");\n");
+        }
+        fileWriter.append(
+                "            if (request.getParameter(\"gid\") != null) {\n" +
+                "                try {\n" +
+                "                    searchDTO.setLong1(Long.parseLong(request.getParameter(\"gid\")));\n" +
+                "                } catch (Exception e) {\n" +
+                "                }\n" +
+                "            }\n" +
+                "            List<CommonSubTableDTO> lst = commonSubTableData.getAll(searchDTO, 0, 0);\n" +
+                "\n" +
+                "            for (CommonSubTableDTO item : lst) {\n"
+        );
+        int count_long = 0;
+        for(TableInfo subTableInfo : tableSet.subTables){
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                ColumnProperty colProp = subTableInfo.columns.get(i);
+                if(colProp.getColType().equals("Long")){
+                    count_long++;
+                    fileWriter.append(
+                            "                List<MstDivisionDTO> lstMst" + count_long + " = mstDivisionData.getAllMstDepartmentType(\"707\");\n" +
+                            "                for (MstDivisionDTO item1 : lstMst" + count_long + ") {\n" +
+                            "                    if (Objects.equals(item.get" + capitalize(colProp.getColName()) + "(), item1.getDvsValue())) {\n" +
+                            "                        item.set" + capitalize(colProp.getColName()) + "ST(item1.getDvsName());\n" +
+                            "                    }\n" +
+                            "                }\n"
+                    );
+                }
+            }
+        }
+        fileWriter.append(
+                "            }\n" +
+                "            return lst;\n" +
+                "        } catch (Exception e) {\n" +
+                "            logger.error(e.getMessage(), e);\n" +
+                "            return null;\n" +
+                "        }\n" +
+                "    }\n"
+        );
         fileWriter.close();
     }
 }

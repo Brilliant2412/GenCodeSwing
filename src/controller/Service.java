@@ -1561,7 +1561,7 @@ public class Service {
         Hieu.genDTO(tableSet, folder);
         //genDAO(tableInfo, folder);
         genBusiness(tableInfo, folder);
-        genBusinessImpl(tableInfo, folder);
+        Tung.genBusinessImpl(tableSet, folder);
         genRsService(tableInfo, folder);
         genRsServiceImpl(tableInfo, folder);
         genBean(tableInfo, folder);
