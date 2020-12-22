@@ -390,7 +390,7 @@ public class Hieu {
 
             }
             fileWriter.append(
-                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\"><a style=\"cursor: pointer; color:white !important;\" class=\"fa fa-plus fa-lg src\" onclick=\"" + uncapitalize(tableInfo.tableName) + "_onClickAddData();\"></a></th>\n" +
+                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\"><a style=\"cursor: pointer; color:white !important;\" class=\"fa fa-plus fa-lg src\" onclick=\"" + uncapitalize(tableInfo.tableName) + "onClickAddData();\"></a></th>\n" +
                             "                        </tr>\n" +
                             "                    </thead>\n" +
                             "                    <tbody id=\"" + uncapitalize(tableInfo.tableName) + "_dataDetailInfo\" >\n" +

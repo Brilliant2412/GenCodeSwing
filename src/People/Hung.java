@@ -8,6 +8,8 @@ package People;
 import controller.CodeGenerator;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import model.TableInfo;
 import static controller.CodeGenerator.*;
 import model.ColumnProperty;
@@ -25,7 +27,7 @@ public class Hung {
             if (kieuNhap.equals("Combobox")) {
                 res = "\t\t\t\t\t\t\t\t\t<label class=\"col-lg-1 control-label\">" + moTa + "</label>\n" +
                         "\t\t\t\t\t\t\t\t\t<div class=\"col-lg-2 selectContainer\">\n" +
-                        "\t\t\t\t\t\t\t\t\t\t<div id=\"cb" + tenTruong + "Search\">\n" +
+                        "\t\t\t\t\t\t\t\t\t\t<div id=\"cb" + tenTruong + "Search\"></div>\n" +
                         "\t\t\t\t\t\t\t\t\t</div>\n";
             } else {
                 res = "\t\t\t\t\t\t\t\t\t<label class=\"col-lg-1 control-label\">" + moTa + "</label>\n" +
@@ -44,6 +46,22 @@ public class Hung {
                     "\t\t\t\t\t\t\t\t\t<div class=\"col-lg-1\">\n" +
                     "\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"dateCalendar\" placeholder=\"Đến\" id=\"" + tenTruong + "SearchTo\"> \n" +
                     "\t\t\t\t\t\t\t\t\t</div>\n";
+        }
+        return res;
+
+    }
+
+    public static ArrayList<ColumnProperty> columns_search(TableInfo tableInfo){
+        ArrayList<ColumnProperty> res = new ArrayList<>();
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).isSearch() == true){
+                if (tableInfo.columns.get(i).getColType().equals("String")){
+                    continue;
+                }else{
+                    res.add(tableInfo.columns.get(i));
+                }
+
+            }
         }
         return res;
     }
@@ -69,8 +87,9 @@ public class Hung {
                 "                        <button type=\"submit\" class=\"bv-hidden-submit\" style=\"display: none; width: 0px; height: 0px;\"></button>\n" +
                 "                        <fieldset>\n");
 
-
-        int k = tableInfo.countSearch;
+        ArrayList<ColumnProperty> res_search = columns_search(tableInfo);
+        System.out.println(res_search.size());
+        int k = res_search.size()-1;
         int r = k / 4;
         int q = k%4;
         int i = 0;
@@ -81,92 +100,90 @@ public class Hung {
                     "                                \t<div class=\"col-lg-2 selectContainer\">\n" +
                     "                                    \t<input type=\"text\" class=\"form-control\" placeholder=\"Nhập từ khóa\" id=\"keySearch\">\n" +
                     "                                \t</div>\n");
-            for (; i < tableInfo.columns.size(); i++) {
-                if (tableInfo.columns.get(i).isSearch() == true) {
-                    String res = resSearch(tableInfo.columns.get(i).getColName(),
-                            tableInfo.columns.get(i).getColDescription(),
-                            tableInfo.columns.get(i).getColType(),
-                            tableInfo.columns.get(i).getInputType()
-                    );
+            for (; i < res_search.size(); i++) {
+                String res = resSearch(res_search.get(i).getColName(),
+                        res_search.get(i).getColDescription(),
+                        res_search.get(i).getColType(),
+                        res_search.get(i).getInputType()
+                );
+                if (res.equals("")){
+                    continue;
+                }else{
                     fileWriter.append(res);
                 }
+
             }
-            fileWriter.append("\t\t\t\t\t\t\t\t</div>\n\n");
-        }else {
+            fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
+        }
+        else {
             fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
             fileWriter.append("\t\t\t\t\t\t\t\t\t<label class=\"col-lg-1 control-label\" style=\"padding:5px 4px\">Từ khóa</label>\n" +
                     "                                \t<div class=\"col-lg-2 selectContainer\">\n" +
                     "                                    \t<input type=\"text\" class=\"form-control\" placeholder=\"Nhập từ khóa\" id=\"keySearch\">\n" +
                     "                                \t</div>\n");
-            for (; i < tableInfo.columns.size(); i++) {
-                if (tableInfo.columns.get(i).isSearch() == true) {
-                    countSearch++;
-                    String res = resSearch(tableInfo.columns.get(i).getColName(),
-                            tableInfo.columns.get(i).getColDescription(),
-                            tableInfo.columns.get(i).getColType(),
-                            tableInfo.columns.get(i).getInputType()
-                    );
-                    fileWriter.append(res);
-                    if (countSearch == 3) {
-                        fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
-                        break;
-                    }
+            for (; i < res_search.size(); i++) {
+                String res = resSearch(res_search.get(i).getColName(),
+                        res_search.get(i).getColDescription(),
+                        res_search.get(i).getColType(),
+                        res_search.get(i).getInputType()
+                );
+                fileWriter.append(res);
+                if (i == 3) {
+                    fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
+                    break;
                 }
             }
             k -= 3;
-            countSearch -= 3;
             r = k / 4;
             q = k % 4;
-            i++;
+            //i++;
             if (r == 0) {
                 fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
-                for (; i < tableInfo.columns.size(); i++) {
-                    if (tableInfo.columns.get(i).isSearch() == true) {
-                        String res = resSearch(tableInfo.columns.get(i).getColName(),
-                                tableInfo.columns.get(i).getColDescription(),
-                                tableInfo.columns.get(i).getColType(),
-                                tableInfo.columns.get(i).getInputType()
-                        );
-                        fileWriter.append(res);
-                    }
+                for (; i < res_search.size(); i++) {
+                    String res = resSearch(res_search.get(i).getColName(),
+                            res_search.get(i).getColDescription(),
+                            res_search.get(i).getColType(),
+                            res_search.get(i).getInputType()
+                    );
+                    fileWriter.append(res);
                 }
                 fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
             } else {
                 for (int dem = 0; dem < r; dem++) {
                     fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
-                    for (; i < tableInfo.columns.size(); i++) {
-                        if (tableInfo.columns.get(i).isSearch() == true) {
-                            countSearch++;
-                            String res = resSearch(tableInfo.columns.get(i).getColName(),
-                                    tableInfo.columns.get(i).getColDescription(),
-                                    tableInfo.columns.get(i).getColType(),
-                                    tableInfo.columns.get(i).getInputType()
-                            );
-                            fileWriter.append(res);
-                            if (countSearch % 4 == 3 && countSearch <= k) {
-                                fileWriter.append("\t\t\t\t\t\t\t\t/div>\n");
-                            } else {
-                                break;
-                            }
+                    for (; i < res_search.size(); i++) {
+                        String res = resSearch(res_search.get(i).getColName(),
+                                res_search.get(i).getColDescription(),
+                                res_search.get(i).getColType(),
+                                res_search.get(i).getInputType()
+                        );
+                        fileWriter.append(res);
+                        if (i % 4 == 3 && i <= k) {
+                            fileWriter.append("\t\t\t\t\t\t\t\t/div>\n");
+                        } else {
+                            continue;
                         }
                     }
                 }
                 if (q != 0) {
                     fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
-                    for (; i < tableInfo.columns.size(); i++) {
-                        if (tableInfo.columns.get(i).isSearch() == true) {
-                            String res = resSearch(tableInfo.columns.get(i).getColName(),
-                                    tableInfo.columns.get(i).getColDescription(),
-                                    tableInfo.columns.get(i).getColType(),
-                                    tableInfo.columns.get(i).getInputType()
-                            );
-                            fileWriter.append(res);
-                        }
+                    for (; i < res_search.size(); i++) {
+                        String res = resSearch(res_search.get(i).getColName(),
+                                res_search.get(i).getColDescription(),
+                                res_search.get(i).getColType(),
+                                res_search.get(i).getInputType()
+                        );
+                        fileWriter.append(res);
                     }
                     fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
                 }
             }
         }
+        fileWriter.append("\t\t\t\t\t\t\t\t<label class=\"col-md-1 control-label\" ></label>\n" +
+                "                                <div class=\"col-lg-2 selectContainer\">\n" +
+                "                                    <button id=\"btnSearch\" class=\"btn btn-success\" type=\"button\" style=\"width: 100%;\">Tìm kiếm</button>\n" +
+                "                                </div>\n");
+
         fileWriter.append("                        </fieldset>\n" +
                 "                        \n" +
                 "                    </form>\n" +
@@ -174,6 +191,7 @@ public class Hung {
                 "                <br>\n" +
                 "            </div>\n" +
                 "        </div>\n" +
+                "   </div>\n"+
                 "</section>\n" +
                 "\n" +
                 "<style>\n" +
