@@ -383,7 +383,13 @@ public class Hieu {
                             "                        <tr>\n" +
                             "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">STT</th>\n");
             for(int i = 1; i < subTableInfo.columns.size(); i++){
-                if(subTableInfo.columns.get(i).isShow()){
+                if(subTableInfo.columns.get(i).isShow() && !subTableInfo.columns.get(i).getInputType().equals("file")){
+                    fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + subTableInfo.columns.get(i).getColDescription() + "</th>\n");
+                }
+
+            }
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                if(subTableInfo.columns.get(i).isShow() && subTableInfo.columns.get(i).getInputType().equals("file")){
                     fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + subTableInfo.columns.get(i).getColDescription() + "</th>\n");
                 }
 

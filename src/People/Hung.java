@@ -66,6 +66,20 @@ public class Hung {
         return res;
     }
 
+    public static ArrayList<ColumnProperty> columns_isshow_notfile(TableInfo tableInfo){
+        ArrayList<ColumnProperty> res = new ArrayList<>();
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).isShow() == true){
+                if (tableInfo.columns.get(i).getInputType().equals("file")){
+                    continue;
+                }else{
+                    res.add(tableInfo.columns.get(i));
+                }
+
+            }
+        }
+        return res;
+    }
 
     public static void genformSearch(TableInfo tableInfo, String folder) throws IOException {
         FileWriter fileWriter = new FileWriter(folder+"\\formSearch.jsp");
@@ -1263,37 +1277,6 @@ public class Hung {
             }
         }
 
-//        for (int i = 0;i<tableInfo.columns.size();i++){
-//            if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true && !tableInfo.columns.get(i).getInputType().equals("file")){
-//                if (countS %2 == 1){
-//                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
-//                }else{
-//                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
-//                }
-//                countS--;
-//            }
-//        }
-//
-//        //date
-//        for (int i = 0;i<tableInfo.columns.size();i++){
-//            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
-//                if (countS%2 == 1){
-//                    fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
-//                }else{
-//                    fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
-//                }
-//                countS--;
-//            }
-//        }
-
-//        // combobox text
-//        for (int i = 0;i<tableInfo.columns.size();i++){
-//            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
-//                fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML(txt"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
-//            }
-//        }
-
-
         fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML('');");
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("file")){
@@ -1423,7 +1406,7 @@ public class Hung {
                 "    vt_form.clearError();\n" +
                 "    "+uncapitalize(tableInfo.tableName)+"setValueToFormSubTable();\n" +
                 "    //lưu file\n" +
-                "    $.ajax({\n" +
+                "    /*$.ajax({\n" +
                 "        traditional: true,\n" +
                 "        url: \"token.json\",\n" +
                 "        dataType: \"text\",\n" +
@@ -1445,7 +1428,7 @@ public class Hung {
                 "            type: \"POST\",\n" +
                 "            headers: {\"X-XSRF-TOKEN\": result},\n" +
                 "            dataType: 'json'\n" +
-                "        }).success(function (result) {\n"
+                "        }).success(function (result) {*/\n"
 
         );
         fileWriter.append("            if (vt_form.validate1(\"#subTableForm\", null, "+uncapitalize(tableInfo.tableName)+"SubTable.validateRule)) {\n" +
@@ -1479,29 +1462,20 @@ public class Hung {
 
 
         // html + nhung thang hien ra ChaBombChild
-        //string
         int nth_child = 2;
-        for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true && !tableInfo.columns.get(i).getInputType().equals("file")){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
-                nth_child++;
-            }
-        }
+        ArrayList<ColumnProperty> table_isshow_notfile = columns_isshow_notfile(tableInfo);
+        System.out.println(table_isshow_notfile.size());
+        for (int i = 0;i<table_isshow_notfile.size();i++){
+            if (table_isshow_notfile.get(i).getColType().equals("String")){
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
 
-        //date
-        for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
-                nth_child++;
+            }else if (table_isshow_notfile.get(i).getColType().equals("Date")){
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
             }
-        }
-
-        // combobox text
-        for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
-                nth_child++;
+            else if (table_isshow_notfile.get(i).getInputType().equals("Combobox") && table_isshow_notfile.get(i).getColType().equals("Long")){
+                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html(txt"+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
             }
+            nth_child++;
         }
 
         // check file
