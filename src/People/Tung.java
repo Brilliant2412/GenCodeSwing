@@ -1350,6 +1350,10 @@ public class Tung {
                 "import com.tav.web.bo.ValidationResult;\n" +
                 "import com.tav.web.common.CommonConstant;\n" +
                 "import com.tav.web.common.CommonFunction;\n" +
+                "import com.tav.web.data.CommonSubTableData;\n" +
+                "import com.tav.web.dto.MstDivisionDTO;\n" +
+                "import com.tav.web.data.MstDivisionData;\n" +
+                "import java.util.Objects;\n" +
                 "import com.tav.web.common.ConvertData;\n" +
                 "import com.tav.web.common.ErpConstants;\n" +
                 "import com.tav.web.common.StringUtil;\n" +
@@ -1406,6 +1410,11 @@ public class Tung {
                 "    @Autowired\n" +
                 "    private "+ tableInfo.tableName+"Data "+uncapitalize(tableInfo.tableName)+"Data;\n" +
                 "\n" +
+                "   @Autowired\n" +
+                "   private CommonSubTableData commonSubTableData;\n" +
+                "\n" +
+                "   @Autowired\n" +
+                "   private MstDivisionData mstDivisionData;\n\n" +
                 "    @RequestMapping(\"/\" + ErpConstants.RequestMapping."+ tableInfo.title.toUpperCase()+")\n" +
                 "    public ModelAndView agent(Model model, HttpServletRequest request) {\n" +
                 "        return new ModelAndView(\""+uncapitalize(tableInfo.tableName)+"\");\n" +
@@ -1512,8 +1521,64 @@ public class Tung {
                 "    @RequestMapping(value = \"/\" + ErpConstants.RequestMapping.GET_"+ tableInfo.title.toUpperCase()+"_BY_ID, method = RequestMethod.GET)\n" +
                 "    public @ResponseBody\n" +
                 "    "+ tableInfo.tableName+"DTO getOneById(HttpServletRequest request) {\n" +
-                "        Long id = Long.parseLong(request.getParameter(\"gid\"));\n" +
-                "        return "+uncapitalize(tableInfo.tableName)+"Data.getOneById(id);\n" +
+                "        Long id = Long.parseLong(request.getParameter(\"gid\"));\n" );
+
+
+        fileWriter.write(
+                        "        try {\n" +
+                        "            // get info paging\n");
+
+
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append("            SearchCommonFinalDTO searchDTO_" + subTableInfo.tableName + " = new SearchCommonFinalDTO();\n" +
+                    "            searchDTO_" + subTableInfo.tableName + ".setString1(\"" + tableInfo.tableName.toUpperCase() + "\");\n");
+            fileWriter.append("            searchDTO_" + subTableInfo.tableName + ".setString2(\"" + tableInfo.tableName + "_" + subTableInfo.tableName + "\");\n"+
+                    "            searchDTO_" + subTableInfo.tableName + ".setLong1(id);\n");
+        }
+        fileWriter.append(
+                "            if (request.getParameter(\"gid\") != null) {\n" +
+                        "                try {\n" +
+                        "                    searchDTO.setLong1(Long.parseLong(request.getParameter(\"gid\")));\n" +
+                        "                } catch (Exception e) {\n" +
+                        "                }\n" +
+                        "            }\n"
+
+        );
+        int count_long1 = 0;
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append(
+                    "            List<CommonSubTableDTO> lst_" + subTableInfo.tableName + " = commonSubTableData.getAll(searchDTO_" + subTableInfo.tableName + ", 0, 0);\n" +
+                    "\n" +
+                    "            for (CommonSubTableDTO item : lst_" + subTableInfo.tableName + ") {\n"
+            );
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                ColumnProperty colProp = subTableInfo.columns.get(i);
+                if(colProp.getColType().equals("Long")){
+                    count_long1++;
+                    fileWriter.append(
+                            "                List<MstDivisionDTO> lstMst" + count_long1 + " = mstDivisionData.getAllMstDepartmentType(\"707\");\n" +
+                                    "                for (MstDivisionDTO item1 : lstMst" + count_long1 + ") {\n" +
+                                    "                    if (Objects.equals(item.get" + capitalize(colProp.getColName()) + "(), item1.getDvsValue())) {\n" +
+                                    "                        item.set" + capitalize(colProp.getColName()) + "ST(item1.getDvsName());\n" +
+                                    "                    }\n" +
+                                    "                }\n"
+                    );
+                }
+            }
+            fileWriter.append(
+                    "            }\n" +
+                    "            " + uncapitalize(tableInfo.tableName) + "DTO.set" + subTableInfo.tableName + "_lstSubTable(lst_" + subTableInfo.tableName + ");\n");
+        }
+        fileWriter.append(
+                        "        } catch (Exception e) {\n" +
+                        "            logger.error(e.getMessage(), e);\n" +
+                        "    }\n"
+        );
+
+
+
+        fileWriter.append(
+                "        return " + uncapitalize(tableInfo.tableName) + "DTO;\n" +
                 "    }\n" +
                 "\n" +
                 "    //add\n" +
@@ -1682,8 +1747,8 @@ public class Tung {
                 "\t\tserviceResult.setId(bo.get"+capitalize(gid).trim()+"());\n");
 
         for(TableInfo subTableInfo : tableSet.subTables){
-            fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(subTableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"lstSubTable();\n" +
-                    "        if ("+uncapitalize(subTableInfo.tableName)+"_lstSubTable != null && !"+uncapitalize(tableInfo.tableName)+"_lstSubTable.isEmpty()) {\n" +
+            fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(subTableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+ subTableInfo.tableName+"_lstSubTable();\n" +
+                    "        if ("+uncapitalize(subTableInfo.tableName)+"_lstSubTable != null && !"+uncapitalize(subTableInfo.tableName)+"_lstSubTable.isEmpty()) {\n" +
                     "            "+uncapitalize(subTableInfo.tableName)+"_lstSubTable.stream().forEach((item) -> {\n" +
                     "                item.setMain_id(bo.getGid());\n" +
                     "                item.setTable_name(\""+tableInfo.tableName.toUpperCase()+"\");\n" +
@@ -1706,7 +1771,7 @@ public class Tung {
         fileWriter.append("\t\tcommonSubTableDAO.deleteListObjByTableName(searchDTO);\n");
 
         for(TableInfo subTableInfo : tableSet.subTables){
-            fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(subTableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+ subTableInfo.tableName + "lstSubTable();\n" +
+            fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(subTableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+ subTableInfo.tableName + "_lstSubTable();\n" +
                     "        if ("+uncapitalize(subTableInfo.tableName)+"_lstSubTable != null && !"+uncapitalize(subTableInfo.tableName)+"_lstSubTable.isEmpty()) {\n" +
                     "            "+uncapitalize(subTableInfo.tableName)+"_lstSubTable.stream().forEach((item) -> {\n" +
                     "                item.setMain_id("+uncapitalize(tableInfo.tableName)+"DTO.getGid());\n" +
