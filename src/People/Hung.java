@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import model.TableInfo;
 import static controller.CodeGenerator.*;
 import model.ColumnProperty;
+import model.TableSet;
 
 /**
  *
@@ -233,7 +234,8 @@ public class Hung {
         fileWriter.close();
     }
 
-    public static void genJs(TableInfo tableInfo, String folder) throws  IOException{
+    public static void genJs(TableSet tableSet, String folder) throws  IOException{
+        TableInfo tableInfo = tableSet.tableInfo;
         FileWriter fileWriter = new FileWriter(folder+"\\" + uncapitalize(tableInfo.tableName) + ".js");
         fileWriter.write("//$(\"#TBL_DOCUMENT_TYPE\").addClass(\"active\");\n" +
                 "//$(\"#naviParent\").replaceWith($(\"#ROOT_LAND_POINT  span\").html());\n" +
@@ -759,6 +761,42 @@ public class Hung {
                             "                    }\n"
             );
         }
+
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append(
+                    "                    var lst_" + subTableInfo.tableName + " = data." + uncapitalize(subTableInfo.tableName) + "_lstSubTable;\n" +
+                    "                    for(var i=0; i<lst_" + subTableInfo.tableName + ".length;i++){\n" +
+                    "                        $(\"#" + uncapitalize(subTableInfo.tableName) + "_dataDetailInfo\").append(\n" +
+                    "                                " + uncapitalize(subTableInfo.tableName) + "addNewDataToTable(3, lst_" + subTableInfo.tableName + "[i].main_id, ");
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                ColumnProperty colProp = subTableInfo.columns.get(i);
+                if(colProp.getColType().equals("Long")){
+                    fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
+                    fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + "ST, ");
+                }
+            }
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                ColumnProperty colProp = subTableInfo.columns.get(i);
+                if(colProp.getColType().equals("String")){
+                    fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
+                }
+            }
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                ColumnProperty colProp = subTableInfo.columns.get(i);
+                if(colProp.getColType().equals("Date")){
+                    fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + "ST, ");
+                }
+            }
+            fileWriter.append(
+                    "1)\n" +
+                    "                        );\n" +
+                    "                    }");
+        }
+
+
+
+
+
         fileWriter.append("\n\t\t\t\t\t$('#dialog-formAddNew').dialog({\n" +
                 "                        title: \"Cập nhật thông tin " + tableInfo.description + "\"\n" +
                 "                    }).dialog('open');\n" +
@@ -1464,7 +1502,6 @@ public class Hung {
         // html + nhung thang hien ra ChaBombChild
         int nth_child = 2;
         ArrayList<ColumnProperty> table_isshow_notfile = columns_isshow_notfile(tableInfo);
-        System.out.println(table_isshow_notfile.size());
         for (int i = 0;i<table_isshow_notfile.size();i++){
             if (table_isshow_notfile.get(i).getColType().equals("String")){
                 fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");

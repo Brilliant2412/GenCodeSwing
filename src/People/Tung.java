@@ -1525,8 +1525,9 @@ public class Tung {
 
 
         fileWriter.write(
-                        "        try {\n" +
-                        "            // get info paging\n");
+                "        " + tableInfo.tableName + "DTO " + uncapitalize(tableInfo.tableName) + "DTO = " + uncapitalize(tableInfo.tableName) + "Data.getOneById(id);" +
+                "        try {\n" +
+                "            // get info paging\n");
 
 
         for(TableInfo subTableInfo : tableSet.subTables){
@@ -1537,8 +1538,11 @@ public class Tung {
         }
         fileWriter.append(
                 "            if (request.getParameter(\"gid\") != null) {\n" +
-                        "                try {\n" +
-                        "                    searchDTO.setLong1(Long.parseLong(request.getParameter(\"gid\")));\n" +
+                        "                try {\n");
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append("                    searchDTO_" + subTableInfo.tableName + ".setLong1(Long.parseLong(request.getParameter(\"gid\")));\n");
+        }
+        fileWriter.append(
                         "                } catch (Exception e) {\n" +
                         "                }\n" +
                         "            }\n"

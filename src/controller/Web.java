@@ -1410,7 +1410,7 @@ public class Web {
         genTitle(tableInfo, folder);
         genListjsp(tableInfo, dir2.getAbsolutePath());
         //genJs(tableInfo, folder);
-        Hung.genJs(tableInfo, folder);
+        Hung.genJs(tableSet, folder);
         Hieu.genDialogAdd(tableSet, dir2.getAbsolutePath());
         Hieu.genDTO_Web(tableSet, folder);
         genView(tableInfo,dir2.getAbsolutePath());
