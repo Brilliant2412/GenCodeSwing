@@ -60,7 +60,7 @@ public class CodeGenerator {
         Service.genService(tableSet ,pathOne);
         Web.genWeb(tableSet, pathTwo);
         for(int i = 0; i < tableSet.subTables.size(); i++){
-            SubObj.genSubObj(tableSet.subTables.get(i), pathSubObjs);
+            SubObj.genSubObj(tableSet.subTables.get(i), pathSubObjs,tableSet.tableInfo.tableName);
         }
     }
 }
