@@ -404,8 +404,11 @@ public class Hieu {
                             "            </div>\n");
         }
         fileWriter.append("\t\t</fieldset>\n" +
-                "\t</form:form>\n" +
-                "\t<jsp:include page=\"subTable.jsp\" />\n" +
+                "\t</form:form>\n");
+        for(TableInfo subTableInfo : tableSet.subTables) {
+            fileWriter.append("\t<jsp:include page=\"subTable"+uncapitalize(subTableInfo.tableName)+".jsp\" />\n");
+        }
+        fileWriter.append(
                 "</div>\n" +
                 "<script type=\"text/javascript\">\n" +
                 "\t$(\"#dialog-formAddNew\").dialog({\n" +

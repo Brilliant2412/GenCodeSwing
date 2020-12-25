@@ -372,7 +372,7 @@ public class Hung {
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isSearch()){
                 t_cb1++;
-                fileWriter.append("url += \"&listLong"+t_cb1+"=\"+listLong"+t_cb1+";\n");
+                fileWriter.append("    url += \"&listLong"+t_cb1+"=\"+listLong"+t_cb1+";\n");
             }
         }
         //date
@@ -1019,7 +1019,7 @@ public class Hung {
          *                                 onClickAddData func
          *********************************************************************************************/
         fileWriter.append("function "+uncapitalize(tableInfo.tableName)+"onClickAddData() {\n" +
-                "    vt_form.reset($('#subTableForm'));\n" +
+                "    vt_form.reset($('#subTableForm"+uncapitalize(tableInfo.tableName)+"'));\n" +
                 "    $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val(\"0\");\n" +
                 "    //document.getElementById('div_btn_delete_file').style.display = \"none\";\n" +
                 "    $(\"#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc\").val(\"0\");\n" +
@@ -1040,11 +1040,11 @@ public class Hung {
             }
         }
         if (checkfile == true){
-            fileWriter.append("\t$(\"#fileTopicFilesTmpSubTable\").html(\"\");\n" +
+            fileWriter.append("\t$(\"#fileTopicFilesTmpSubTable"+uncapitalize(tableInfo.tableName)+"\").html(\"\");\n" +
                     "\tvar html = \"\";\n" +
-                    "\thtml += '<input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable\" id=\"filestTmpSubTable\" type=\"file\"/>';\n" +
-                    "\thtml += '<span id=\"filestTmpSubTable_error\" class=\"note note-error\"></span>';\n" +
-                    "\t$(\"#fileTopicFilesTmpSubTable\").html(html);\n");
+                    "\thtml += '<input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable\" id=\"filestTmpSubTable"+uncapitalize(tableInfo.tableName)+"\" type=\"file\"/>';\n" +
+                    "\thtml += '<span id=\"filestTmpSubTable"+uncapitalize(tableInfo.tableName)+"_error\" class=\"note note-error\"></span>';\n" +
+                    "\t$(\"#fileTopicFilesTmpSubTable"+uncapitalize(tableInfo.tableName)+"\").html(html);\n");
         }
         //STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
@@ -1079,9 +1079,9 @@ public class Hung {
 
 
 
-        fileWriter.append("    $('#dialog-formAddTopicMember').dialog('open');\n" +
-                "    $('#dialog-formAddTopicMember').parent().addClass(\"dialogAddEditMemberTopic\");\n" +
-                "    $('.dialogAddEditMemberTopic').find('.ui-dialog-title').empty().append(\"Thêm mới bảng con\");\n");
+        fileWriter.append("    $('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"').dialog('open');\n" +
+                "    $('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"').parent().addClass(\"dialogAddEditMemberTopic"+uncapitalize(tableInfo.tableName)+"\");\n" +
+                "    $('.dialogAddEditMemberTopic"+uncapitalize(tableInfo.tableName)+"').find('.ui-dialog-title').empty().append(\"Thêm mới bảng con "+uncapitalize(tableInfo.tableName)+" \");\n");
         fileWriter.append("\n}\n");
         /*********************************************************************************************
          *                                 on click remove
@@ -1113,7 +1113,7 @@ public class Hung {
                 "\n" +
                 "    vt_form.clearError();\n" +
                 "    "+uncapitalize(tableInfo.tableName)+"setValueToFormSubTable();\n" +
-                "    if (vt_form.validate1(\"#subTableForm\", null, "+uncapitalize(tableInfo.tableName)+"SubTable.validateRule)) {\n" +
+                "    if (vt_form.validate1(\"#subTableForm"+uncapitalize(tableInfo.tableName)+"\", null, "+uncapitalize(tableInfo.tableName)+"SubTable.validateRule)) {\n" +
                 "        //lưu file\n" +
                 "        $.ajax({\n" +
                 "            traditional: true,\n" +
@@ -1190,7 +1190,7 @@ public class Hung {
         fileWriter.append("\n                "+uncapitalize(tableInfo.tableName)+"reloadMemberIndex();\n" +
                 "                "+uncapitalize(tableInfo.tableName)+"indexTopicMember++;\n" +
                 "                "+uncapitalize(tableInfo.tableName)+"reloadSttMember();\n" +
-                "                $(\"#dialog-formAddTopicMember\").dialog(\"close\");\n" +
+                "                $(\"#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"\").dialog(\"close\");\n" +
                 "            });\n" +
                 "        });\n" +
                 "   }\n" +
@@ -1375,7 +1375,7 @@ public class Hung {
          *********************************************************************************************/
         fileWriter.append("$(document).on(\"click\", \".edit-cha-bomb\", function () {\n" +
                 "    $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val(\"\");\n"+
-                "    vt_form.clearReadOnlyInput($('#dialog-formAddTopicMember'));\n" +
+                "    vt_form.clearReadOnlyInput($('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"'));\n" +
                 "    $('#btnAddRole').removeAttr(\"btnAddRole1\");\n" +
                 "    //document.getElementById('div_btn_delete_file').style.display = \"block\";\n" +
                 "    $(\"#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc\").val(\"0\");\n" +
@@ -1421,7 +1421,7 @@ public class Hung {
                             "    else{\n" +
                             "        html += '<input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable\" id=\"filestTmpSubTable"+uncapitalize(tableInfo.tableName)+"\" type=\"file\">';\n" +
                             "    }\n" +
-                            "    $(\"#fileTopicFilesTmpSubTable\").html(html);\n");
+                            "    $(\"#fileTopicFilesTmpSubTable"+uncapitalize(tableInfo.tableName)+"\").html(html);\n");
                 }else{
                     fileWriter.append("\n    $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");");
                 }
@@ -1456,9 +1456,9 @@ public class Hung {
                 "        strFile = e.target.files[0].name;\n" +
                 "    });\n" +
                 "    $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val(id);\n" +
-                "    $('#dialog-formAddTopicMember').dialog('open');\n" +
-                "    $('#dialog-formAddTopicMember').parent().addClass(\"dialogAddEditMemberTopic\");\n" +
-                "    $('.dialogAddEditMemberTopic').find('.ui-dialog-title').empty().append(\"Chỉnh sửa thông tin\");\n" +
+                "    $('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"').dialog('open');\n" +
+                "    $('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"').parent().addClass(\"dialogAddEditMemberTopic"+uncapitalize(tableInfo.tableName)+"\");\n" +
+                "    $('.dialogAddEditMemberTopic"+uncapitalize(tableInfo.tableName)+"').find('.ui-dialog-title').empty().append(\"Chỉnh sửa thông tin "+uncapitalize(tableInfo.tableName)+"\");\n" +
                 "    return false;\n" +
                 "});\n");
         /*********************************************************************************************
@@ -1493,7 +1493,7 @@ public class Hung {
                 "        }).success(function (result) {\n"
 
         );
-        fileWriter.append("            if (vt_form.validate1(\"#subTableForm\", null, "+uncapitalize(tableInfo.tableName)+"SubTable.validateRule)) {\n" +
+        fileWriter.append("            if (vt_form.validate1(\"#subTableForm"+uncapitalize(tableInfo.tableName)+"\", null, "+uncapitalize(tableInfo.tableName)+"SubTable.validateRule)) {\n" +
                 "                var id = $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val();\n");
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
@@ -1590,32 +1590,34 @@ public class Hung {
         fileWriter.append("\n                "+uncapitalize(tableInfo.tableName)+"reloadMemberIndex();\n" +
                 "                "+uncapitalize(tableInfo.tableName)+"indexTopicMember++;\n" +
                 "                "+uncapitalize(tableInfo.tableName)+"reloadSttMember();\n" +
-                "                $(\"#dialog-formAddTopicMember\").dialog(\"close\");\n" +
+                "                $(\"#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"\").dialog(\"close\");\n" +
                 "            }\n" +
                 "        });\n");
-        fileWriter.append("//        $.ajax({\n" +
-                "//        async: false,\n" +
-                "//                url: \"updatefilessubtable.html\",\n" +
-                "//                data: formdataTmp,\n" +
-                "//                processData: false,\n" +
-                "//                contentType: false,\n" +
-                "//                enctype: 'multipart/form-data',\n" +
-                "//                type: \"POST\",\n" +
-                "//                headers: {\"X-XSRF-TOKEN\": result},\n" +
-                "//                dataType: 'json',\n" +
-                "//                beforeSend: function (xhr) {\n" +
-                "//                vt_loading.showIconLoading();\n" +
-                "//                },\n" +
-                "//                success: function (data) {\n" +
-                "//                strFile = data;\n" +
-                "//                }, error: function (jqXHR, textStatus, errorThrown) {\n" +
-                "////                vt_loading.showAlertFail(\"Thêm mới không thành công\");\n" +
-                "//        }, complete: function (jqXHR, textStatus) {\n" +
-                "//        vt_loading.hideIconLoading();\n" +
-                "//        }\n" +
-                "//        });\n"+
+        fileWriter.append(
                 "   });\n" +
                 "}\n");
+
+//        fileWriter.append("//        $.ajax({\\n\" +\n" +
+//                "                \"//        async: false,\\n\" +\n" +
+//                "                \"//                url: \\\"updatefilessubtable.html\\\",\\n\" +\n" +
+//                "                \"//                data: formdataTmp,\\n\" +\n" +
+//                "                \"//                processData: false,\\n\" +\n" +
+//                "                \"//                contentType: false,\\n\" +\n" +
+//                "                \"//                enctype: 'multipart/form-data',\\n\" +\n" +
+//                "                \"//                type: \\\"POST\\\",\\n\" +\n" +
+//                "                \"//                headers: {\\\"X-XSRF-TOKEN\\\": result},\\n\" +\n" +
+//                "                \"//                dataType: 'json',\\n\" +\n" +
+//                "                \"//                beforeSend: function (xhr) {\\n\" +\n" +
+//                "                \"//                vt_loading.showIconLoading();\\n\" +\n" +
+//                "                \"//                },\\n\" +\n" +
+//                "                \"//                success: function (data) {\\n\" +\n" +
+//                "                \"//                strFile = data;\\n\" +\n" +
+//                "                \"//                }, error: function (jqXHR, textStatus, errorThrown) {\\n\" +\n" +
+//                "                \"////                vt_loading.showAlertFail(\\\"Thêm mới không thành công\\\");\\n\" +\n" +
+//                "                \"//        }, complete: function (jqXHR, textStatus) {\\n\" +\n" +
+//                "                \"//        vt_loading.hideIconLoading();\\n\" +\n" +
+//                "                \"//        }\\n\" +\n" +
+//                "                \"//        });\\n\"+");
         /*********************************************************************************************
          *                                 Validate
          *********************************************************************************************/

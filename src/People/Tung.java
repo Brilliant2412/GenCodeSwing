@@ -1194,7 +1194,7 @@ public class Tung {
 
     public static void gensubTableJSP(TableInfo tableInfo, String folder) throws  IOException
     {
-        FileWriter fileWriter = new FileWriter(folder + "\\subTable.jsp");
+        FileWriter fileWriter = new FileWriter(folder + "\\"+uncapitalize(tableInfo.tableName)+"SubTable.jsp");
         fileWriter.write("<%@page contentType=\"text/html\" pageEncoding=\"UTF-8\"%>\n" +
                 "<%@ taglib prefix=\"spring\" uri=\"http://www.springframework.org/tags\" %>\n" +
                 "<%@ taglib uri=\"http://java.sun.com/jsp/jstl/core\" prefix=\"c\" %>\n" +
@@ -1203,8 +1203,8 @@ public class Tung {
                 "<%@ taglib prefix=\"fmt\" uri=\"http://java.sun.com/jsp/jstl/fmt\" %>\n" +
                 "<script src=\"${pageContext.request.contextPath}/share/core/js/"+uncapitalize(tableInfo.tableName)+"SubTable.js\"/>\n" +
                 "<div class=\"ui-widget-overlay1 ui-front custom-overlay\" style=\"z-index: 1 !important\"></div>\n" +
-                "<div id=\"dialog-formAddTopicMember\" style=\"z-index: 9998 !important\"> \n" +
-                "    <form:form id=\"subTableForm\" modelAttribute=\"subTableForm\" class=\"form-horizontal\">\n" +
+                "<div id=\"dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"\" style=\"z-index: 9998 !important\"> \n" +
+                "    <form:form id=\"subTableForm"+uncapitalize(tableInfo.tableName)+"\" modelAttribute=\"subTableForm"+uncapitalize(tableInfo.tableName)+"\" class=\"form-horizontal\">\n" +
                 "        <input type=\"hidden\" id=\""+uncapitalize(tableInfo.tableName)+"isedit1\" name=\"isedit1\" value=\"0\"/>\n" +
                 "        <input type=\"hidden\" id=\""+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc\" name=\"\" value=\"0\"/>\n" +
                 "        <fieldset>\n" +
@@ -1269,9 +1269,9 @@ public class Tung {
                 if (c_file==0) {
                     fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n" +
                             "                <label class=\"col-lg-1 control-label  lb_input\">" + columnProperty.getColDescription() + "</label>\n" +
-                            "                <div class=\"col-md-11\" id=\"fileTopicFilesTmpSubTable\">\n" +
-                            "                    <input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable\" id=\"filestTmpSubTable\" type=\"file\"/>\n" +
-                            "                    <span id=\"filestTmpSubTable_error\" class=\"note note-error\"></span>\n" +
+                            "                <div class=\"col-md-11\" id=\"fileTopicFilesTmpSubTable"+uncapitalize(tableInfo.tableName)+"\">\n" +
+                            "                    <input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable\" id=\"filestTmpSubTable"+uncapitalize(tableInfo.tableName)+"\" type=\"file\"/>\n" +
+                            "                    <span id=\"filestTmpSubTable"+uncapitalize(tableInfo.tableName)+"_error\" class=\"note note-error\"></span>\n" +
                             "                </div>\n" +
                             "            </div>\n");
 
@@ -1280,9 +1280,9 @@ public class Tung {
                 {
                     fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n" +
                             "                <label class=\"col-lg-1 control-label  lb_input\">" + columnProperty.getColDescription() + "</label>\n" +
-                            "                <div class=\"col-md-11\" id=\"fileTopicFilesTmpSubTable"+c_file+"\">\n" +
-                            "                    <input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable"+c_file+"\" id=\"filestTmpSubTable"+c_file+"\" type=\"file\"/>\n" +
-                            "                    <span id=\"filestTmpSubTable"+c_file+"_error\" class=\"note note-error\"></span>\n" +
+                            "                <div class=\"col-md-11\" id=\"fileTopicFilesTmpSubTable"+c_file+uncapitalize(tableInfo.tableName)+"\">\n" +
+                            "                    <input class=\"form-control\" placeholder=\"\" name=\"filestTmpSubTable"+c_file+"\" id=\"filestTmpSubTable"+c_file+uncapitalize(tableInfo.tableName)+"\" type=\"file\"/>\n" +
+                            "                    <span id=\"filestTmpSubTable"+c_file+uncapitalize(tableInfo.tableName)+"_error\" class=\"note note-error\"></span>\n" +
                             "                </div>\n" +
                             "            </div>\n");
                 }
@@ -1294,7 +1294,7 @@ public class Tung {
                 "    </form:form>\n" +
                 "</div>\n" +
                 "<script type=\"text/javascript\">\n" +
-                "    $(\"#dialog-formAddTopicMember\").dialog({\n" +
+                "    $(\"#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"\").dialog({\n" +
                 "        width: isMobile.any() ? $(window).width() : ($(window).width() / 20 * 19),\n" +
                 "        height: $(window).height() / 5 * 5 - 80,\n" +
                 "        autoOpen: false,\n" +
