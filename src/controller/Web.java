@@ -321,7 +321,8 @@ public class Web {
                 "public static final String GET_ALL_"+ tableInfo.title.toUpperCase()+"= \"getall"+ tableInfo.tableName.toLowerCase() +".json\";\n" +
                 "public static final String ADD_"+ tableInfo.title.toUpperCase()+" = \"add"+ tableInfo.tableName.toLowerCase() +".html\";\n" +
                 "public static final String UPDATE_"+ tableInfo.title.toUpperCase()+" = \"update"+ tableInfo.tableName.toLowerCase() +".html\";\n" +
-                "public static final String DELETE_"+ tableInfo.title.toUpperCase()+" = \"delete"+ tableInfo.tableName.toLowerCase() +".html\";");
+                "public static final String DELETE_"+ tableInfo.title.toUpperCase()+" = \"delete"+ tableInfo.tableName.toLowerCase() +".html\";\n"+
+                "public static final String "+ tableInfo.title.toUpperCase()+"_ADD_FILE = \""+ tableInfo.tableName.toLowerCase() +"addfile.html\";\n");
         fileWriter.close();
     }
 

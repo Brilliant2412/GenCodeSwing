@@ -513,8 +513,11 @@ public class Hung {
 //        }
 
         fileWriter.append("\tonClickBtAdd = function () {\n" +
-                "        vt_form.reset($('#" + uncapitalize(tableInfo.tableName) + "Form'));\n" +
-                "        $(\"#gid\").val(\"\"); // reset form\n" +
+                "        vt_form.reset($('#" + uncapitalize(tableInfo.tableName) + "Form'));\n");
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append("        $(\"#"+uncapitalize(subTableInfo.tableName)+"_dataDetailInfo\").html(\"\");\n");
+        };
+        fileWriter.append("        $(\"#gid\").val(\"\"); // reset form\n" +
                 "        vt_form.clearError();\n" +
                 "        $(\"#isedit\").val(\"0\");\n" +
                 "        \n"
@@ -723,14 +726,17 @@ public class Hung {
          *********************************************************************************************/
         fileWriter.append("\teditTblDocumentType: function (id) {\n" +
                 "        if (id !== null) {\n" +
-                "            vt_form.reset($('#"+uncapitalize(tableInfo.tableName)+"Form'));\n" +
-                "            vt_form.clearError();\n" +
-                "            $.ajax({\n" +
-                "                async: false,\n" +
-                "                data: {gid: id},\n" +
-                "                url: \"getone"+tableInfo.tableName.toLowerCase()+"bygid.json\",\n" +
-                "                success: function (data, status, xhr) {\n" +
-                "                    $(\"#gid\").val(data.gid);\n");
+                "            vt_form.reset($('#"+uncapitalize(tableInfo.tableName)+"Form'));\n");
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append("            $(\"#"+uncapitalize(subTableInfo.tableName)+"_dataDetailInfo\").html(\"\");\n");
+        };
+        fileWriter.append( "            vt_form.clearError();\n" +
+                 "            $.ajax({\n" +
+                 "                async: false,\n" +
+                 "                data: {gid: id},\n" +
+                 "                url: \"getone"+tableInfo.tableName.toLowerCase()+"bygid.json\",\n" +
+                 "                success: function (data, status, xhr) {\n" +
+                 "                    $(\"#gid\").val(data.gid);\n");
         for (int i = 1; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
             if (columnProperty.getColType().equals("Date"))

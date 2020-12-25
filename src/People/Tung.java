@@ -1686,8 +1686,29 @@ public class Tung {
                         "        JSONObject result = new JSONObject(serviceResult);\n" +
                         "        return result.toString();\n" +
                         "    }\n" +
-                        "\n" +
-                        "}\n");
+                        "\n");
+
+        fileWriter.append("    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping." +tableInfo.title.toUpperCase()+"_ADD_FILE}, method = RequestMethod.POST,\n" +
+                "            produces = \"text/html;charset=utf-8\")\n" +
+                "    public @ResponseBody\n" +
+                "    String addFileSub(\n" +
+                "            MultipartHttpServletRequest multipartRequest\n" +
+                "    ) throws JSONException, ParseException {\n" +
+                "\n" +
+                "        try {\n" +
+                "            String file = CommonFunction.uploadFileOnAdd(multipartRequest, \"filestTmpSubTable\");\n" +
+                "\n" +
+                "            JSONObject jsObj = new JSONObject();\n" +
+                "            jsObj.put(\"name\", file);\n" +
+                "            return jsObj.toString();\n" +
+                "        } catch (Exception ex) {\n" +
+                "            JSONObject jsObj = new JSONObject();\n" +
+                "            jsObj.put(\"code\", 400);\n" +
+                "            //System.out.println(\"llllllllllllllllllllllllllllllllll \" + jsObj.toString());\n" +
+                "            return jsObj.toString();\n" +
+                "        }\n" +
+                "    }\n"+
+                "}\n");
 
         fileWriter.close();
     }
@@ -1771,10 +1792,13 @@ public class Tung {
                 "\tpublic ServiceResult updateObj("+ tableInfo.tableName+"DTO "+ uncapitalize(tableInfo.tableName)+"DTO) {\n"+
                 "\t\tServiceResult result;\n"+
                 "\t\t"+ tableInfo.tableName+"BO bo = "+ uncapitalize(tableInfo.tableName)+"DAO"+".addDTO("+ uncapitalize(tableInfo.tableName)+"DTO);\n"+
-                "\t\tresult = new ServiceResult();\n" );
-        fileWriter.append("\t\tcommonSubTableDAO.deleteListObjByTableName(searchDTO);\n");
+                "\t\tresult = new ServiceResult();\n");
 
         for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append(
+                    "        SearchCommonFinalDTO searchDTO_" + subTableInfo.tableName + " = new SearchCommonFinalDTO();\n" +
+                            "        searchDTO_" + subTableInfo.tableName + ".setString1(\"" + tableInfo.tableName.toUpperCase() + "\");\n");
+            fileWriter.append("\t\tcommonSubTableDAO.deleteListObjByTableName(searchDTO_" + subTableInfo.tableName + ");\n");
             fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(subTableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+ subTableInfo.tableName + "_lstSubTable();\n" +
                     "        if ("+uncapitalize(subTableInfo.tableName)+"_lstSubTable != null && !"+uncapitalize(subTableInfo.tableName)+"_lstSubTable.isEmpty()) {\n" +
                     "            "+uncapitalize(subTableInfo.tableName)+"_lstSubTable.stream().forEach((item) -> {\n" +
