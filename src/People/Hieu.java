@@ -406,7 +406,7 @@ public class Hieu {
         fileWriter.append("\t\t</fieldset>\n" +
                 "\t</form:form>\n");
         for(TableInfo subTableInfo : tableSet.subTables) {
-            fileWriter.append("\t<jsp:include page=\"subTable"+uncapitalize(subTableInfo.tableName)+".jsp\" />\n");
+            fileWriter.append("\t<jsp:include page=\""+uncapitalize(subTableInfo.tableName)+"SubTable.jsp\" />\n");
         }
         fileWriter.append(
                 "</div>\n" +
