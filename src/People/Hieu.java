@@ -20,35 +20,70 @@ import static controller.CodeGenerator.uncapitalize;
  * @author hungy
  */
 public class Hieu {
-    private static String checkDang(String tenTruong,String moTa,String kieuDL,String kieuNhap){
+    private static String checkDang(String tenTruong,String moTa,String kieuDL,String kieuNhap,boolean isValidate){
         String res = "";
         if (kieuDL.equals("String")){
-            res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
-                    "\t\t\t\t<div class=\"col-lg-2\">\n"+
-                    "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\" class=\"form-control\"/>\n" +
-                    "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
-                    "\t\t\t\t</div>\n";
-        }else if (kieuDL.equals("Long") || kieuDL.equals("Double")){
-            if (kieuNhap.equals("Combobox")){
-                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
-                        "\t\t\t\t<div class=\"col-lg-2\">\n" +
-                        "\t\t\t\t\t<div id=\"cb"+tenTruong+"\"></div> \n" +
-                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" class=\"text_hidden\"  />\n" +
+            if (isValidate){
+                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
+                        "\t\t\t\t<div class=\"col-lg-2\">\n"+
+                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\" class=\"form-control\"/>\n" +
                         "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
                         "\t\t\t\t</div>\n";
             }else{
                 res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
-                        "\t\t\t\t<div class=\"col-lg-2\">\n" +
-                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
-                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>                           \n" +
+                        "\t\t\t\t<div class=\"col-lg-2\">\n"+
+                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\" class=\"form-control\"/>\n" +
+                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
                         "\t\t\t\t</div>\n";
             }
+
+        }else if (kieuDL.equals("Long") || kieuDL.equals("Double")){
+            if (kieuNhap.equals("Combobox")){
+                if (isValidate){
+                    res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
+                            "\t\t\t\t<div class=\"col-lg-2\">\n" +
+                            "\t\t\t\t\t<div id=\"cb"+tenTruong+"\"></div> \n" +
+                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" class=\"text_hidden\"  />\n" +
+                            "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                            "\t\t\t\t</div>\n";
+                }else{
+                    res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                            "\t\t\t\t<div class=\"col-lg-2\">\n" +
+                            "\t\t\t\t\t<div id=\"cb"+tenTruong+"\"></div> \n" +
+                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" class=\"text_hidden\"  />\n" +
+                            "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                            "\t\t\t\t</div>\n";
+                }
+            }else{
+                if (isValidate){
+                    res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
+                            "\t\t\t\t<div class=\"col-lg-2\">\n" +
+                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
+                            "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>                           \n" +
+                            "\t\t\t\t</div>\n";
+                }else{
+                    res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                            "\t\t\t\t<div class=\"col-lg-2\">\n" +
+                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
+                            "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>                           \n" +
+                            "\t\t\t\t</div>\n";
+                }
+
+            }
         }else if (kieuDL.equals("Date")){
-            res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
-                    "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
-                    "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
-                    "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
-                    "\t\t\t\t</div>\n";
+            if (isValidate){
+                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
+                        "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
+                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
+                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                        "\t\t\t\t</div>\n";
+            }else{
+                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                        "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
+                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
+                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                        "\t\t\t\t</div>\n";
+            }
         }
         return res;
     }
@@ -346,7 +381,8 @@ public class Hieu {
                 String res = checkDang(tableInfo.columns.get(4*i+j+1).getColName(),
                         tableInfo.columns.get(4*i+j+1).getColDescription(),
                         tableInfo.columns.get(4*i+j+1).getColType(),
-                        tableInfo.columns.get(4*i+j+1).getInputType()
+                        tableInfo.columns.get(4*i+j+1).getInputType(),
+                        tableInfo.columns.get(4*i+j+1).isValidate()
                 );
                 fileWriter.append(res);
             }
@@ -358,7 +394,8 @@ public class Hieu {
                 String res = checkDang(tableInfo.columns.get(i).getColName(),
                         tableInfo.columns.get(i).getColDescription(),
                         tableInfo.columns.get(i).getColType(),
-                        tableInfo.columns.get(i).getInputType()
+                        tableInfo.columns.get(i).getInputType(),
+                        tableInfo.columns.get(i).isValidate()
                 );
                 fileWriter.append(res);
             }

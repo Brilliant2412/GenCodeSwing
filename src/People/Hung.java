@@ -251,7 +251,7 @@ public class Hung {
                         "            + '        <span class=\"tooltipCustext\">' + $(\"#tooltipEdit\").val() + '</span><img src=\"share/core/images/edit.png\" class=\"grid-icon\"/>'\n" +
                         "            + '    </a><a class=\"tooltipCus iconDelete\" href=\"javascript:objTblDocumentType.deleteTblDocumentType(\\'' + gid + '\\')\">'\n" +
                         "            + '        <span class=\"tooltipCustext\">' + $(\"#tooltipDelete\").val() + '</span><img src=\"share/core/images/delete_1.png\" class=\"grid-icon\"/></a>'\n" +
-                        "            + '</div>';\n" +
+                        "            + '</div>';" +
                         "};\n\n");
 
         /*********************************************************************************************
@@ -410,7 +410,7 @@ public class Hung {
 "    vt_sys.showBody();\n" +
 "    vt_loading.hideIconLoading();\n" +
 "    return false;\n" +
-"};\n");
+"};");
         
         
         
@@ -727,6 +727,7 @@ public class Hung {
         fileWriter.append("\teditTblDocumentType: function (id) {\n" +
                 "        if (id !== null) {\n" +
                 "            vt_form.reset($('#"+uncapitalize(tableInfo.tableName)+"Form'));\n");
+        fileWriter.append("            $(\"#isedit\").val(\"1\");\n");
         for(TableInfo subTableInfo : tableSet.subTables){
             fileWriter.append("            $(\"#"+uncapitalize(subTableInfo.tableName)+"_dataDetailInfo\").html(\"\");\n");
         };
@@ -768,12 +769,16 @@ public class Hung {
             );
         }
 
+        for(TableInfo subTableInfo : tableSet.subTables) {
+            fileWriter.append(uncapitalize(subTableInfo.tableName)+"indexTopicMember = 3;\n");
+        }
+
         for(TableInfo subTableInfo : tableSet.subTables){
             fileWriter.append(
                     "                    var lst_" + subTableInfo.tableName + " = data." + uncapitalize(subTableInfo.tableName) + "_lstSubTable;\n" +
                     "                    for(var i=0; i<lst_" + subTableInfo.tableName + ".length;i++){\n" +
                     "                        $(\"#" + uncapitalize(subTableInfo.tableName) + "_dataDetailInfo\").append(\n" +
-                    "                                " + uncapitalize(subTableInfo.tableName) + "addNewDataToTable(3, lst_" + subTableInfo.tableName + "[i].main_id, ");
+                    "                                " + uncapitalize(subTableInfo.tableName) + "addNewDataToTable("+uncapitalize(subTableInfo.tableName)+"indexTopicMember, lst_" + subTableInfo.tableName + "[i].main_id, ");
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
                 if(colProp.getColType().equals("Long")){
@@ -795,7 +800,8 @@ public class Hung {
             }
             fileWriter.append(
                     "1)\n" +
-                    "                        );\n" +
+                    "                        );\n"
+                             +"\t\t"+uncapitalize(subTableInfo.tableName)+"indexTopicMember++;\n"+
                     "                    }");
         }
 
@@ -1185,7 +1191,7 @@ public class Hung {
             }
         }
         fileWriter.append("1)\n"+
-                "                        );\n"
+                "                        );"
         );
         fileWriter.append("\n                "+uncapitalize(tableInfo.tableName)+"reloadMemberIndex();\n" +
                 "                "+uncapitalize(tableInfo.tableName)+"indexTopicMember++;\n" +
@@ -1202,7 +1208,7 @@ public class Hung {
          *********************************************************************************************/
         fileWriter.append("function "+uncapitalize(tableInfo.tableName)+"reloadSttMember() {\n" +
                 "    var count = 0;\n" +
-                "    $(\"#dataDetailInfo tr\").each(function () {\n" +
+                "    $(\"#"+uncapitalize(tableInfo.tableName)+"_dataDetailInfo tr\").each(function () {\n" +
                 "        count++;\n" +
                 "        $(this).find(\"td:first-child\").html(count);\n" +
                 "    });\n" +
@@ -1326,7 +1332,7 @@ public class Hung {
             }
         }
 
-        fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML('');\n");
+        fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML('');");
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("file")){
                 fileWriter.append("\n    if ("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" !== null && "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" !== \"\") {\n" +
@@ -1341,19 +1347,19 @@ public class Hung {
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")) {
-                fileWriter.append("    html += \"<input class='" +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + "' type='hidden' value='\" + " +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + " + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstDetailInfo[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName() + "' />\";\n");
+                fileWriter.append("    html += \"<input class='" +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + "' type='hidden' value='\" + " +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + " + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName() + "' />\";\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
-                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='_lstDetailInfo[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";\n");
+                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='_lstDetailInfo[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";\n");
+                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";");
             }
         }
         fileWriter.append("\n    if (isEdit === 1) {\n" +
@@ -1408,7 +1414,7 @@ public class Hung {
         }
         fileWriter.append("\n" +
                 "    $(\"#create_time111_subdoc\").val($('#create_time111').val());\n" +
-                "    $(\"#user_create1_subdoc\").val($('#user_create1').val());\n");
+                "    $(\"#user_create1_subdoc\").val($('#user_create1').val());");
         //String
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")) {
@@ -1423,7 +1429,7 @@ public class Hung {
                             "    }\n" +
                             "    $(\"#fileTopicFilesTmpSubTable"+uncapitalize(tableInfo.tableName)+"\").html(html);\n");
                 }else{
-                    fileWriter.append("\n    $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
+                    fileWriter.append("\n    $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");");
                 }
 
             }
@@ -1432,7 +1438,7 @@ public class Hung {
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")) {
-                fileWriter.append("\n    $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
+                fileWriter.append("\n    $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");");
             }
         }
         //date picker
@@ -1448,7 +1454,7 @@ public class Hung {
                         "        yearRange: \"-10:+50\",\n" +
                         "        onSelect: function (selected) {\n" +
                         "        }\n" +
-                        "    });\n");
+                        "    });");
             }
         }
         fileWriter.append("\n"+

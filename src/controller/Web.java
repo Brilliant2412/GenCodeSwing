@@ -315,7 +315,7 @@ public class Web {
     }
 
     static void genControllerParameters(TableInfo tableInfo, String folder) throws IOException {
-        FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName.toLowerCase() +".html");
+        FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName.toLowerCase() +".txt");
         fileWriter.write("public static final String "+ tableInfo.title.toUpperCase()+" = \""+ tableInfo.tableName.toLowerCase() +".html\";\n" +
                 "public static final String GET_"+ tableInfo.title.toUpperCase()+"_BY_ID = \"getone" + tableInfo.tableName.toLowerCase() +"bygid.json\";\n" +
                 "public static final String GET_ALL_"+ tableInfo.title.toUpperCase()+"= \"getall"+ tableInfo.tableName.toLowerCase() +".json\";\n" +
@@ -1418,6 +1418,6 @@ public class Web {
         //genControllerSearch(tableInfo, folder);
         //Tung.genJsSearch(tableInfo,folder);
         Hung.genformSearch(tableInfo,dir2.getAbsolutePath());
-        Hieu.genSubTableController(tableSet, folder);
+        //Hieu.genSubTableController(tableSet, folder);
     }
 }
