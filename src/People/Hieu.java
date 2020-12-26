@@ -456,7 +456,7 @@ public class Hieu {
         fileWriter.write("package com.tav.web.controller;\n" +
                 "\n" +
                 "import com.google.common.base.Strings;\n" +
-                "import com.tav.web.common.DateUtil;" +
+                "import com.tav.web.common.DateUtil;\n" +
                 "import com.google.gson.Gson;\n" +
                 "import com.google.gson.JsonObject;\n" +
                 "import com.tav.common.web.form.JsonDataGrid;\n" +
@@ -597,7 +597,7 @@ public class Hieu {
 
         for (int i = 0; i < 2*count_date; i+=2) {
             fileWriter.append("            searchDTO.setString"+(i+1)+"(request.getParameter(\"string"+(i+1)+"\"));\n" +
-                    "            searchDTO.setString"+(i+2)+"(request.getParameter(\"string"+(i+2)+"\"));");
+                    "            searchDTO.setString"+(i+2)+"(request.getParameter(\"string"+(i+2)+"\"));\n");
 
         }
 

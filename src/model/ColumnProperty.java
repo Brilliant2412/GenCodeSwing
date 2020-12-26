@@ -19,6 +19,7 @@ public class ColumnProperty {
     private boolean show;
     private String validateMessage;
     private boolean search;
+    private int groupCD;
 
     public boolean isSearch() {
         return search;
@@ -162,6 +163,14 @@ public class ColumnProperty {
 
     public void setValidateMessage(String validateMessage) {
         this.validateMessage = validateMessage;
+    }
+
+    public int getGroupCD() {
+        return groupCD;
+    }
+
+    public void setGroupCD(int groupCD) {
+        this.groupCD = groupCD;
     }
 }
 

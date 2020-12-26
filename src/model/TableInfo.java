@@ -95,7 +95,11 @@ public class TableInfo {
                     colProp.setSearch(true);
                     countSearch++;
                 }
-
+                try{
+                    colProp.setGroupCD((int)Double.parseDouble(row.getCell(18).toString()));
+                }catch (Exception e){
+                    colProp.setGroupCD(0);
+                }
             }
         }
     }

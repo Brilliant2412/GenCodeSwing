@@ -167,7 +167,7 @@ public class Tung {
 
 
         fileWriter.append(
-                "\t\tsqlCommand.append(\" ORDER BY tbl." + tableInfo.columns.get(0).getColName() + " \");" +
+                "\t\tsqlCommand.append(\" ORDER BY tbl." + tableInfo.columns.get(0).getColName() + " \");\n" +
 
                         "\n\t\tQuery query = getSession().createSQLQuery(sqlCommand.toString())\n");
         for (int i = 0; i < tableInfo.columns.size(); i++) {
@@ -695,13 +695,13 @@ public class Tung {
          *********************************************************************************************/
         fileWriter.append(
                 "var editCellRendererVT = function (gid) {\n" +
-                        "    return '<div style=\"text-align: center\">'\n" +
-                        "            + '    <a class=\"tooltipCus iconEdit\" href=\"javascript:objTblDocumentType.editTblDocumentType(\\'' + gid + '\\')\">'\n" +
-                        "            + '        <span class=\"tooltipCustext\">' + $(\"#tooltipEdit\").val() + '</span><img src=\"share/core/images/edit.png\" class=\"grid-icon\"/>'\n" +
-                        "            + '    </a><a class=\"tooltipCus iconDelete\" href=\"javascript:objTblDocumentType.deleteTblDocumentType(\\'' + gid + '\\')\">'\n" +
-                        "            + '        <span class=\"tooltipCustext\">' + $(\"#tooltipDelete\").val() + '</span><img src=\"share/core/images/delete_1.png\" class=\"grid-icon\"/></a>'\n" +
-                        "            + '</div>';" +
-                        "};\n\n");
+                "    return '<div style=\"text-align: center\">'\n" +
+                "            + '    <a class=\"tooltipCus iconEdit\" href=\"javascript:objTblDocumentType.editTblDocumentType(\\'' + gid + '\\')\">'\n" +
+                "            + '        <span class=\"tooltipCustext\">' + $(\"#tooltipEdit\").val() + '</span><img src=\"share/core/images/edit.png\" class=\"grid-icon\"/>'\n" +
+                "            + '    </a><a class=\"tooltipCus iconDelete\" href=\"javascript:objTblDocumentType.deleteTblDocumentType(\\'' + gid + '\\')\">'\n" +
+                "            + '        <span class=\"tooltipCustext\">' + $(\"#tooltipDelete\").val() + '</span><img src=\"share/core/images/delete_1.png\" class=\"grid-icon\"/></a>'\n" +
+                "            + '</div>';\n" +
+                "};\n\n");
 
         /*********************************************************************************************
          *                                 var datafields
@@ -1341,7 +1341,7 @@ public class Tung {
         fileWriter.write("package com.tav.web.controller;\n" +
                 "\n" +
                 "import com.google.common.base.Strings;\n" +
-                "import com.tav.web.common.DateUtil;" +
+                "import com.tav.web.common.DateUtil;\n" +
                 "import com.google.gson.Gson;\n" +
                 "import com.google.gson.JsonObject;\n" +
                 "import com.tav.common.web.form.JsonDataGrid;\n" +
@@ -1493,7 +1493,7 @@ public class Tung {
 
         for (int i = 0; i < 2*count_date; i+=2) {
             fileWriter.append("            searchDTO.setString"+(i+1)+"(request.getParameter(\"string"+(i+1)+"\"));\n" +
-                    "            searchDTO.setString"+(i+2)+"(request.getParameter(\"string"+(i+2)+"\"));");
+                    "            searchDTO.setString"+(i+2)+"(request.getParameter(\"string"+(i+2)+"\"));\n");
 
         }
 
@@ -1525,7 +1525,7 @@ public class Tung {
 
 
         fileWriter.write(
-                "        " + tableInfo.tableName + "DTO " + uncapitalize(tableInfo.tableName) + "DTO = " + uncapitalize(tableInfo.tableName) + "Data.getOneById(id);" +
+                "        " + tableInfo.tableName + "DTO " + uncapitalize(tableInfo.tableName) + "DTO = " + uncapitalize(tableInfo.tableName) + "Data.getOneById(id);\n" +
                 "        try {\n" +
                 "            // get info paging\n");
 
@@ -1560,7 +1560,7 @@ public class Tung {
                 if(colProp.getColType().equals("Long")){
                     count_long1++;
                     fileWriter.append(
-                            "                List<MstDivisionDTO> lstMst" + count_long1 + " = mstDivisionData.getAllMstDepartmentType(\"707\");\n" +
+                            "                List<MstDivisionDTO> lstMst" + count_long1 + " = mstDivisionData.getAllMstDepartmentType(\"" + colProp.getGroupCD() + "\");\n" +
                                     "                for (MstDivisionDTO item1 : lstMst" + count_long1 + ") {\n" +
                                     "                    if (Objects.equals(item.get" + capitalize(colProp.getColName()) + "(), item1.getDvsValue())) {\n" +
                                     "                        item.set" + capitalize(colProp.getColName()) + "ST(item1.getDvsName());\n" +
