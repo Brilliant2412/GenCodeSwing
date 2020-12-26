@@ -727,6 +727,7 @@ public class Hung {
         fileWriter.append("\teditTblDocumentType: function (id) {\n" +
                 "        if (id !== null) {\n" +
                 "            vt_form.reset($('#"+uncapitalize(tableInfo.tableName)+"Form'));\n");
+        fileWriter.append("            $(\"#isedit\").val(\"1\");\n");
         for(TableInfo subTableInfo : tableSet.subTables){
             fileWriter.append("            $(\"#"+uncapitalize(subTableInfo.tableName)+"_dataDetailInfo\").html(\"\");\n");
         };
@@ -768,12 +769,16 @@ public class Hung {
             );
         }
 
+        for(TableInfo subTableInfo : tableSet.subTables) {
+            fileWriter.append(uncapitalize(subTableInfo.tableName)+"indexTopicMember = 3;\n");
+        }
+
         for(TableInfo subTableInfo : tableSet.subTables){
             fileWriter.append(
                     "                    var lst_" + subTableInfo.tableName + " = data." + uncapitalize(subTableInfo.tableName) + "_lstSubTable;\n" +
                     "                    for(var i=0; i<lst_" + subTableInfo.tableName + ".length;i++){\n" +
                     "                        $(\"#" + uncapitalize(subTableInfo.tableName) + "_dataDetailInfo\").append(\n" +
-                    "                                " + uncapitalize(subTableInfo.tableName) + "addNewDataToTable(3, lst_" + subTableInfo.tableName + "[i].main_id, ");
+                    "                                " + uncapitalize(subTableInfo.tableName) + "addNewDataToTable("+uncapitalize(subTableInfo.tableName)+"indexTopicMember, lst_" + subTableInfo.tableName + "[i].main_id, ");
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
                 if(colProp.getColType().equals("Long")){
@@ -795,7 +800,8 @@ public class Hung {
             }
             fileWriter.append(
                     "1)\n" +
-                    "                        );\n" +
+                    "                        );\n"
+                            +"\t\t"+uncapitalize(subTableInfo.tableName)+"indexTopicMember++;\n"+
                     "                    }");
         }
 
@@ -1202,7 +1208,7 @@ public class Hung {
          *********************************************************************************************/
         fileWriter.append("function "+uncapitalize(tableInfo.tableName)+"reloadSttMember() {\n" +
                 "    var count = 0;\n" +
-                "    $(\"#dataDetailInfo tr\").each(function () {\n" +
+                "    $(\"#"+uncapitalize(tableInfo.tableName)+"_dataDetailInfo tr\").each(function () {\n" +
                 "        count++;\n" +
                 "        $(this).find(\"td:first-child\").html(count);\n" +
                 "    });\n" +
@@ -1341,19 +1347,19 @@ public class Hung {
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")) {
-                fileWriter.append("    html += \"<input class='" +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + "' type='hidden' value='\" + " +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + " + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstDetailInfo[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName() + "' />\";\n");
+                fileWriter.append("    html += \"<input class='" +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + "' type='hidden' value='\" + " +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + " + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName() + "' />\";\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("String")){
-                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='_lstDetailInfo[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";\n");
+                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equals("Date")){
-                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='_lstDetailInfo[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";");
+                fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";");
             }
         }
         fileWriter.append("\n    if (isEdit === 1) {\n" +

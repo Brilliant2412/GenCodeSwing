@@ -1340,8 +1340,9 @@ public class Tung {
         FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "Controller.java");
         fileWriter.write("package com.tav.web.controller;\n" +
                 "\n" +
+                "import org.json.JSONException;\n"+
                 "import com.google.common.base.Strings;\n" +
-                "import com.tav.web.common.DateUtil;" +
+                "import com.tav.web.common.DateUtil;\n" +
                 "import com.google.gson.Gson;\n" +
                 "import com.google.gson.JsonObject;\n" +
                 "import com.tav.common.web.form.JsonDataGrid;\n" +
@@ -1793,12 +1794,21 @@ public class Tung {
                 "\t\tServiceResult result;\n"+
                 "\t\t"+ tableInfo.tableName+"BO bo = "+ uncapitalize(tableInfo.tableName)+"DAO"+".addDTO("+ uncapitalize(tableInfo.tableName)+"DTO);\n"+
                 "\t\tresult = new ServiceResult();\n");
-
         for(TableInfo subTableInfo : tableSet.subTables){
             fileWriter.append(
                     "        SearchCommonFinalDTO searchDTO_" + subTableInfo.tableName + " = new SearchCommonFinalDTO();\n" +
                             "        searchDTO_" + subTableInfo.tableName + ".setString1(\"" + tableInfo.tableName.toUpperCase() + "\");\n");
+
+            fileWriter.append(
+                            "        searchDTO_" + subTableInfo.tableName + ".setString2(\"" + tableInfo.tableName + "_" + subTableInfo.tableName + "\");\n");
+
+            fileWriter.append(
+                    "        searchDTO_" + subTableInfo.tableName + ".setLong1( "+ uncapitalize(tableInfo.tableName) + "DTO.getGid()" +");\n");
+
             fileWriter.append("\t\tcommonSubTableDAO.deleteListObjByTableName(searchDTO_" + subTableInfo.tableName + ");\n");
+        }
+
+        for(TableInfo subTableInfo : tableSet.subTables){
             fileWriter.append("\t\tList<CommonSubTableDTO> "+uncapitalize(subTableInfo.tableName)+"_lstSubTable = "+uncapitalize(tableInfo.tableName)+"DTO.get"+ subTableInfo.tableName + "_lstSubTable();\n" +
                     "        if ("+uncapitalize(subTableInfo.tableName)+"_lstSubTable != null && !"+uncapitalize(subTableInfo.tableName)+"_lstSubTable.isEmpty()) {\n" +
                     "            "+uncapitalize(subTableInfo.tableName)+"_lstSubTable.stream().forEach((item) -> {\n" +

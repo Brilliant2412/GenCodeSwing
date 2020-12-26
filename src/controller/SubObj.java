@@ -14,9 +14,9 @@ public class SubObj {
     public static void genSubObj(TableInfo tableInfo, String folder,String fatherTableName) throws IOException {
         File dir = new File(folder);
         dir.mkdirs();
-        File dir2 = new File(folder + "\\" + uncapitalize(tableInfo.tableName));
+        File dir2 = new File(folder + "\\" + uncapitalize(fatherTableName));
         dir2.mkdirs();
         Tung.gensubTableJSP(tableInfo, dir2.getAbsolutePath());
-        Hung.genSubTableJs(tableInfo,fatherTableName,dir2.getAbsolutePath());
+        Hung.genSubTableJs(tableInfo,fatherTableName,dir.getAbsolutePath());
     }
 }
