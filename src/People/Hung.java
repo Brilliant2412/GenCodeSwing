@@ -801,7 +801,7 @@ public class Hung {
             fileWriter.append(
                     "1)\n" +
                     "                        );\n"
-                            +"\t\t"+uncapitalize(subTableInfo.tableName)+"indexTopicMember++;\n"+
+                             +"\t\t"+uncapitalize(subTableInfo.tableName)+"indexTopicMember++;\n"+
                     "                    }");
         }
 
