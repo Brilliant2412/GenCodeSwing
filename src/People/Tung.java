@@ -1615,7 +1615,15 @@ public class Tung {
 
 
         ////////////////////////////////////////////////
-
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if(colProp.getInputType().equals("file")){
+                fileWriter.append("            String doc_files = CommonFunction.uploadFileOnAdd(multipartRequest, \"filestTmp\");\n" +
+                        "            "+tableInfo.tableName+"DTO.set"+capitalize(colProp.getColName())+"(doc_files);\n");
+            }
+        }
+//        fileWriter.append("            String doc_files = CommonFunction.uploadFileOnAdd(multipartRequest, \"filestTmp\");\n" +
+//                "            "+tableInfo.tableName+"DTO.setFiles(doc_files);\n");
 
 
         fileWriter.append(
@@ -1655,7 +1663,13 @@ public class Tung {
         genSubTableController(tableSet, fileWriter);
         ////////////////////////////////////////////////
 
-
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            ColumnProperty colProp = tableInfo.columns.get(i);
+            if(colProp.getInputType().equals("file")){
+                fileWriter.append("            String doc_files = CommonFunction.uploadFileOnUpdate(multipartRequest, \"filestTmp\");\n" +
+                        "            "+tableInfo.tableName+"DTO.set"+capitalize(colProp.getColName())+"(doc_files);\n");
+            }
+        }
 
 
         fileWriter.append(
