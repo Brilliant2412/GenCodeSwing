@@ -668,7 +668,7 @@ public class Service {
                 "\t\tsqlCommand.append(\" WHERE 1=1 \");\n" +
                 "\t//String\n" +
                 " \tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
-                "            sqlCommand.append(\" and (   \");\n");
+                "\t\tsqlCommand.append(\" and (   \");\n");
 
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
@@ -1270,16 +1270,16 @@ public class Service {
          *                                     GET COUNT
          ***************************************************************************************/
         fileWriter.append(
-                "public Integer getCount(SearchCommonFinalDTO searchDTO) {\n" +
-                        "           SimpleDateFormat formatter = new SimpleDateFormat(\"dd/MM/yyyy HH:mm:ss\");\n" +
-                        "           StringBuilder sqlCommand = new StringBuilder();\n" +
-                        "        sqlCommand.append(\" SELECT \");\n" +
-                        "        sqlCommand.append(\" COUNT(1)\");\n" +
-                        "        sqlCommand.append(\" FROM  " + tableInfo.title + " tbl \");\n" +
-                        "        sqlCommand.append(\" WHERE 1=1 \");\n" +
-                        "\t//String\n" +
-                        " \tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
-                        "            sqlCommand.append(\" and (   \");\n");
+                "\tpublic Integer getCount(SearchCommonFinalDTO searchDTO) {\n" +
+                "        SimpleDateFormat formatter = new SimpleDateFormat(\"dd/MM/yyyy HH:mm:ss\");\n" +
+                "        StringBuilder sqlCommand = new StringBuilder();\n" +
+                "        sqlCommand.append(\" SELECT \");\n" +
+                "        sqlCommand.append(\" COUNT(1)\");\n" +
+                "        sqlCommand.append(\" FROM  " + tableInfo.title + " tbl \");\n" +
+                "        sqlCommand.append(\" WHERE 1=1 \");\n" +
+                "\t//String\n" +
+                " \tif (!StringUtil.isEmpty(searchDTO.getStringKeyWord())) {\n" +
+                "            sqlCommand.append(\" and (   \");\n");
 
         int temp = 0;
         for (int i = 0; i < tableInfo.columns.size(); i++) {

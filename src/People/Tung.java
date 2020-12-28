@@ -1619,7 +1619,7 @@ public class Tung {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getInputType().equals("file")){
                 fileWriter.append("            String doc_files = CommonFunction.uploadFileOnAdd(multipartRequest, \"filestTmp\");\n" +
-                        "            "+tableInfo.tableName+"DTO.set"+capitalize(colProp.getColName())+"(doc_files);\n");
+                        "            " + uncapitalize(tableInfo.tableName) + "DTO.set"+capitalize(colProp.getColName())+"(doc_files);\n");
             }
         }
 //        fileWriter.append("            String doc_files = CommonFunction.uploadFileOnAdd(multipartRequest, \"filestTmp\");\n" +
