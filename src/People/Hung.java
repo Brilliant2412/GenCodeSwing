@@ -902,7 +902,113 @@ public class Hung {
                 "}");
         fileWriter.close();
     }
-    
+
+    public static int dem(TableInfo tableInfo){
+        int dem = 0;
+        //string
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true){
+                dem++;
+            }
+        }
+
+        // combobox
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
+                dem++;
+            }
+        }
+        //date
+
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
+                dem++;
+            }
+        }
+        return dem;
+    }
+
+    private static String checkDang(String tenTruong,String moTa,String kieuDL,String kieuNhap,boolean isValidate){
+        String res = "";
+        if (kieuDL.equals("String")){
+            if (isValidate){
+                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
+                        "\t\t\t\t<div class=\"col-lg-2\">\n"+
+                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\" class=\"form-control\"/>\n" +
+                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                        "\t\t\t\t</div>\n";
+            }else{
+                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                        "\t\t\t\t<div class=\"col-lg-2\">\n"+
+                        "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\" class=\"form-control\"/>\n" +
+                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                        "\t\t\t\t</div>\n";
+            }
+
+        }else if (kieuDL.equals("Long") || kieuDL.equals("Double")){
+            if (kieuNhap.equals("Combobox")){
+                if (isValidate){
+                    res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
+                            "\t\t\t\t<div class=\"col-lg-2\">\n" +
+                            "\t\t\t\t\t<div id=\"cb"+tenTruong+"\"></div> \n" +
+                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" class=\"text_hidden\"  />\n" +
+                            "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                            "\t\t\t\t</div>\n";
+                }else{
+                    res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                            "\t\t\t\t<div class=\"col-lg-2\">\n" +
+                            "\t\t\t\t\t<div id=\"cb"+tenTruong+"\"></div> \n" +
+                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" class=\"text_hidden\"  />\n" +
+                            "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                            "\t\t\t\t</div>\n";
+                }
+            }else{
+                if (isValidate){
+                    res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
+                            "\t\t\t\t<div class=\"col-lg-2\">\n" +
+                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
+                            "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>                           \n" +
+                            "\t\t\t\t</div>\n";
+                }else{
+                    res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                            "\t\t\t\t<div class=\"col-lg-2\">\n" +
+                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
+                            "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>                           \n" +
+                            "\t\t\t\t</div>\n";
+                }
+
+            }
+        }else if (kieuDL.equals("Date")){
+            if (isValidate){
+                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
+                        "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
+                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
+                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                        "\t\t\t\t</div>\n";
+            }else{
+                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                        "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
+                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
+                        "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
+                        "\t\t\t\t</div>\n";
+            }
+        }
+        return res;
+    }
+
+    public static ArrayList<ColumnProperty> columns_notfile(TableInfo tableInfo){
+        ArrayList<ColumnProperty> res = new ArrayList<>();
+        for (int i = 0;i<tableInfo.columns.size();i++) {
+            if (tableInfo.columns.get(i).getInputType().equals("file")) {
+                continue;
+            } else {
+                res.add(tableInfo.columns.get(i));
+            }
+
+        }
+        return res;
+    }
+
     public static void genView(TableInfo tableInfo, String folder) throws IOException {
         FileWriter fileWriter = new FileWriter(folder + "\\View.jsp");
         fileWriter.write("<%@ page contentType=\"text/html;charset=UTF-8\" %>\n" +
@@ -991,29 +1097,151 @@ public class Hung {
     
     }
 
-    public static int dem(TableInfo tableInfo){
-        int dem = 0;
-        //string
-        for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true){
-                dem++;
+
+    public static void genDialogAdd(TableSet tableSet, String folder) throws IOException {
+        TableInfo tableInfo = tableSet.tableInfo;
+        FileWriter fileWriter = new FileWriter(folder + "\\dialogAdd.jsp");
+        fileWriter.write("<%@ page contentType=\"text/html;charset=UTF-8\" %>\n" +
+                "<%@ taglib prefix=\"spring\" uri=\"http://www.springframework.org/tags\" %>\n" +
+                "<%@ taglib uri=\"http://java.sun.com/jsp/jstl/core\" prefix=\"c\" %>\n" +
+                "<%@ taglib uri=\"http://java.sun.com/jsp/jstl/functions\" prefix=\"fn\" %>\n" +
+                "<%@ taglib uri=\"http://www.springframework.org/tags/form\" prefix=\"form\"%>  \n" +
+                "<%@ taglib prefix=\"fmt\" uri=\"http://java.sun.com/jsp/jstl/fmt\" %>\n"+
+                "<div id=\"dialog-formAddNew\">\n" +
+                "\t<form:form id=\""+uncapitalize(tableInfo.tableName)+"Form\" modelAttribute=\""+uncapitalize(tableInfo.tableName)+"Form\" class=\"form-horizontal\">\t\n" +
+                "\t\t<input type=\"hidden\" name=\"${_csrf.parameterName}\" value=\"${_csrf.token}\" />\n" +
+                "\t\t<input type=\"hidden\" id=\"gid\" name=\"gid\" value=\"\"/>\n" +
+                "\t\t<input type=\"hidden\" id=\"isedit\" name=\"isedit\" value=\"0\"/>\n" +
+                "\t\t<fieldset>\n");
+        fileWriter.append("\t\t\t<legend class=\"fs-legend-head\">\n" +
+                "\t\t\t\t<span class=\"iconFS\"></span>\n" +
+                "\t\t\t\t<span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Thông tin chung</b></span>\n" +
+                "\t\t\t</legend>\n");
+        ArrayList<ColumnProperty> listnofile = columns_notfile(tableInfo);
+        int k =listnofile.size()-1;
+        int r = k/4;
+        int q = k%4;
+        for (int i = 0;i<r;i++){
+            fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
+            for (int j =0;j<=3;j++){
+                String res = checkDang(listnofile.get(4*i+j+1).getColName(),
+                        listnofile.get(4*i+j+1).getColDescription(),
+                        listnofile.get(4*i+j+1).getColType(),
+                        listnofile.get(4*i+j+1).getInputType(),
+                        listnofile.get(4*i+j+1).isValidate()
+                );
+                fileWriter.append(res);
             }
+            fileWriter.append("\t\t\t</div>\n\n");
+        }
+        if (q != 0){
+            fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
+            for (int i = r*4+1;i<=k;i++){
+                String res = checkDang(listnofile.get(i).getColName(),
+                        listnofile.get(i).getColDescription(),
+                        listnofile.get(i).getColType(),
+                        listnofile.get(i).getInputType(),
+                        listnofile.get(i).isValidate()
+                );
+                fileWriter.append(res);
+            }
+            fileWriter.append("\t\t\t</div>\n\n");
+        }
+        boolean check_file = false;
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("file")){
+                check_file = true;
+                break;
+            }
+        }
+        if (check_file == true){
+            fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n" +
+                    "                <label class=\"col-lg-1 control-label  lb_input\">File đính kèm</label>\n" +
+                    "                <div class=\"col-md-11\" id=\"fileTopicFilesTmp\">\n" +
+                    "                    <input class=\"form-control\" placeholder=\"\" name=\"filestTmp\" id=\"filestTmp\" type=\"file\"/>\n" +
+                    "                    <span id=\"filestTmp_error\" class=\"note note-error\"></span>\n" +
+                    "                </div>\n" +
+                    "            </div>\n\n");
         }
 
-        // combobox
-        for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
-                dem++;
-            }
-        }
-        //date
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append(
+                    "\t\t\t<legend class=\"fs-legend-head\">\n" +
+                            "                <span class=\"iconFS\"></span>\n" +
+                            "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Bảng con</b></span>\n" +
+                            "            </legend>\n" +
+                            "            <div class=\"form-group-add row\">\n" +
+                            "                <table id=\"" + uncapitalize(subTableInfo.tableName) + "_tblMstDivision\" class=\"table table-striped table-bordered table-hover smart-form dataTable no-footer\">\n" +
+                            "                    <thead>\n" +
+                            "                        <tr>\n" +
+                            "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">STT</th>\n");
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                if(subTableInfo.columns.get(i).isShow() && !subTableInfo.columns.get(i).getInputType().equals("file")){
+                    fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + subTableInfo.columns.get(i).getColDescription() + "</th>\n");
+                }
 
-        for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
-                dem++;
             }
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                if(subTableInfo.columns.get(i).isShow() && subTableInfo.columns.get(i).getInputType().equals("file")){
+                    fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + subTableInfo.columns.get(i).getColDescription() + "</th>\n");
+                }
+
+            }
+            fileWriter.append(
+                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\"><a style=\"cursor: pointer; color:white !important;\" class=\"fa fa-plus fa-lg src\" onclick=\"" + uncapitalize(subTableInfo.tableName) + "onClickAddData();\"></a></th>\n" +
+                            "                        </tr>\n" +
+                            "                    </thead>\n" +
+                            "                    <tbody id=\"" + uncapitalize(subTableInfo.tableName) + "_dataDetailInfo\" >\n" +
+                            "                    </tbody>\n" +
+                            "                </table>\n" +
+                            "            </div>\n");
         }
-        return dem;
+        fileWriter.append("\t\t</fieldset>\n" +
+                "\t</form:form>\n");
+        for(TableInfo subTableInfo : tableSet.subTables) {
+            fileWriter.append("\t<jsp:include page=\""+uncapitalize(subTableInfo.tableName)+"SubTable.jsp\" />\n");
+        }
+        fileWriter.append(
+                "</div>\n" +
+                        "<script type=\"text/javascript\">\n" +
+                        "\t$(\"#dialog-formAddNew\").dialog({\n" +
+                        "\t\twidth: isMobile.any() ? $(window).width() : ($(window).width() / 20 * 19),\n" +
+                        "\t\theight: $(window).height() / 5 * 5 - 80,\n" +
+                        "\t\tautoOpen: false,\n" +
+                        "\t\tmodal: true,\n" +
+                        "\t\tposition: [($(window).width() / 80 * 2.5), 20],\n" +
+                        "\t\topen: function () {\n" +
+                        "\t\t\t$('.areaTable').addClass('custom-overlay-popup-add-edit');\n" +
+                        "\t\t\t$('.dialogAddEdit').css('z-index', 1001);\n" +
+                        "\n" +
+                        "\t\t},\n" +
+                        "\t\tclose: function () {\n" +
+                        "\t\t\t$('.areaTable').removeClass('custom-overlay-popup-add-edit');\n" +
+                        "\n" +
+                        "\t\t},\n" +
+                        "\t\tbuttons: [{\n" +
+                        "\t\t\thtml: \"<fmt:message key='button.close' />\",\n" +
+                        "\t\t\t\"class\": \"btn btn-default\",\n" +
+                        "\t\t\tclick: function () {\n" +
+                        "\t\t\t$(this).dialog('close');\n" +
+                        "\t\t\t}\n" +
+                        " \t\t\t}, {\n" +
+                        "\t\t\t\thtml: \"<fmt:message key='button.update' />\",\n" +
+                        "\t\t\t\t\"class\": \"btn btn-primary\",\n" +
+                        "\t\t\t\t\"id\": \"btnAddTblInfoNotifyYes\",\n" +
+                        "\t\t\t\tclick: function () {\n" +
+                        "\t\t\t\t\tvar item = $('#isedit').val();\n" +
+                        "\t\t\t\t\tif (item === '0') {\n" +
+                        "\t\t\t\t\t\taddTblDocumentTypeMethod();\n" +
+                        "\t\t\t\t\t} else {\n" +
+                        "\t\t\t\t\t\teditTblDocumentTypeMethod();\n" +
+                        "\t\t\t\t\t}\n" +
+                        "\t\t\t\t}\n" +
+                        "\t\t\t}\n" +
+                        "\t\t]\n" +
+                        "\t});\n" +
+                        "</script>");
+        fileWriter.close();
     }
 
     public static void genSubTableJs(TableInfo tableInfo,String fatherTableName,String folder) throws IOException {
