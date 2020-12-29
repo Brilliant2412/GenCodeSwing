@@ -11,12 +11,12 @@ import java.io.IOException;
 import static controller.CodeGenerator.uncapitalize;
 
 public class SubObj {
-    public static void genSubObj(TableInfo tableInfo, String folder,String fatherTableName) throws IOException {
+    public static void genSubObj(TableInfo tableInfo, String folder,String parentTableName) throws IOException {
         File dir = new File(folder);
         dir.mkdirs();
-        File dir2 = new File(folder + "\\" + uncapitalize(fatherTableName));
+        File dir2 = new File(folder + "\\" + uncapitalize(parentTableName));
         dir2.mkdirs();
-        Tung.gensubTableJSP(tableInfo, dir2.getAbsolutePath());
-        Hung.genSubTableJs(tableInfo,fatherTableName,dir.getAbsolutePath());
+        Tung.gensubTableJSP(tableInfo, parentTableName, dir2.getAbsolutePath());
+        Hung.genSubTableJs(tableInfo,parentTableName,dir.getAbsolutePath());
     }
 }

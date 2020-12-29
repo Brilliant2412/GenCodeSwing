@@ -1244,8 +1244,8 @@ public class Hung {
         fileWriter.close();
     }
 
-    public static void genSubTableJs(TableInfo tableInfo,String fatherTableName,String folder) throws IOException {
-        FileWriter fileWriter = new FileWriter(folder +"\\"+uncapitalize(tableInfo.tableName) +"SubTable.js");
+    public static void genSubTableJs(TableInfo tableInfo,String parentTableName,String folder) throws IOException {
+        FileWriter fileWriter = new FileWriter(folder +"\\" + parentTableName + "_" + uncapitalize(tableInfo.tableName) +"SubTable.js");
         fileWriter.write("var "+uncapitalize(tableInfo.tableName) +"indexTopicMember = 2;\n" +
                 "var strFile = \"\";\n" +
                 "var gid = 0;\n" );
@@ -1267,6 +1267,7 @@ public class Hung {
                 fileWriter.append("\tvt_combobox.buildCombobox(\"cb"+uncapitalize(tableInfo.tableName) + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
             }
         }
+        //FILE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equals("file")){
                 checkfile = true;
@@ -1362,7 +1363,7 @@ public class Hung {
                 "            }\n" +
                 "            $.ajax({\n" +
                 "                async: false,\n" +
-                "                url: \""+fatherTableName.toLowerCase()+"addfile.html\",\n" +
+                "                url: \""+parentTableName.toLowerCase()+"addfile.html\",\n" +
                 "                data: formdataTmp,\n" +
                 "                processData: false,\n" +
                 "                contentType: false,\n" +
@@ -1688,7 +1689,13 @@ public class Hung {
         fileWriter.append("\n"+
                 "    $('input[type=\"file\"]').change(function (e) {\n" +
                 "        strFile = e.target.files[0].name;\n" +
-                "    });\n" +
+                "    });\n");
+        for (int i = 0;i<tableInfo.columns.size();i++){
+            if (tableInfo.columns.get(i).getInputType().equals("file")){
+                fileWriter.append("\tstrFile = " + uncapitalize(tableInfo.tableName) + tableInfo.columns.get(i).getColName() + ";\n");
+            }
+        }
+        fileWriter.append(
                 "    $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val(id);\n" +
                 "    $('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"').dialog('open');\n" +
                 "    $('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"').parent().addClass(\"dialogAddEditMemberTopic"+uncapitalize(tableInfo.tableName)+"\");\n" +
@@ -1716,7 +1723,7 @@ public class Hung {
                 "        }\n" +
                 "        $.ajax({\n" +
                 "            async: false,\n" +
-                "            url: \""+fatherTableName.toLowerCase()+"addfile.html\",\n" +
+                "            url: \""+parentTableName.toLowerCase()+"addfile.html\",\n" +
                 "            data: formdataTmp,\n" +
                 "            processData: false,\n" +
                 "            contentType: false,\n" +
@@ -1756,6 +1763,11 @@ public class Hung {
             }
         }
 
+        fileWriter.append(
+                "\t\t\t\tif(result.name != null and result.name != undefined){\n" +
+                "\t\t\t\t\tstrFile = result.name;\n" +
+                "\t\t\t\t}\n"
+        );
 
         // html + nhung thang hien ra ChaBombChild
         int nth_child = 2;
@@ -1778,7 +1790,7 @@ public class Hung {
             for (int i = 0;i<tableInfo.columns.size();i++){
                 if (tableInfo.columns.get(i).getInputType().equals("file")){
                     fileWriter.append("//                if($('#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc').val() === '0'){\n" +
-                            "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + id + '\\')\"  style=\"cursor:pointer; color: blue;\"><span >' + (result.name + '').substring(0, 30) + '...' + '</span></a>');\n" +
+                            "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + id + '\\')\"  style=\"cursor:pointer; color: blue;\"><span >' + (strFile + '').substring(0, 30) + '...' + '</span></a>');\n" +
                             "//                }\n" +
                             "//                else{\n" +
                             "//                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('');\n" +
@@ -1805,7 +1817,7 @@ public class Hung {
             for (int i = 0;i<tableInfo.columns.size();i++){
                 if (tableInfo.columns.get(i).getInputType().equals("file")){
                     fileWriter.append("//                if($('#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc').val() === '0'){\n" +
-                            "                    $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(result.name);\n" +
+                            "                    $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(strFile);\n" +
                             "//                }\n" +
                             "//                else{\n" +
                             "//                    $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n" +

@@ -1192,16 +1192,16 @@ public class Tung {
         return res;
     }
 
-    public static void gensubTableJSP(TableInfo tableInfo, String folder) throws  IOException
+    public static void gensubTableJSP(TableInfo tableInfo, String parentTableName, String folder) throws  IOException
     {
-        FileWriter fileWriter = new FileWriter(folder + "\\"+uncapitalize(tableInfo.tableName)+"SubTable.jsp");
+        FileWriter fileWriter = new FileWriter(folder + "\\" + parentTableName + "_" + uncapitalize(tableInfo.tableName)+"SubTable.jsp");
         fileWriter.write("<%@page contentType=\"text/html\" pageEncoding=\"UTF-8\"%>\n" +
                 "<%@ taglib prefix=\"spring\" uri=\"http://www.springframework.org/tags\" %>\n" +
                 "<%@ taglib uri=\"http://java.sun.com/jsp/jstl/core\" prefix=\"c\" %>\n" +
                 "<%@ taglib uri=\"http://java.sun.com/jsp/jstl/functions\" prefix=\"fn\" %>\n" +
                 "<%@ taglib uri=\"http://www.springframework.org/tags/form\" prefix=\"form\"%>  \n" +
                 "<%@ taglib prefix=\"fmt\" uri=\"http://java.sun.com/jsp/jstl/fmt\" %>\n" +
-                "<script src=\"${pageContext.request.contextPath}/share/core/js/"+uncapitalize(tableInfo.tableName)+"SubTable.js\"/>\n" +
+                "<script src=\"${pageContext.request.contextPath}/share/core/js/" + parentTableName + "_" + uncapitalize(tableInfo.tableName)+"SubTable.js\"/>\n" +
                 "<div class=\"ui-widget-overlay1 ui-front custom-overlay\" style=\"z-index: 1 !important\"></div>\n" +
                 "<div id=\"dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"\" style=\"z-index: 9998 !important\"> \n" +
                 "    <form:form id=\"subTableForm"+uncapitalize(tableInfo.tableName)+"\" modelAttribute=\"subTableForm"+uncapitalize(tableInfo.tableName)+"\" class=\"form-horizontal\">\n" +
@@ -1558,7 +1558,7 @@ public class Tung {
             );
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
-                if(colProp.getColType().equals("Long")){
+                if(colProp.getColType().equals("Long") && colProp.getInputType().equals("Combobox")){
                     count_long1++;
                     fileWriter.append(
                             "                List<MstDivisionDTO> lstMst" + count_long1 + " = mstDivisionData.getAllMstDepartmentType(\"" + colProp.getGroupCD() + "\");\n" +
