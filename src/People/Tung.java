@@ -1369,6 +1369,7 @@ public class Tung {
                 "import java.io.File;\n" +
                 "import java.io.FileInputStream;\n" +
                 "import java.io.FileNotFoundException;\n" +
+                "import java.io.UnsupportedEncodingException;\n" +
                 "import java.io.FileOutputStream;\n" +
                 "import java.io.IOException;\n" +
                 "import java.nio.file.Files;\n" +
@@ -1666,8 +1667,15 @@ public class Tung {
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getInputType().equals("file")){
-                fileWriter.append("            String doc_files = CommonFunction.uploadFileOnUpdate(multipartRequest, \"filestTmp\");\n" +
-                        "            "+tableInfo.tableName+"DTO.set"+capitalize(colProp.getColName())+"(doc_files);\n");
+                fileWriter.append(
+                        "            String doc_files = CommonFunction.uploadFileOnUpdate(multipartRequest, \"filestTmp\");\n" +
+                        "            " + tableInfo.tableName + "DTO " + uncapitalize(tableInfo.tableName) + "DTOTmp = " + uncapitalize(tableInfo.tableName) + "Data.getOneById(" + uncapitalize(tableInfo.tableName) + "DTO.getGid());\n" +
+                        "            if (" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "() != null && doc_files != \"\") {\n" +
+                        "                " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(doc_files);\n" +
+                        "            } else {\n" +
+                        "                " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(" + uncapitalize(tableInfo.tableName) + "DTOTmp.get" + capitalize(colProp.getColName()) + "());\n" +
+                        "            }\n"
+                );
             }
         }
 
@@ -1722,9 +1730,44 @@ public class Tung {
                 "            //System.out.println(\"llllllllllllllllllllllllllllllllll \" + jsObj.toString());\n" +
                 "            return jsObj.toString();\n" +
                 "        }\n" +
-                "    }\n"+
-                "}\n");
+                "    }\n");
 
+        String file = null;
+        for(ColumnProperty colProp : tableInfo.columns){
+            if(colProp.getInputType().equals("file")){
+                file = colProp.getColName();
+            }
+        }
+        if(file != null){
+            fileWriter.append(
+                    "    @RequestMapping(value = \"/\" + ErpConstants.RequestMapping.DOWNLOAD_FILE_" + tableInfo.title.toUpperCase() + ", method = RequestMethod.GET)\n" +
+                    "    public void downloadFiles(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {\n" +
+                    "        String dataDirectory = CommonConstant.PATH_FOLDER_TOPIC_FILE;\n" +
+                    "        Long id = null;\n" +
+                    "        if (!Strings.isNullOrEmpty(request.getParameter(\"id\"))) {\n" +
+                    "            id = Long.parseLong(request.getParameter(\"id\"));\n" +
+                    "            " + tableInfo.tableName + "DTO " + uncapitalize(tableInfo.tableName) + "DTOTmp = " + uncapitalize(tableInfo.tableName) + "Data.getOneById(id);\n" +
+                    "            if (" + uncapitalize(tableInfo.tableName) + "DTOTmp != null) {\n" +
+                    "                String fileName = " + uncapitalize(tableInfo.tableName) + "DTOTmp.get" + capitalize(file) + "();\n" +
+                    "                response.setContentType(MediaType.APPLICATION_OCTET_STREAM);\n" +
+                    "                response.setHeader(\"Content-Transfer-Encoding\", \"binary\");\n" +
+                    "                response.setHeader(\"Content-Disposition\", \"attachment; filename=\" + CommonFunction.convertFileNameVietNam(fileName));\n" +
+                    "                Path file = Paths.get(dataDirectory, new String(fileName.getBytes(), \"UTF-8\"));\n" +
+                    "                if (Files.exists(file)) {\n" +
+                    "                    response.setContentType(\"application/vnd.ms-excel\");\n" +
+                    "                    response.addHeader(\"Content-Disposition\", \"attachment; filename=\" + CommonFunction.convertFileNameVietNam(fileName));\n" +
+                    "                    try {\n" +
+                    "                        Files.copy(file, response.getOutputStream());\n" +
+                    "                        response.getOutputStream().flush();\n" +
+                    "                    } catch (IOException ex) {\n" +
+                    "                        logger.error(ex);\n" +
+                    "                    }\n" +
+                    "                }\n" +
+                    "            }\n" +
+                    "        }\n" +
+                    "    }\n");
+        }
+        fileWriter.append("}\n");
         fileWriter.close();
     }
 

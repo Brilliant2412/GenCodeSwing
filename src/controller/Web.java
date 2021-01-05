@@ -323,6 +323,15 @@ public class Web {
                 "public static final String UPDATE_"+ tableInfo.title.toUpperCase()+" = \"update"+ tableInfo.tableName.toLowerCase() +".html\";\n" +
                 "public static final String DELETE_"+ tableInfo.title.toUpperCase()+" = \"delete"+ tableInfo.tableName.toLowerCase() +".html\";\n"+
                 "public static final String "+ tableInfo.title.toUpperCase()+"_ADD_FILE = \""+ tableInfo.tableName.toLowerCase() +"addfile.html\";\n");
+        String file = null;
+        for(ColumnProperty colProp : tableInfo.columns){
+            if(colProp.getInputType().equals("file")){
+                file = colProp.getColName();
+            }
+        }
+        if(file != null){
+            fileWriter.append("public static final String DOWNLOAD_FILE_" + tableInfo.title.toUpperCase() + " = \"download" + tableInfo.tableName + "file.html\";\n");
+        }
         fileWriter.close();
     }
 

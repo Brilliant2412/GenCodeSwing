@@ -279,10 +279,13 @@ public class Hung {
                 "\t{text: 'gid', datafield: 'gid', hidden: true},\n");
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-
             if (columnProperty.isShow())
             {
-                fileWriter.append("\t{text: \""+columnProperty.getColDescription()+"\", datafield: '"+columnProperty.getColName()+"', res: \"data-class='phone'\"},\n");
+                fileWriter.append("\t{text: \""+columnProperty.getColDescription()+"\", datafield: '" + columnProperty.getColName());
+                if((columnProperty.getColType().equals("Long") && columnProperty.getInputType().equals("Combobox")) || columnProperty.getColType().equals("Date")){
+                    fileWriter.append("ST");
+                }
+                fileWriter.append("', res: \"data-class='phone'\"},\n");
 
             }
         }
@@ -754,23 +757,33 @@ public class Hung {
         }
         String file = null;
         for(int i = 0; i < tableInfo.columns.size(); i++){
-            if(tableInfo.columns.get(i).getColType().equals("File")){
+            if(tableInfo.columns.get(i).getInputType().equals("file")){
                 file = tableInfo.columns.get(i).getColName();
             }
         }
         if(file != null){
+//            fileWriter.append(
+//                    "                var html = '';\n" +
+//                    "                    if (data.file !== null && data.file !== \"\") {\n" +
+//                    "                        html = '<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument(' + data.gid + ')\"  style=\"cursor:pointer;color: blue;\"><span >' + (data.file + '').substring(0, 20) + '...' + '</span></a>';\n" +
+//                    "                    } else {\n" +
+//                    "                        html += '';\n" +
+//                    "                    }\n"
+//            );
             fileWriter.append(
-                    "                var html = '';\n" +
-                            "                    if (data.file !== null && data.file !== \"\") {\n" +
-                            "                        html = '<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument(' + data.gid + ')\"  style=\"cursor:pointer;color: blue;\"><span >' + (data.file + '').substring(0, 20) + '...' + '</span></a>';\n" +
-                            "                    } else {\n" +
-                            "                        html += '';\n" +
-                            "                    }\n"
+                    "                    var html = '';\n" +
+                    "                    if (data." + file + " != null) {\n" +
+                    "                        html += '<span style=\"color:blue;cursor: pointer;\" onclick=\"downloadFileDocument(' + data.gid + ')\">' + data." + file + " + '</span>';\n" +
+                    "                        html += '<input class=\"form-control valid\" placeholder=\"\" name=\"filestTmp\" id=\"filestTmp\" type=\"file\" aria-invalid=\"false\">';\n" +
+                    "                    } else {\n" +
+                    "                        html += '<input class=\"form-control valid\" placeholder=\"\" name=\"filestTmp\" id=\"filestTmp\" type=\"file\" aria-invalid=\"false\">';\n" +
+                    "                    }\n" +
+                    "                    $(\"#fileTopicFilesTmp\").html(html);\n"
             );
         }
 
         for(TableInfo subTableInfo : tableSet.subTables) {
-            fileWriter.append(uncapitalize(subTableInfo.tableName)+"indexTopicMember = 3;\n");
+            fileWriter.append("                    " + uncapitalize(subTableInfo.tableName)+"indexTopicMember = 3;\n");
         }
 
         for(TableInfo subTableInfo : tableSet.subTables){
@@ -800,8 +813,8 @@ public class Hung {
             }
             fileWriter.append(
                     "1)\n" +
-                    "                        );\n"
-                             +"\t\t"+uncapitalize(subTableInfo.tableName)+"indexTopicMember++;\n"+
+                    "                        );\n" +
+                    "                        " + uncapitalize(subTableInfo.tableName) + "indexTopicMember++;\n"+
                     "                    }");
         }
 
@@ -1199,7 +1212,7 @@ public class Hung {
         fileWriter.append("\t\t</fieldset>\n" +
                 "\t</form:form>\n");
         for(TableInfo subTableInfo : tableSet.subTables) {
-            fileWriter.append("\t<jsp:include page=\""+uncapitalize(subTableInfo.tableName)+"SubTable.jsp\" />\n");
+            fileWriter.append("\t<jsp:include page=\""+ tableInfo.tableName + "_" + uncapitalize(subTableInfo.tableName)+"SubTable.jsp\" />\n");
         }
         fileWriter.append(
                 "</div>\n" +
@@ -1593,7 +1606,7 @@ public class Hung {
         }
         fileWriter.append("\n    if (isEdit === 1) {\n" +
                 "        html += '<td align=\"center\"><a data-id=\"' + count + '\" class=\"remove-cha-bomb\" style=\"cursor:pointer;\"><span title=\"Xóa\" class=\"fa fa-trash-o  fa-lg\"></span></a> |';\n" +
-                "        html += '<a data-id=\"' + count + '\" class=\"edit-cha-bomb\" style=\"cursor:pointer;\"><span title=\"Chỉnh sửa\" class=\"fa fa-edit fa-lg\"></span></a>';\n" +
+                "        html += '<a data-id=\"' + count + '\" class=\"" + uncapitalize(tableInfo.tableName) + "_edit-cha-bomb\" style=\"cursor:pointer;\"><span title=\"Chỉnh sửa\" class=\"fa fa-edit fa-lg\"></span></a>';\n" +
                 "        html += \"</td>\";\n" +
                 "    }\n" +
                 "\n" +
@@ -1608,7 +1621,7 @@ public class Hung {
         /*********************************************************************************************
          *                                 Edit dialog
          *********************************************************************************************/
-        fileWriter.append("$(document).on(\"click\", \".edit-cha-bomb\", function () {\n" +
+        fileWriter.append("$(document).on(\"click\", \"." + uncapitalize(tableInfo.tableName) + "_edit-cha-bomb\", function () {\n" +
                 "    $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val(\"\");\n"+
                 "    vt_form.clearReadOnlyInput($('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"'));\n" +
                 "    $('#btnAddRole').removeAttr(\"btnAddRole1\");\n" +
@@ -1764,7 +1777,7 @@ public class Hung {
         }
 
         fileWriter.append(
-                "\t\t\t\tif(result.name != null and result.name != undefined){\n" +
+                "\t\t\t\tif(result.name != null && result.name != undefined){\n" +
                 "\t\t\t\t\tstrFile = result.name;\n" +
                 "\t\t\t\t}\n"
         );

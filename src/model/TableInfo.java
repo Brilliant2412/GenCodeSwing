@@ -26,6 +26,7 @@ public class TableInfo {
         int n_mst = 0;
         int n_department = 0;
         int n_plan = 0;
+        int count = 0;
         FileInputStream inputStream = new FileInputStream(exccelFile);
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
         inputStream.close();
@@ -57,15 +58,16 @@ public class TableInfo {
                 }
                 colProp.setFKTable(row.getCell(5).toString().trim());
                 if(!colProp.getFKTable().equals("")){
-                    if(row.getCell(5).toString().startsWith("mst")){
-                        colProp.setJoinTableName("mst" + ++n_mst);
-                    }
-                    else if(row.getCell(5).toString().startsWith("department")){
-                        colProp.setJoinTableName("d" + ++n_department);
-                    }
-                    else if(row.getCell(5).toString().startsWith("plan")){
-                        colProp.setJoinTableName("pln" + ++n_plan);
-                    }
+//                    if(row.getCell(5).toString().startsWith("mst")){
+//                        colProp.setJoinTableName("mst" + ++n_mst);
+//                    }
+//                    else if(row.getCell(5).toString().startsWith("department")){
+//                        colProp.setJoinTableName("d" + ++n_department);
+//                    }
+//                    else if(row.getCell(5).toString().startsWith("plan")){
+//                        colProp.setJoinTableName("pln" + ++n_plan);
+//                    }
+                    colProp.setJoinTableName(colProp.getFKTable().substring(0, 3) + ++count);
                     colProp.setJoinConstraint(row.getCell(6).toString());;
                     colProp.setJoinField(row.getCell(7).toString());
                     colProp.setSelectField(row.getCell(8).toString());
