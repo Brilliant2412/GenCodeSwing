@@ -52,8 +52,8 @@ public class CodeGenerator {
         return s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 
-    public void GEN(int sheet, Vector<Integer> numSubObjs) throws IOException {
-        TableSet tableSet = new TableSet(url, sheet, numSubObjs);
+    public void GEN(int sheet, Vector<Integer> numSubObjs, int excelType) throws IOException {
+        TableSet tableSet = new TableSet(url, sheet, numSubObjs, excelType);
         pathOne = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"service";
         pathTwo = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"web";
         //pathSubObjs = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"sub objects";

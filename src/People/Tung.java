@@ -32,7 +32,7 @@ public class Tung {
 
             for (int i = 0; i < subTableInfo.columns.size(); i++) {
                 ColumnProperty colProp = subTableInfo.columns.get(i);
-                if (colProp.getColType().equals("Date"))
+                if (colProp.getColType().equalsIgnoreCase("Date"))
                 {
                     fileWriter.append("\t\t\t\t\t\tif (!StringUtil.isEmpty(item.get" + capitalize(colProp.getColName()) + "())) {\n" +
                             "                                item.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(item.get" + capitalize(colProp.getColName()) + "()));\n" +
@@ -46,14 +46,14 @@ public class Tung {
                 ColumnProperty colProp = subTableInfo.columns.get(i);
                 if (colProp.isValidate()) {
                     temp++;
-                    if (colProp.getColType().equals("Long")) {
+                    if (colProp.getColType().equalsIgnoreCase("Long")) {
                         if (temp == 1) {
                             fileWriter.append("(item.get" + capitalize(colProp.getColName()) + "() != null && item.get" + capitalize(colProp.getColName()) + "() > 0)\n");
                         } else {
                             fileWriter.append("\t\t\t||(item.get" + capitalize(colProp.getColName()) + "() != null && item.get" + capitalize(colProp.getColName()) + "() > 0)\n");
                         }
                     }
-                    if (colProp.getColType().equals("String") || colProp.getColType().equals("Date"))
+                    if (colProp.getColType().equalsIgnoreCase("String") || colProp.getColType().equalsIgnoreCase("Date"))
                     {
                         if (temp == 1) {
                             fileWriter.append("!Strings.isNullOrEmpty(item.get" + capitalize(colProp.getColName()) + "())");
@@ -133,7 +133,7 @@ public class Tung {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("String")) {
+                if (colProp.getColType().equalsIgnoreCase("String")) {
                     count_str++;
                     if (count_str == 1) {
                         fileWriter.append("\t    sqlCommand.append(\"  LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
@@ -141,17 +141,17 @@ public class Tung {
                         fileWriter.append("\t    sqlCommand.append(\"  OR LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
                     }
                 }
-                if (colProp.getColType().equals("Long")) {
-                    if (colProp.getInputType().equals("Combobox")) {
+                if (colProp.getColType().equalsIgnoreCase("Long")) {
+                    if (colProp.getInputType().equalsIgnoreCase("Combobox")) {
                         count_cb++;
                     } else {
                         count_long++;
                     }
                 }
-                if (colProp.getColType().equals("Double")) {
+                if (colProp.getColType().equalsIgnoreCase("Double")) {
                     count_db++;
                 }
-                if (colProp.getColType().equals("Date")) {
+                if (colProp.getColType().equalsIgnoreCase("Date")) {
                     count_date++;
                 }
 
@@ -173,7 +173,7 @@ public class Tung {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append("\t\t\t.addScalar(\"");
-            if (colProp.getColType().equals("Date")) {
+            if (colProp.getColType().equalsIgnoreCase("Date")) {
                 fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
             } else {
                 fileWriter.append(colProp.getColName() + "\", " + capitalize((colProp.getColType())) + "Type.INSTANCE)\n");
@@ -215,7 +215,7 @@ public class Tung {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("String")) {
+                if (colProp.getColType().equalsIgnoreCase("String")) {
                     temp++;
                     if (temp == 1) {
                         fileWriter.append("\t    sqlCommand.append(\"  LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
@@ -255,7 +255,7 @@ public class Tung {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append("\t\t\t.addScalar(\"");
-            if (colProp.getColType().equals("Date")) {
+            if (colProp.getColType().equalsIgnoreCase("Date")) {
                 fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
             } else {
                 fileWriter.append(colProp.getColName() + "\", " + capitalize((colProp.getColType())) + "Type.INSTANCE)\n");
@@ -362,8 +362,8 @@ public class Tung {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("Long")) {
-                    if (colProp.getInputType().equals("Combobox")) {
+                if (colProp.getColType().equalsIgnoreCase("Long")) {
+                    if (colProp.getInputType().equalsIgnoreCase("Combobox")) {
                         t1++;
                         fileWriter.append("\tif (searchDTO.getListLong" + t1 + "() != null && !searchDTO.getListLong" + t1 + "().isEmpty()) {\n" +
                                 "            sqlCommand.append(\" and tbl." + colProp.getColName() + " in (:listLong" + t1 + ") \");\n" +
@@ -379,8 +379,8 @@ public class Tung {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("Long")) {
-                    if (!colProp.getInputType().equals("Combobox")) {
+                if (colProp.getColType().equalsIgnoreCase("Long")) {
+                    if (!colProp.getInputType().equalsIgnoreCase("Combobox")) {
                         t2++;
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong" + t2 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " >= (:long" + (t2++) + ") \");\n" +
@@ -397,8 +397,8 @@ public class Tung {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("Double")) {
-                    if (!colProp.getInputType().equals("Combobox")) {
+                if (colProp.getColType().equalsIgnoreCase("Double")) {
+                    if (!colProp.getInputType().equalsIgnoreCase("Combobox")) {
                         t3++;
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble" + t3 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " >= (:double" + (t3++) + ") \");\n" +
@@ -417,7 +417,7 @@ public class Tung {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("Date")) {
+                if (colProp.getColType().equalsIgnoreCase("Date")) {
                     t4++;
                     fileWriter.append("\tif (  (searchDTO.getString" + t4 + "() != null && !searchDTO.getString" + t4 + "().isEmpty())   &&   (searchDTO.getString" + (t4 + 1) + "() != null && !searchDTO.getString" + (t4 + 1) + "().isEmpty())  ) {\n" +
                             "            sqlCommand.append(\"  and ( tbl." + colProp.getColName() + " between (:string" + t4 + ") and (:string" + (t4 + 1) + ")    ) \");\n" +
@@ -709,10 +709,10 @@ public class Tung {
         fileWriter.append("var datafields = [\n");
         for (int i = 0; i <tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("String")) {
+            if (columnProperty.getColType().equalsIgnoreCase("String")) {
                 fileWriter.append("    {name: '" + columnProperty.getColName() + "', type: 'String'},\n");
             }
-            else if (columnProperty.getColType().equals("Date")) {
+            else if (columnProperty.getColType().equalsIgnoreCase("Date")) {
                 fileWriter.append("    {name: '" + columnProperty.getColName() + "', type: 'String'},\n");
                 fileWriter.append("    {name: '" + columnProperty.getColName() + "ST', type: 'String'},\n");
             }
@@ -761,7 +761,7 @@ public class Tung {
         );
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "$(\"#" + colProp.getColName() + "SearchFrom\").datepicker({\n" +
                                 "\tduration: \"fast\",\n" +
@@ -800,7 +800,7 @@ public class Tung {
          **********************************************************************************************/
 //        for(int i = 1; i < tableInfo.columns.size(); i++){
 //            ColumnProperty colProp = tableInfo.columns.get(i);
-//            if(colProp.getInputType().equals("Combobox") && colProp.isSearch() ){
+//            if(colProp.getInputType().equalsIgnoreCase("Combobox") && colProp.isSearch() ){
 //                fileWriter.append("\t\tvt_combobox.buildCombobox(\"cb" + colProp.getColName() + "Search\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
 //            }
 //        }
@@ -814,7 +814,7 @@ public class Tung {
         );
         for(int i = 1; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getInputType().equals("Combobox")){
+            if(colProp.getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("\t\tvt_combobox.buildCombobox(\"cb" + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
             }
         }
@@ -836,7 +836,7 @@ public class Tung {
                         "        var item;\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getInputType().equals("Combobox")){
+            if(colProp.getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append(
                         "\t\titem = $('#cb" + colProp.getColName() + "Combobox').val();\n" +
                                 "\t\t$('input[name=\""  + colProp.getColName() + "\"]').val(item);\n"
@@ -1026,11 +1026,11 @@ public class Tung {
                 "                    $(\"#gid\").val(data.gid);\n");
         for (int i = 1; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("Date"))
+            if (columnProperty.getColType().equalsIgnoreCase("Date"))
             {
                 fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+"ST);\n");
             }
-            else if (columnProperty.getInputType().equals("Combobox"))
+            else if (columnProperty.getInputType().equalsIgnoreCase("Combobox"))
             {
 
                 fileWriter.append("\t\t\t\t\tvt_combobox.buildCombobox(\"cb"+columnProperty.getColName()+"\", \""+columnProperty.getComboboxBuildPath()+"\", data."+columnProperty.getColName()+", \""+columnProperty.getComboboxName()+"\", \""+columnProperty.getComboboxValue()+"\", \"- Chọn "+columnProperty.getColDescription()+" -\", 0);\n");
@@ -1106,11 +1106,11 @@ public class Tung {
                 "                    $(\"#gid\").val(data.gid);\n");
         for (int i = 1; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("Date"))
+            if (columnProperty.getColType().equalsIgnoreCase("Date"))
             {
                 fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+"ST);\n");
             }
-            else if (columnProperty.getInputType().equals("Combobox"))
+            else if (columnProperty.getInputType().equalsIgnoreCase("Combobox"))
             {
                 //ok gen lai cho anh file js cai file excel cua a la file nao a
                 fileWriter.append("\t\t\t\t\tvt_combobox.buildCombobox(\"cb"+columnProperty.getColName()+"\", \""+columnProperty.getComboboxBuildPath()+"\", data."+columnProperty.getColName()+", \""+columnProperty.getComboboxName()+"\", \""+columnProperty.getComboboxValue()+"\", \"- Chọn "+columnProperty.getColDescription()+" -\", 0);\n");
@@ -1134,11 +1134,11 @@ public class Tung {
                 "                    $(\"#gid\").val(data.gid);\n");
         for (int i = 1; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("Date"))
+            if (columnProperty.getColType().equalsIgnoreCase("Date"))
             {
                 fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+"ST);\n");
             }
-            else if (columnProperty.getInputType().equals("Combobox"))
+            else if (columnProperty.getInputType().equalsIgnoreCase("Combobox"))
             {
                 fileWriter.append("\t\t\t\t\t$(\"#cb"+columnProperty.getColName()+"combobox"+"\").val(data."+columnProperty.getColName()+"ST"+");\n");
             }
@@ -1226,7 +1226,7 @@ public class Tung {
                 "            </legend>\n");
         ArrayList<ColumnProperty> columns_except_file = new ArrayList<>();
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("file")){
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                 continue;
             }else{
                 columns_except_file.add(tableInfo.columns.get(i));
@@ -1445,9 +1445,9 @@ public class Tung {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("Long") )
+                if (colProp.getColType().equalsIgnoreCase("Long") )
                 {
-                    if (colProp.getInputType().equals("Combobox"))
+                    if (colProp.getInputType().equalsIgnoreCase("Combobox"))
                     {
                         count_cb++;
                     }
@@ -1456,11 +1456,11 @@ public class Tung {
                         count_long++;
                     }
                 }
-                if (colProp.getColType().equals("Double"))
+                if (colProp.getColType().equalsIgnoreCase("Double"))
                 {
                     count_db++;
                 }
-                if (colProp.getColType().equals("Date"))
+                if (colProp.getColType().equalsIgnoreCase("Date"))
                 {
                     count_date++;
                 }
@@ -1559,7 +1559,7 @@ public class Tung {
             );
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
-                if(colProp.getColType().equals("Long") && colProp.getInputType().equals("Combobox")){
+                if(colProp.getColType().equalsIgnoreCase("Long") && colProp.getInputType().equalsIgnoreCase("Combobox")){
                     count_long1++;
                     fileWriter.append(
                             "                List<MstDivisionDTO> lstMst" + count_long1 + " = mstDivisionData.getAllMstDepartmentType(\"" + colProp.getGroupCD() + "\");\n" +
@@ -1601,7 +1601,7 @@ public class Tung {
                 "        } else {\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
                                 "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
@@ -1618,7 +1618,7 @@ public class Tung {
         ////////////////////////////////////////////////
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getInputType().equals("file")){
+            if(colProp.getInputType().equalsIgnoreCase("file")){
                 fileWriter.append("            String doc_files = CommonFunction.uploadFileOnAdd(multipartRequest, \"filestTmp\");\n" +
                         "            " + uncapitalize(tableInfo.tableName) + "DTO.set"+capitalize(colProp.getColName())+"(doc_files);\n");
             }
@@ -1649,7 +1649,7 @@ public class Tung {
                         "        } else {\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
                                 "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
@@ -1666,11 +1666,11 @@ public class Tung {
 
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getInputType().equals("file")){
+            if(colProp.getInputType().equalsIgnoreCase("file")){
                 fileWriter.append(
                         "            String doc_files = CommonFunction.uploadFileOnUpdate(multipartRequest, \"filestTmp\");\n" +
                         "            " + tableInfo.tableName + "DTO " + uncapitalize(tableInfo.tableName) + "DTOTmp = " + uncapitalize(tableInfo.tableName) + "Data.getOneById(" + uncapitalize(tableInfo.tableName) + "DTO.getGid());\n" +
-                        "            if (" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "() != null && doc_files != \"\") {\n" +
+                        "            if (doc_files != null && doc_files != \"\") {\n" +
                         "                " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(doc_files);\n" +
                         "            } else {\n" +
                         "                " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(" + uncapitalize(tableInfo.tableName) + "DTOTmp.get" + capitalize(colProp.getColName()) + "());\n" +
@@ -1682,34 +1682,34 @@ public class Tung {
 
         fileWriter.append(
                 "            serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.updateBO("+uncapitalize(tableInfo.tableName)+"DTO);\n" +
-                        "            processServiceResult(serviceResult);\n" +
-                        "            result = new JSONObject(serviceResult);\n" +
-                        "        }\n" +
-                        "        return result.toString();\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    //validate\n" +
-                        "    private String validateForm("+ tableInfo.tableName+"DTO cbChaDTO) {\n" +
-                        "        List<ValidationResult> lsError = new ArrayList<>();\n" +
-                        "        if (lsError.size() > 0) {\n" +
-                        "            Gson gson = new Gson();\n" +
-                        "            return gson.toJson(lsError);\n" +
-                        "        }\n" +
-                        "        return null;\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.DELETE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST,\n" +
-                        "            produces = \"text/html;charset=utf-8\")\n" +
-                        "    public @ResponseBody\n" +
-                        "    String deleteObj(@ModelAttribute(\"objectCommonSearchDTO\") ObjectCommonSearchDTO objectCommonSearchDTO,\n" +
-                        "            HttpServletRequest request) {\n" +
-                        "        HttpSession session = request.getSession();\n" +
-                        "        ServiceResult serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.deleteObj(objectCommonSearchDTO);\n" +
-                        "        processServiceResult(serviceResult);\n" +
-                        "        JSONObject result = new JSONObject(serviceResult);\n" +
-                        "        return result.toString();\n" +
-                        "    }\n" +
-                        "\n");
+                "            processServiceResult(serviceResult);\n" +
+                "            result = new JSONObject(serviceResult);\n" +
+                "        }\n" +
+                "        return result.toString();\n" +
+                "    }\n" +
+                "\n" +
+                "    //validate\n" +
+                "    private String validateForm("+ tableInfo.tableName+"DTO cbChaDTO) {\n" +
+                "        List<ValidationResult> lsError = new ArrayList<>();\n" +
+                "        if (lsError.size() > 0) {\n" +
+                "            Gson gson = new Gson();\n" +
+                "            return gson.toJson(lsError);\n" +
+                "        }\n" +
+                "        return null;\n" +
+                "    }\n" +
+                "\n" +
+                "    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping.DELETE_"+ tableInfo.title.toUpperCase()+"}, method = RequestMethod.POST,\n" +
+                "            produces = \"text/html;charset=utf-8\")\n" +
+                "    public @ResponseBody\n" +
+                "    String deleteObj(@ModelAttribute(\"objectCommonSearchDTO\") ObjectCommonSearchDTO objectCommonSearchDTO,\n" +
+                "            HttpServletRequest request) {\n" +
+                "        HttpSession session = request.getSession();\n" +
+                "        ServiceResult serviceResult = "+uncapitalize(tableInfo.tableName)+"Data.deleteObj(objectCommonSearchDTO);\n" +
+                "        processServiceResult(serviceResult);\n" +
+                "        JSONObject result = new JSONObject(serviceResult);\n" +
+                "        return result.toString();\n" +
+                "    }\n" +
+                "\n");
 
         fileWriter.append("    @RequestMapping(value = {\"/\" + ErpConstants.RequestMapping." +tableInfo.title.toUpperCase()+"_ADD_FILE}, method = RequestMethod.POST,\n" +
                 "            produces = \"text/html;charset=utf-8\")\n" +
@@ -1734,7 +1734,7 @@ public class Tung {
 
         String file = null;
         for(ColumnProperty colProp : tableInfo.columns){
-            if(colProp.getInputType().equals("file")){
+            if(colProp.getInputType().equalsIgnoreCase("file")){
                 file = colProp.getColName();
             }
         }

@@ -145,9 +145,9 @@ public class Web {
                     ColumnProperty colProp = tableInfo.columns.get(i);
                     if (colProp.isSearch())
                     {
-                        if (colProp.getColType().equals("Long") )
+                        if (colProp.getColType().equalsIgnoreCase("Long") )
                         {
-                            if (colProp.getInputType().equals("Combobox"))
+                            if (colProp.getInputType().equalsIgnoreCase("Combobox"))
                             {
                                 count_cb++;
                             }
@@ -156,11 +156,11 @@ public class Web {
                                 count_long++;
                             }
                         }
-                        if (colProp.getColType().equals("Double"))
+                        if (colProp.getColType().equalsIgnoreCase("Double"))
                         {
                             count_db++;
                         }
-                        if (colProp.getColType().equals("Date"))
+                        if (colProp.getColType().equalsIgnoreCase("Date"))
                         {
                             count_date++;
                         }
@@ -241,7 +241,7 @@ public class Web {
                 "        } else {\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
                                 "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
@@ -271,7 +271,7 @@ public class Web {
                         "        } else {\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
                                 "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
@@ -325,7 +325,7 @@ public class Web {
                 "public static final String "+ tableInfo.title.toUpperCase()+"_ADD_FILE = \""+ tableInfo.tableName.toLowerCase() +"addfile.html\";\n");
         String file = null;
         for(ColumnProperty colProp : tableInfo.columns){
-            if(colProp.getInputType().equals("file")){
+            if(colProp.getInputType().equalsIgnoreCase("file")){
                 file = colProp.getColName();
             }
         }
@@ -478,10 +478,10 @@ public class Web {
         fileWriter.append("var datafields = [\n");
         for (int i = 0; i <tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("String")) {
+            if (columnProperty.getColType().equalsIgnoreCase("String")) {
                 fileWriter.append("    {name: '" + columnProperty.getColName() + "', type: 'String'},\n");
             }
-            else if (columnProperty.getColType().equals("Date")) {
+            else if (columnProperty.getColType().equalsIgnoreCase("Date")) {
                 fileWriter.append("    {name: '" + columnProperty.getColName() + "', type: 'String'},\n");
                 fileWriter.append("    {name: '" + columnProperty.getColName() + "ST', type: 'String'},\n");
             }
@@ -501,7 +501,7 @@ public class Web {
             if (columnProperty.isShow())
             {
                 fileWriter.append("\t{text: \""+columnProperty.getColDescription()+"\", datafield: '" + columnProperty.getColName());
-                if(columnProperty.getColType().equals("Date") || columnProperty.getInputType().equals("Combobox")){
+                if(columnProperty.getColType().equalsIgnoreCase("Date") || columnProperty.getInputType().equalsIgnoreCase("Combobox")){
                     fileWriter.append("ST");
                 }
                 fileWriter.append("', res: \"data-class='phone'\"},\n");
@@ -534,7 +534,7 @@ public class Web {
         
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "$(\"#" + colProp.getColName() + "\").datepicker({\n" +
                                 "\tduration: \"fast\",\n" +
@@ -553,7 +553,7 @@ public class Web {
         
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "$(\"#" + colProp.getColName() + "SearchFrom\").datepicker({\n" +
                                 "\tduration: \"fast\",\n" +
@@ -601,7 +601,7 @@ public class Web {
         );
         for(int i = 1; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getInputType().equals("Combobox")){
+            if(colProp.getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("\t\tvt_combobox.buildCombobox(\"cb" + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
             }
         }
@@ -623,7 +623,7 @@ public class Web {
                         "        var item;\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getInputType().equals("Combobox")){
+            if(colProp.getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append(
                         "\t\titem = $('#cb" + colProp.getColName() + "Combobox').val();\n" +
                                 "\t\t$('input[name=\""  + colProp.getColName() + "\"]').val(item);\n"
@@ -813,11 +813,11 @@ public class Web {
                 "                    $(\"#gid\").val(data.gid);\n");
         for (int i = 1; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("Date"))
+            if (columnProperty.getColType().equalsIgnoreCase("Date"))
             {
                 fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+"ST);\n");
             }
-            else if (columnProperty.getInputType().equals("Combobox"))
+            else if (columnProperty.getInputType().equalsIgnoreCase("Combobox"))
             {
                 //ok gen lai cho anh file js cai file excel cua a la file nao a
                 fileWriter.append("\t\t\t\t\tvt_combobox.buildCombobox(\"cb"+columnProperty.getColName()+"\", \""+columnProperty.getComboboxBuildPath()+"\", data."+columnProperty.getColName()+", \""+columnProperty.getComboboxName()+"\", \""+columnProperty.getComboboxValue()+"\", \"- Chọn "+columnProperty.getColDescription()+" -\", 0);\n");
@@ -897,11 +897,11 @@ public class Web {
                 "                    $(\"#gid\").val(data.gid);\n");
         for (int i = 1; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("Date"))
+            if (columnProperty.getColType().equalsIgnoreCase("Date"))
             {
                 fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"View"+"\").val(data."+columnProperty.getColName()+"ST);\n");
             }
-            else if (columnProperty.getInputType().equals("Combobox"))
+            else if (columnProperty.getInputType().equalsIgnoreCase("Combobox"))
             {
                 fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"View"+"\").val(data."+columnProperty.getColName()+"ST"+");\n");
             }
@@ -1023,13 +1023,13 @@ public class Web {
             ColumnProperty colProp = tableInfo.columns.get(i);
             //fileWriter.append("\tprivate " + colProp.getColType() + " " + colProp.getColName() + ";\t\t//" + colProp.getColDescription() + "\n");
             fileWriter.append("\tprivate ");
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("String " + colProp.getColName() + ";\t\t//" + colProp.getColDescription() + "\n");
             }
             else{
                 fileWriter.append(colProp.getColType() + " " + colProp.getColName() + ";\t\t//" + colProp.getColDescription() + "\n");
             }
-            if(!colProp.getFKTable().equals("") || colProp.getColType().equals("Date")){
+            if(!colProp.getFKTable().equals("") || colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("\tprivate String " + colProp.getColName() + "ST;\n");
             }
         }
@@ -1039,7 +1039,7 @@ public class Web {
             fileWriter.append(
                     "\tpublic ");
             //colProp.getColType() +
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("String ");
             }
             else{
@@ -1052,7 +1052,7 @@ public class Web {
             fileWriter.append(
                     "\tpublic void set" + capitalize(colProp.getColName()) + "(");
             //colProp.getColType()
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("String ");
             }
             else{
@@ -1063,7 +1063,7 @@ public class Web {
                     "\t}\n\n"
 
             );
-            if(!colProp.getFKTable().equals("") || colProp.getColType().equals("Date")){
+            if(!colProp.getFKTable().equals("") || colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "\tpublic String get" + capitalize(colProp.getColName()) + "ST(){\n" +
                                 "\t\treturn " + colProp.getColName() + "ST;\n" +
@@ -1132,15 +1132,6 @@ public class Web {
                 "\t\tautoOpen: false,\n" +
                 "\t\tmodal: true,\n" +
                 "\t\tposition: [($(window).width() / 80 * 2.5), 20],\n" +
-                "\t\topen: function () {\n" +
-                "\t\t\t$('.areaTable').addClass('custom-overlay-popup-add-edit');\n" +
-                "\t\t\t$('.dialogAddEdit').css('z-index', 1001);\n" +
-                "\n" +
-                "\t\t},\n" +
-                "\t\tclose: function () {\n" +
-                "\t\t\t$('.areaTable').removeClass('custom-overlay-popup-add-edit');\n" +
-                "\n" +
-                "\t\t},\n" +
                 "\t\tbuttons: [{\n" +
                 "\t\t\thtml: \"<fmt:message key='button.close' />\",\n" +
                 "\t\t\t\"class\": \"btn btn-default\",\n" +
@@ -1258,9 +1249,9 @@ public class Web {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("Long") )
+                if (colProp.getColType().equalsIgnoreCase("Long") )
                 {
-                    if (colProp.getInputType().equals("Combobox"))
+                    if (colProp.getInputType().equalsIgnoreCase("Combobox"))
                     {
                         count_cb++;
                     }
@@ -1269,11 +1260,11 @@ public class Web {
                         count_long++;
                     }
                 }
-                if (colProp.getColType().equals("Double"))
+                if (colProp.getColType().equalsIgnoreCase("Double"))
                 {
                     count_db++;
                 }
-                if (colProp.getColType().equals("Date"))
+                if (colProp.getColType().equalsIgnoreCase("Date"))
                 {
                     count_date++;
                 }

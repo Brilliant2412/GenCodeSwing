@@ -17,7 +17,7 @@ public class Service {
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append("\t\tsqlCommand.append(\"");
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("to_char(tbl." + colProp.getColName() + ", 'DD/MM/YYYY') as " + colProp.getColName() + "ST");
                 if(i != tableInfo.columns.size() - 1){
                     fileWriter.append(",");
@@ -143,7 +143,7 @@ public class Service {
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append("\tprivate " + colProp.getColType() + " " + colProp.getColName() + ";\t\t//" + colProp.getColDescription() + "\n");
-            if(!colProp.getFKTable().equals("") || colProp.getColType().equals("Date")){
+            if(!colProp.getFKTable().equals("") || colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("\tprivate String " + colProp.getColName() + "ST;\n");
             }
         }
@@ -160,7 +160,7 @@ public class Service {
                             "\t}\n\n"
 
             );
-            if(!colProp.getFKTable().equals("") || colProp.getColType().equals("Date")){
+            if(!colProp.getFKTable().equals("") || colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "\tpublic String get" + capitalize(colProp.getColName()) + "ST(){\n" +
                                 "\t\treturn " + colProp.getColName() + "ST;\n" +
@@ -249,7 +249,7 @@ public class Service {
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append("\t\t\t.addScalar(\"");
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
             }
             else{
@@ -298,7 +298,7 @@ public class Service {
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append("\t\t\t.addScalar(\"");
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
             }
             else{
@@ -674,7 +674,7 @@ public class Service {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("String")) {
+                if (colProp.getColType().equalsIgnoreCase("String")) {
                     count_str++;
                     if (count_str == 1) {
                         fileWriter.append("\t    sqlCommand.append(\"  LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
@@ -682,9 +682,9 @@ public class Service {
                         fileWriter.append("\t    sqlCommand.append(\"  OR LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
                     }
                 }
-                if (colProp.getColType().equals("Long") )
+                if (colProp.getColType().equalsIgnoreCase("Long") )
                 {
-                    if (colProp.getInputType().equals("Combobox"))
+                    if (colProp.getInputType().equalsIgnoreCase("Combobox"))
                     {
                         count_cb++;
                     }
@@ -693,11 +693,11 @@ public class Service {
                         count_long++;
                     }
                 }
-                if (colProp.getColType().equals("Double"))
+                if (colProp.getColType().equalsIgnoreCase("Double"))
                 {
                     count_db++;
                 }
-                if (colProp.getColType().equals("Date"))
+                if (colProp.getColType().equalsIgnoreCase("Date"))
                 {
                     count_date++;
                 }
@@ -713,9 +713,9 @@ public class Service {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("Long") )
+                if (colProp.getColType().equalsIgnoreCase("Long") )
                 {
-                    if (colProp.getInputType().equals("Combobox"))
+                    if (colProp.getInputType().equalsIgnoreCase("Combobox"))
                     {
                         t1++;
                         fileWriter.append("\tif (searchDTO.getListLong"+t1+"() != null && !searchDTO.getListLong"+t1+"().isEmpty()) {\n" +
@@ -733,9 +733,9 @@ public class Service {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("Long") )
+                if (colProp.getColType().equalsIgnoreCase("Long") )
                 {
-                    if (!colProp.getInputType().equals("Combobox"))
+                    if (!colProp.getInputType().equalsIgnoreCase("Combobox"))
                     {
                         t2++;
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong"+t2+"())) {\n" +
@@ -754,9 +754,9 @@ public class Service {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("Double") )
+                if (colProp.getColType().equalsIgnoreCase("Double") )
                 {
-                    if (!colProp.getInputType().equals("Combobox"))
+                    if (!colProp.getInputType().equalsIgnoreCase("Combobox"))
                     {
                         t3++;
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble"+t3+"())) {\n" +
@@ -777,7 +777,7 @@ public class Service {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("Date") ) {
+                if (colProp.getColType().equalsIgnoreCase("Date") ) {
                     t4++;
                     fileWriter.append("\tif (  (searchDTO.getString"+t4+"() != null && !searchDTO.getString"+t4+"().isEmpty())   &&   (searchDTO.getString"+(t4+1)+"() != null && !searchDTO.getString"+(t4+1)+"().isEmpty())  ) {\n" +
                             "            sqlCommand.append(\"  and ( tbl."+colProp.getColName()+" between (:string"+t4+") and (:string"+(t4+1)+")    ) \");\n" +
@@ -875,7 +875,7 @@ public class Service {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("String")) {
+                if (colProp.getColType().equalsIgnoreCase("String")) {
                     count_str++;
                     if (count_str == 1) {
                         fileWriter.append("\t    sqlCommand.append(\"  LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
@@ -893,9 +893,9 @@ public class Service {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("Long") )
+                if (colProp.getColType().equalsIgnoreCase("Long") )
                 {
-                    if (colProp.getInputType().equals("Combobox"))
+                    if (colProp.getInputType().equalsIgnoreCase("Combobox"))
                     {
                         c1++;
                         fileWriter.append("\tif (searchDTO.getListLong"+c1+"() != null && !searchDTO.getListLong"+c1+"().isEmpty()) {\n" +
@@ -913,9 +913,9 @@ public class Service {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("Long") )
+                if (colProp.getColType().equalsIgnoreCase("Long") )
                 {
-                    if (!colProp.getInputType().equals("Combobox"))
+                    if (!colProp.getInputType().equalsIgnoreCase("Combobox"))
                     {
                         c2++;
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong"+c2+"())) {\n" +
@@ -934,9 +934,9 @@ public class Service {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("Double") )
+                if (colProp.getColType().equalsIgnoreCase("Double") )
                 {
-                    if (!colProp.getInputType().equals("Combobox"))
+                    if (!colProp.getInputType().equalsIgnoreCase("Combobox"))
                     {
                         c3++;
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble"+c3+"())) {\n" +
@@ -957,7 +957,7 @@ public class Service {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("Date") ) {
+                if (colProp.getColType().equalsIgnoreCase("Date") ) {
                     c4++;
                     fileWriter.append("\tif (  (searchDTO.getString"+c4+"() != null && !searchDTO.getString"+c4+"().isEmpty())   &&   (objectSearchCommonDTO.getString"+(c4+1)+"() != null && !objectSearchCommonDTO.getString"+(c4+1)+"().isEmpty())  ) {\n" +
                             "            sqlCommand.append(\"  and ( tbl."+colProp.getColName()+" between (:string"+c4+") and (:string"+(c4+1)+")    ) \");\n" +
@@ -1199,7 +1199,7 @@ public class Service {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("String")) {
+                if (colProp.getColType().equalsIgnoreCase("String")) {
                     count_str++;
                     if (count_str == 1) {
                         fileWriter.append("\t    sqlCommand.append(\"  LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
@@ -1207,17 +1207,17 @@ public class Service {
                         fileWriter.append("\t    sqlCommand.append(\"  OR LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
                     }
                 }
-                if (colProp.getColType().equals("Long")) {
-                    if (colProp.getInputType().equals("Combobox")) {
+                if (colProp.getColType().equalsIgnoreCase("Long")) {
+                    if (colProp.getInputType().equalsIgnoreCase("Combobox")) {
                         count_cb++;
                     } else {
                         count_long++;
                     }
                 }
-                if (colProp.getColType().equals("Double")) {
+                if (colProp.getColType().equalsIgnoreCase("Double")) {
                     count_db++;
                 }
-                if (colProp.getColType().equals("Date")) {
+                if (colProp.getColType().equalsIgnoreCase("Date")) {
                     count_date++;
                 }
 
@@ -1239,10 +1239,10 @@ public class Service {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append("\t\t\t.addScalar(\"");
-            if(colProp.getColType().equals("File")){
+            if(colProp.getColType().equalsIgnoreCase("File")){
                 fileWriter.append(colProp.getColName() + "\", StringType.INSTANCE)\n");
             }
-            if (colProp.getColType().equals("Date")) {
+            if (colProp.getColType().equalsIgnoreCase("Date")) {
                 fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
             }
             else {
@@ -1285,7 +1285,7 @@ public class Service {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("String")) {
+                if (colProp.getColType().equalsIgnoreCase("String")) {
                     temp++;
                     if (temp == 1) {
                         fileWriter.append("\t    sqlCommand.append(\"  LOWER(tbl." + colProp.getColName() + ") like LOWER(:stringKeyWord)   \");\n");
@@ -1328,7 +1328,7 @@ public class Service {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append("\t\t\t.addScalar(\"");
-            if (colProp.getColType().equals("Date")) {
+            if (colProp.getColType().equalsIgnoreCase("Date")) {
                 fileWriter.append(colProp.getColName() + "ST\", StringType.INSTANCE)\n");
             } else {
                 fileWriter.append(colProp.getColName() + "\", " + capitalize((colProp.getColType())) + "Type.INSTANCE)\n");
@@ -1435,8 +1435,8 @@ public class Service {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("Long")) {
-                    if (colProp.getInputType().equals("Combobox")) {
+                if (colProp.getColType().equalsIgnoreCase("Long")) {
+                    if (colProp.getInputType().equalsIgnoreCase("Combobox")) {
                         t1++;
                         fileWriter.append("\tif (searchDTO.getListLong" + t1 + "() != null && !searchDTO.getListLong" + t1 + "().isEmpty()) {\n" +
                                 "            sqlCommand.append(\" and tbl." + colProp.getColName() + " in (:listLong" + t1 + ") \");\n" +
@@ -1452,8 +1452,8 @@ public class Service {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("Long")) {
-                    if (!colProp.getInputType().equals("Combobox")) {
+                if (colProp.getColType().equalsIgnoreCase("Long")) {
+                    if (!colProp.getInputType().equalsIgnoreCase("Combobox")) {
                         t2++;
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getLong" + t2 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " >= (:long" + (t2++) + ") \");\n" +
@@ -1470,8 +1470,8 @@ public class Service {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("Double")) {
-                    if (!colProp.getInputType().equals("Combobox")) {
+                if (colProp.getColType().equalsIgnoreCase("Double")) {
+                    if (!colProp.getInputType().equalsIgnoreCase("Combobox")) {
                         t3++;
                         fileWriter.append("\tif (!StringUtil.isEmpty(searchDTO.getDouble" + t3 + "())) {\n" +
                                 "\t\tsqlCommand.append(\" and tbl." + colProp.getColName() + " >= (:double" + (t3++) + ") \");\n" +
@@ -1490,7 +1490,7 @@ public class Service {
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch()) {
-                if (colProp.getColType().equals("Date")) {
+                if (colProp.getColType().equalsIgnoreCase("Date")) {
                     t4++;
                     fileWriter.append("\tif (  (searchDTO.getString" + t4 + "() != null && !searchDTO.getString" + t4 + "().isEmpty())   &&   (searchDTO.getString" + (t4 + 1) + "() != null && !searchDTO.getString" + (t4 + 1) + "().isEmpty())  ) {\n" +
                             "            sqlCommand.append(\"  and ( tbl." + colProp.getColName() + " between (:string" + t4 + ") and (:string" + (t4 + 1) + ")    ) \");\n" +

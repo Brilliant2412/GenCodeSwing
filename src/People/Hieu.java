@@ -114,7 +114,7 @@ public class Hieu {
         );
         for(int i = 0; i < tableInfo.columns.size(); i++){
             fileWriter.append("\tprivate ");
-            if(tableInfo.columns.get(i).getColType().equals("File")){
+            if(tableInfo.columns.get(i).getColType().equalsIgnoreCase("File")){
                 fileWriter.append("String");
             }
             else{
@@ -141,7 +141,7 @@ public class Hieu {
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             String colType;
-            if(colProp.getColType().equals("File")){
+            if(colProp.getColType().equalsIgnoreCase("File")){
                 colType = "String";
             }
             else{
@@ -193,7 +193,7 @@ public class Hieu {
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             String colType;
-            if(colProp.getColType().equals("File")){
+            if(colProp.getColType().equalsIgnoreCase("File")){
                 colType = "String";
             }
             else{
@@ -217,7 +217,7 @@ public class Hieu {
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             String colType;
-            if(colProp.getColType().equals("File")){
+            if(colProp.getColType().equalsIgnoreCase("File")){
                 colType = "String";
             }
             else{
@@ -288,13 +288,13 @@ public class Hieu {
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             fileWriter.append("\tprivate ");
-            if(colProp.getColType().equals("Date") || colProp.getColType().equals("File")){
+            if(colProp.getColType().equalsIgnoreCase("Date") || colProp.getColType().equalsIgnoreCase("File")){
                 fileWriter.append("String " + colProp.getColName() + ";\t\t//" + colProp.getColDescription() + "\n");
             }
             else{
                 fileWriter.append(colProp.getColType() + " " + colProp.getColName() + ";\t\t//" + colProp.getColDescription() + "\n");
             }
-            if(!colProp.getFKTable().equals("") || colProp.getColType().equals("Date")){
+            if(!colProp.getFKTable().equals("") || colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("\tprivate String " + colProp.getColName() + "ST;\n");
             }
         }
@@ -313,7 +313,7 @@ public class Hieu {
             fileWriter.append(
                     "\tpublic ");
             //colProp.getColType() +
-            if(colProp.getColType().equals("Date") || colProp.getColType().equals("File")){
+            if(colProp.getColType().equalsIgnoreCase("Date") || colProp.getColType().equalsIgnoreCase("File")){
                 fileWriter.append("String ");
             }
             else{
@@ -326,7 +326,7 @@ public class Hieu {
             fileWriter.append(
                     "\tpublic void set" + capitalize(colProp.getColName()) + "(");
             //colProp.getColType()
-            if(colProp.getColType().equals("Date") || colProp.getColType().equals("File")){
+            if(colProp.getColType().equalsIgnoreCase("Date") || colProp.getColType().equalsIgnoreCase("File")){
                 fileWriter.append("String ");
             }
             else{
@@ -337,7 +337,7 @@ public class Hieu {
                     "\t}\n\n"
 
             );
-            if(!colProp.getFKTable().equals("") || colProp.getColType().equals("Date")){
+            if(!colProp.getFKTable().equals("") || colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "\tpublic String get" + capitalize(colProp.getColName()) + "ST(){\n" +
                                 "\t\treturn " + colProp.getColName() + "ST;\n" +
@@ -420,13 +420,13 @@ public class Hieu {
                             "                        <tr>\n" +
                             "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">STT</th>\n");
             for(int i = 1; i < subTableInfo.columns.size(); i++){
-                if(subTableInfo.columns.get(i).isShow() && !subTableInfo.columns.get(i).getInputType().equals("file")){
+                if(subTableInfo.columns.get(i).isShow() && !subTableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + subTableInfo.columns.get(i).getColDescription() + "</th>\n");
                 }
 
             }
             for(int i = 1; i < subTableInfo.columns.size(); i++){
-                if(subTableInfo.columns.get(i).isShow() && subTableInfo.columns.get(i).getInputType().equals("file")){
+                if(subTableInfo.columns.get(i).isShow() && subTableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + subTableInfo.columns.get(i).getColDescription() + "</th>\n");
                 }
 
@@ -585,9 +585,9 @@ public class Hieu {
             ColumnProperty colProp = tableInfo.columns.get(i);
             if (colProp.isSearch())
             {
-                if (colProp.getColType().equals("Long") )
+                if (colProp.getColType().equalsIgnoreCase("Long") )
                 {
-                    if (colProp.getInputType().equals("Combobox"))
+                    if (colProp.getInputType().equalsIgnoreCase("Combobox"))
                     {
                         count_cb++;
                     }
@@ -596,11 +596,11 @@ public class Hieu {
                         count_long++;
                     }
                 }
-                if (colProp.getColType().equals("Double"))
+                if (colProp.getColType().equalsIgnoreCase("Double"))
                 {
                     count_db++;
                 }
-                if (colProp.getColType().equals("Date"))
+                if (colProp.getColType().equalsIgnoreCase("Date"))
                 {
                     count_date++;
                 }
@@ -678,7 +678,7 @@ public class Hieu {
                 "        } else {\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
                                 "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
@@ -688,7 +688,7 @@ public class Hieu {
         }
         String file = null;
         for(int i = 0; i < tableInfo.columns.size(); i++){
-            if(tableInfo.columns.get(i).getColType().equals("File")){
+            if(tableInfo.columns.get(i).getColType().equalsIgnoreCase("File")){
                 file = tableInfo.columns.get(i).getColName();
                 break;
             }
@@ -720,7 +720,7 @@ public class Hieu {
                         "        } else {\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "            if (!StringUtil.isEmpty(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "())) {\n" +
                                 "                        " + uncapitalize(tableInfo.tableName) + "DTO.set" + capitalize(colProp.getColName()) + "(DateUtil.formatDate(" + uncapitalize(tableInfo.tableName) + "DTO.get" + capitalize(colProp.getColName()) + "()));\n" +
@@ -730,7 +730,7 @@ public class Hieu {
         }
         file = null;
         for(int i = 0; i < tableInfo.columns.size(); i++){
-            if(tableInfo.columns.get(i).getColType().equals("File")){
+            if(tableInfo.columns.get(i).getColType().equalsIgnoreCase("File")){
                 file = tableInfo.columns.get(i).getColName();
                 break;
             }
@@ -773,7 +773,7 @@ public class Hieu {
                         "\n");
         file = null;
         for(int i = 0; i < tableInfo.columns.size(); i++){
-            if(tableInfo.columns.get(i).getColType().equals("File")){
+            if(tableInfo.columns.get(i).getColType().equalsIgnoreCase("File")){
                 file = tableInfo.columns.get(i).getColName();
                 break;
             }
@@ -841,7 +841,7 @@ public class Hieu {
         for(TableInfo subTableInfo : tableSet.subTables){
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
-                if(colProp.getColType().equals("Long")){
+                if(colProp.getColType().equalsIgnoreCase("Long")){
                     count_long++;
                     fileWriter.append(
                             "                List<MstDivisionDTO> lstMst" + count_long + " = mstDivisionData.getAllMstDepartmentType(\"707\");\n" +

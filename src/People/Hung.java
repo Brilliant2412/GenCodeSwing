@@ -56,7 +56,7 @@ public class Hung {
         ArrayList<ColumnProperty> res = new ArrayList<>();
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isSearch() == true){
-                if (tableInfo.columns.get(i).getColType().equals("String")){
+                if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
                     continue;
                 }else{
                     res.add(tableInfo.columns.get(i));
@@ -71,7 +71,7 @@ public class Hung {
         ArrayList<ColumnProperty> res = new ArrayList<>();
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isShow() == true){
-                if (tableInfo.columns.get(i).getInputType().equals("file")){
+                if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     continue;
                 }else{
                     res.add(tableInfo.columns.get(i));
@@ -260,10 +260,10 @@ public class Hung {
         fileWriter.append("var datafields = [\n");
         for (int i = 0; i <tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("String")) {
+            if (columnProperty.getColType().equalsIgnoreCase("String")) {
                 fileWriter.append("    {name: '" + columnProperty.getColName() + "', type: 'String'},\n");
             }
-            else if (columnProperty.getColType().equals("Date")) {
+            else if (columnProperty.getColType().equalsIgnoreCase("Date")) {
                 fileWriter.append("    {name: '" + columnProperty.getColName() + "', type: 'String'},\n");
                 fileWriter.append("    {name: '" + columnProperty.getColName() + "ST', type: 'String'},\n");
             }
@@ -282,7 +282,7 @@ public class Hung {
             if (columnProperty.isShow())
             {
                 fileWriter.append("\t{text: \""+columnProperty.getColDescription()+"\", datafield: '" + columnProperty.getColName());
-                if((columnProperty.getColType().equals("Long") && columnProperty.getInputType().equals("Combobox")) || columnProperty.getColType().equals("Date")){
+                if((columnProperty.getColType().equalsIgnoreCase("Long") && columnProperty.getInputType().equalsIgnoreCase("Combobox")) || columnProperty.getColType().equalsIgnoreCase("Date")){
                     fileWriter.append("ST");
                 }
                 fileWriter.append("', res: \"data-class='phone'\"},\n");
@@ -313,17 +313,17 @@ public class Hung {
 //        for (int i = 0; i < tableInfo.columns.size(); i++) {
 //            ColumnProperty colProp = tableInfo.columns.get(i);
 //            if (colProp.isSearch()) {                
-//                if (colProp.getColType().equals("Long")) {
-//                    if (colProp.getInputType().equals("Combobox")) {
+//                if (colProp.getColType().equalsIgnoreCase("Long")) {
+//                    if (colProp.getInputType().equalsIgnoreCase("Combobox")) {
 //                        count_cb++;
 //                    } else {
 //                        count_long++;
 //                    }
 //                }
-//                if (colProp.getColType().equals("Double")) {
+//                if (colProp.getColType().equalsIgnoreCase("Double")) {
 //                    count_db++;
 //                }
-//                if (colProp.getColType().equals("Date")) {
+//                if (colProp.getColType().equalsIgnoreCase("Date")) {
 //                    count_date++;
 //                }
 //            }
@@ -332,7 +332,7 @@ public class Hung {
         //Combobox
         int t_cb = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isSearch()){
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox") && tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).isSearch()){
                 t_cb++;
                 fileWriter.append("    var listLong"+(t_cb)+" = $('#cb"+tableInfo.columns.get(i).getColName()+"SearchCombobox').val();\n");
             }
@@ -340,7 +340,7 @@ public class Hung {
         //date
         int t_date = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isSearch()){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date") && tableInfo.columns.get(i).isSearch()){
                 t_date++;
                 fileWriter.append("    var string"+(t_date)+" = $('#"+tableInfo.columns.get(i).getColName()+"SearchFrom').val();\n");
                 t_date++;
@@ -351,7 +351,7 @@ public class Hung {
         //long not cb
         int t_long = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") && !tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).isSearch()){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && !tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox") && tableInfo.columns.get(i).isSearch()){
                 t_long++;
                 fileWriter.append("    var long"+(t_long)+" = $('#"+tableInfo.columns.get(i).getColName()+"SearchCombobox').val();\n");
             }
@@ -360,7 +360,7 @@ public class Hung {
         //double
         int t_db = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Double") && tableInfo.columns.get(i).isSearch()){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double") && tableInfo.columns.get(i).isSearch()){
                 t_db++;
                 fileWriter.append("    var double"+(t_db)+" = $('#"+tableInfo.columns.get(i).getColName()+"SearchCombobox').val();\n");
             }
@@ -373,7 +373,7 @@ public class Hung {
         //Combobox
         int t_cb1 = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isSearch()){
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox") && tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).isSearch()){
                 t_cb1++;
                 fileWriter.append("    url += \"&listLong"+t_cb1+"=\"+listLong"+t_cb1+";\n");
             }
@@ -381,7 +381,7 @@ public class Hung {
         //date
         int t_date1 = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isSearch()){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date") && tableInfo.columns.get(i).isSearch()){
                 t_date1++;
                 fileWriter.append("    url += \"&string"+t_date1+"=\"+string"+t_date1+";\n");
                 t_date1++;
@@ -392,7 +392,7 @@ public class Hung {
         //long not cb
         int t_long1 = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") && !tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).isSearch()){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && !tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox") && tableInfo.columns.get(i).isSearch()){
                 t_long1++;
                 fileWriter.append("    url += \"&long"+t_long1+"=\"+long"+t_long1+";\n");
             }
@@ -401,7 +401,7 @@ public class Hung {
         //double
         int t_db1 = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Double") && tableInfo.columns.get(i).isSearch()){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double") && tableInfo.columns.get(i).isSearch()){
                 t_db1++;
                 fileWriter.append("    url += \"&double"+t_db1+"=\"+double"+t_db1+";\n");
             }
@@ -441,7 +441,7 @@ public class Hung {
         
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "$(\"#" + colProp.getColName() + "\").datepicker({\n" +
                                 "\tduration: \"fast\",\n" +
@@ -460,7 +460,7 @@ public class Hung {
         
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getColType().equals("Date")){
+            if(colProp.getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(
                         "$(\"#" + colProp.getColName() + "SearchFrom\").datepicker({\n" +
                                 "\tduration: \"fast\",\n" +
@@ -495,7 +495,7 @@ public class Hung {
                         "\t\n" );
         for(int i = 1; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getInputType().equals("Combobox")){
+            if(colProp.getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("\t\tvt_combobox.buildMultipleCombobox(\"cb" + colProp.getColName() + "Search\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
             }
         }
@@ -510,7 +510,7 @@ public class Hung {
          **********************************************************************************************/
 //        for(int i = 1; i < tableInfo.columns.size(); i++){
 //            ColumnProperty colProp = tableInfo.columns.get(i);
-//            if(colProp.getInputType().equals("Combobox") && colProp.isSearch() ){
+//            if(colProp.getInputType().equalsIgnoreCase("Combobox") && colProp.isSearch() ){
 //                fileWriter.append("\t\tvt_combobox.buildCombobox(\"cb" + colProp.getColName() + "Search\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
 //            }
 //        }
@@ -527,7 +527,7 @@ public class Hung {
         );
         for(int i = 1; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getInputType().equals("Combobox")){
+            if(colProp.getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("\t\tvt_combobox.buildCombobox(\"cb" + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
             }
         }
@@ -549,7 +549,7 @@ public class Hung {
                         "        var item;\n");
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
-            if(colProp.getInputType().equals("Combobox")){
+            if(colProp.getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append(
                         "\t\titem = $('#cb" + colProp.getColName() + "Combobox').val();\n" +
                                 "\t\t$('input[name=\""  + colProp.getColName() + "\"]').val(item);\n"
@@ -743,11 +743,11 @@ public class Hung {
                  "                    $(\"#gid\").val(data.gid);\n");
         for (int i = 1; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("Date"))
+            if (columnProperty.getColType().equalsIgnoreCase("Date"))
             {
                 fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"\").val(data."+columnProperty.getColName()+"ST);\n");
             }
-            else if (columnProperty.getInputType().equals("Combobox"))
+            else if (columnProperty.getInputType().equalsIgnoreCase("Combobox"))
             {
 
                 fileWriter.append("\t\t\t\t\tvt_combobox.buildCombobox(\"cb"+columnProperty.getColName()+"\", \""+columnProperty.getComboboxBuildPath()+"\", data."+columnProperty.getColName()+", \""+columnProperty.getComboboxName()+"\", \""+columnProperty.getComboboxValue()+"\", \"- Chọn "+columnProperty.getColDescription()+" -\", 0);\n");
@@ -757,7 +757,7 @@ public class Hung {
         }
         String file = null;
         for(int i = 0; i < tableInfo.columns.size(); i++){
-            if(tableInfo.columns.get(i).getInputType().equals("file")){
+            if(tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                 file = tableInfo.columns.get(i).getColName();
             }
         }
@@ -794,20 +794,20 @@ public class Hung {
                     "                                " + uncapitalize(subTableInfo.tableName) + "addNewDataToTable("+uncapitalize(subTableInfo.tableName)+"indexTopicMember, lst_" + subTableInfo.tableName + "[i].main_id, ");
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
-                if(colProp.getColType().equals("Long")){
+                if(colProp.getColType().equalsIgnoreCase("Long")){
                     fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
                     fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + "ST, ");
                 }
             }
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
-                if(colProp.getColType().equals("String")){
+                if(colProp.getColType().equalsIgnoreCase("String")){
                     fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
                 }
             }
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
-                if(colProp.getColType().equals("Date")){
+                if(colProp.getColType().equalsIgnoreCase("Date")){
                     fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + "ST, ");
                 }
             }
@@ -890,11 +890,11 @@ public class Hung {
                 "                    $(\"#gid\").val(data.gid);\n");
         for (int i = 1; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if (columnProperty.getColType().equals("Date"))
+            if (columnProperty.getColType().equalsIgnoreCase("Date"))
             {
                 fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"View"+"\").val(data."+columnProperty.getColName()+"ST);\n");
             }
-            else if (columnProperty.getInputType().equals("Combobox"))
+            else if (columnProperty.getInputType().equalsIgnoreCase("Combobox"))
             {
                 fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"View"+"\").val(data."+columnProperty.getColName()+"ST"+");\n");
             }
@@ -920,21 +920,21 @@ public class Hung {
         int dem = 0;
         //string
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String") && tableInfo.columns.get(i).isShow() == true){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String") && tableInfo.columns.get(i).isShow() == true){
                 dem++;
             }
         }
 
         // combobox
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long") && tableInfo.columns.get(i).isShow() == true){
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox") && tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).isShow() == true){
                 dem++;
             }
         }
         //date
 
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date") && tableInfo.columns.get(i).isShow() == true){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date") && tableInfo.columns.get(i).isShow() == true){
                 dem++;
             }
         }
@@ -1012,7 +1012,7 @@ public class Hung {
     public static ArrayList<ColumnProperty> columns_notfile(TableInfo tableInfo){
         ArrayList<ColumnProperty> res = new ArrayList<>();
         for (int i = 0;i<tableInfo.columns.size();i++) {
-            if (tableInfo.columns.get(i).getInputType().equals("file")) {
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")) {
                 continue;
             } else {
                 res.add(tableInfo.columns.get(i));
@@ -1162,7 +1162,7 @@ public class Hung {
         }
         boolean check_file = false;
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("file")){
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                 check_file = true;
                 break;
             }
@@ -1189,13 +1189,13 @@ public class Hung {
                             "                        <tr>\n" +
                             "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">STT</th>\n");
             for(int i = 1; i < subTableInfo.columns.size(); i++){
-                if(subTableInfo.columns.get(i).isShow() && !subTableInfo.columns.get(i).getInputType().equals("file")){
+                if(subTableInfo.columns.get(i).isShow() && !subTableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + subTableInfo.columns.get(i).getColDescription() + "</th>\n");
                 }
 
             }
             for(int i = 1; i < subTableInfo.columns.size(); i++){
-                if(subTableInfo.columns.get(i).isShow() && subTableInfo.columns.get(i).getInputType().equals("file")){
+                if(subTableInfo.columns.get(i).isShow() && subTableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + subTableInfo.columns.get(i).getColDescription() + "</th>\n");
                 }
 
@@ -1223,15 +1223,6 @@ public class Hung {
                         "\t\tautoOpen: false,\n" +
                         "\t\tmodal: true,\n" +
                         "\t\tposition: [($(window).width() / 80 * 2.5), 20],\n" +
-                        "\t\topen: function () {\n" +
-                        "\t\t\t$('.areaTable').addClass('custom-overlay-popup-add-edit');\n" +
-                        "\t\t\t$('.dialogAddEdit').css('z-index', 1001);\n" +
-                        "\n" +
-                        "\t\t},\n" +
-                        "\t\tclose: function () {\n" +
-                        "\t\t\t$('.areaTable').removeClass('custom-overlay-popup-add-edit');\n" +
-                        "\n" +
-                        "\t\t},\n" +
                         "\t\tbuttons: [{\n" +
                         "\t\t\thtml: \"<fmt:message key='button.close' />\",\n" +
                         "\t\t\t\"class\": \"btn btn-default\",\n" +
@@ -1275,14 +1266,14 @@ public class Hung {
         boolean checkfile = false;
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("Combobox")){
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 ColumnProperty colProp = tableInfo.columns.get(i);
                 fileWriter.append("\tvt_combobox.buildCombobox(\"cb"+uncapitalize(tableInfo.tableName) + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
             }
         }
         //FILE
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("file")){
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                 checkfile = true;
                 break;
             }
@@ -1296,20 +1287,20 @@ public class Hung {
         }
         //STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
                 fileWriter.append("\t$(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n");
             }
         }
 
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("\t$(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n");
             }
         }
         //DATE PICKER
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("\n\t$(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").datepicker({\n" +
                         "        duration: \"fast\",\n" +
                         "        changeMonth: true,\n" +
@@ -1347,7 +1338,7 @@ public class Hung {
         fileWriter.append(uncapitalize(tableInfo.tableName)+"setValueToFormSubTable = function () {\n");
         fileWriter.append("    var item;\n");
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long")){
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox") && tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long")){
                 ColumnProperty colProp = tableInfo.columns.get(i);
                 fileWriter.append("\titem = $('#cb"+uncapitalize(tableInfo.tableName)+colProp.getColName()+"Combobox').val();\n"+
                         "\t$('input[name=\""+uncapitalize(tableInfo.tableName)+colProp.getColName()+"\"]').val(item);\n");
@@ -1387,20 +1378,20 @@ public class Hung {
                 "            }).success(function (result) {\n");
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#cb"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Combobox\").val();\n" +
                         "                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Text = $(\"#cb"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Combobox>option:selected\").html();\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
                 fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
@@ -1408,15 +1399,15 @@ public class Hung {
         fileWriter.append("\n                $(\"#"+uncapitalize(tableInfo.tableName)+"_dataDetailInfo\").append(\n" +
                 "                        "+uncapitalize(tableInfo.tableName)+"addNewDataToTable("+uncapitalize(tableInfo.tableName)+"indexTopicMember, gid, ");
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 demxuongdong++;
                 fileWriter.append(uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+", "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Text, ");
             }
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
                 demxuongdong++;
-                if (tableInfo.columns.get(i).getInputType().equals("file")){
+                if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("result.name, ");
                 }else{
                     fileWriter.append(uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+", ");
@@ -1428,7 +1419,7 @@ public class Hung {
             }
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+", ");
             }
         }
@@ -1466,7 +1457,7 @@ public class Hung {
 
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n" +
                         "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n");
             }
@@ -1474,14 +1465,14 @@ public class Hung {
 
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
                 fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n" +
                         "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n" +
                         "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n");
             }
@@ -1495,13 +1486,13 @@ public class Hung {
         demxuongdong = 0;
         fileWriter.append("\nfunction "+uncapitalize(tableInfo.tableName)+"addNewDataToTable(count, id, ");
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 demxuongdong++;
                 fileWriter.append(tableInfo.columns.get(i).getColName()+", "+tableInfo.columns.get(i).getColName()+"Text, ");
             }
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
                 demxuongdong++;
                 fileWriter.append(tableInfo.columns.get(i).getColName()+", ");
                 if (demxuongdong == 11){
@@ -1510,33 +1501,33 @@ public class Hung {
             }
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
                 fileWriter.append(tableInfo.columns.get(i).getColName()+", ");
             }
         }
         fileWriter.append("isEdit) {\n");
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
                 fileWriter.append("    "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : \"\";\n");
             }
         }
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("    "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : 0;\n");
             }
         }
         fileWriter.append("\n\tgid = id;\n");
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("    "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : \"\";\n");
             }
         }
         // COMBOBOX TEXT
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("\tvar txt"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" > 0 ? ("+tableInfo.columns.get(i).getColName()+"Text + '').trim() : \"\";\n");
             }
         }
@@ -1553,21 +1544,21 @@ public class Hung {
 
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isShow() == true){
-                if (tableInfo.columns.get(i).getColType().equals("String")  && !tableInfo.columns.get(i).getInputType().equals("file")){
+                if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")  && !tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     if (countS %2 == 1){
                         fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
                     }else{
                         fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
                     }
                     countS--;
-                }else if (tableInfo.columns.get(i).getColType().equals("Date")){
+                }else if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
                     if (countS%2 == 1){
                         fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
                     }else{
                         fileWriter.append("    html += \"<td align='center' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
                     }
                     countS--;
-                }else if (tableInfo.columns.get(i).getInputType().equals("Combobox") && tableInfo.columns.get(i).getColType().equals("Long")){
+                }else if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox") && tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long")){
                     fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML(txt"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
                     countS--;
                 }
@@ -1576,7 +1567,7 @@ public class Hung {
 
         fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML('');\n");
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("file")){
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                 fileWriter.append("\n    if ("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" !== null && "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" !== \"\") {\n" +
                         "        html += '<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + '\\')\"  style=\"cursor:pointer;color: blue;\"><span >' + ("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + '').substring(0, 30) + '...' + '</span></a></td>'; //\n" +
                         "    } else {\n" +
@@ -1588,19 +1579,19 @@ public class Hung {
         // INPUT
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")) {
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")) {
                 fileWriter.append("    html += \"<input class='" +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + "' type='hidden' value='\" + " +uncapitalize(tableInfo.tableName)+ tableInfo.columns.get(i).getColName() + " + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName() + "' />\";\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
                 fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";\n");
             }
         }
@@ -1631,25 +1622,25 @@ public class Hung {
         //Combobox
         //tableInfo.columns.get(i).getColName()
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")) {
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")) {
                 fileWriter.append("    var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
                 fileWriter.append("    var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")) {
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")) {
                 fileWriter.append("    var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
         //build combobox
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("Combobox")){
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 ColumnProperty colProp = tableInfo.columns.get(i);
                 fileWriter.append("\tvt_combobox.buildCombobox(\"cb"+uncapitalize(tableInfo.tableName) + colProp.getColName() + "\", \"" + colProp.getComboboxBuildPath() + "\", " + uncapitalize(tableInfo.tableName) +colProp.getColName()+", \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
             }
@@ -1659,8 +1650,8 @@ public class Hung {
                 "    $(\"#user_create1_subdoc\").val($('#user_create1').val());\n");
         //String
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String")) {
-                if (tableInfo.columns.get(i).getInputType().equals("file")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")) {
+                if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("\n\tvar html = \"\";\n" +
                             "    if("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" !== null){\n" +
                             "        html += "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+";\n" +
@@ -1679,13 +1670,13 @@ public class Hung {
 
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")) {
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")) {
                 fileWriter.append("\n    $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
         //date picker
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")) {
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")) {
                 fileWriter.append("\n    $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").datepicker({\n" +
                         "        duration: \"fast\",\n" +
                         "        changeMonth: true,\n" +
@@ -1704,7 +1695,7 @@ public class Hung {
                 "        strFile = e.target.files[0].name;\n" +
                 "    });\n");
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getInputType().equals("file")){
+            if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                 fileWriter.append("\tstrFile = " + uncapitalize(tableInfo.tableName) + tableInfo.columns.get(i).getColName() + ";\n");
             }
         }
@@ -1751,27 +1742,27 @@ public class Hung {
                 "                var id = $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val();\n");
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#cb"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Combobox\").val();\n" +
                         "                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Text = $(\"#cb"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Combobox>option:selected\").html();\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
                 fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
 
         // COMBOBOXTEXT
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("                var txt"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" > 0 ? ("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Text + '').trim() : \"\";\n");
             }
         }
@@ -1786,13 +1777,13 @@ public class Hung {
         int nth_child = 2;
         ArrayList<ColumnProperty> table_isshow_notfile = columns_isshow_notfile(tableInfo);
         for (int i = 0;i<table_isshow_notfile.size();i++){
-            if (table_isshow_notfile.get(i).getColType().equals("String")){
+            if (table_isshow_notfile.get(i).getColType().equalsIgnoreCase("String")){
                 fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
 
-            }else if (table_isshow_notfile.get(i).getColType().equals("Date")){
+            }else if (table_isshow_notfile.get(i).getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
             }
-            else if (table_isshow_notfile.get(i).getInputType().equals("Combobox") && table_isshow_notfile.get(i).getColType().equals("Long")){
+            else if (table_isshow_notfile.get(i).getInputType().equalsIgnoreCase("Combobox") && table_isshow_notfile.get(i).getColType().equalsIgnoreCase("Long")){
                 fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html(txt"+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
             }
             nth_child++;
@@ -1801,7 +1792,7 @@ public class Hung {
         // check file
         if (checkfile == true){
             for (int i = 0;i<tableInfo.columns.size();i++){
-                if (tableInfo.columns.get(i).getInputType().equals("file")){
+                if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("//                if($('#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc').val() === '0'){\n" +
                             "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + id + '\\')\"  style=\"cursor:pointer; color: blue;\"><span >' + (strFile + '').substring(0, 30) + '...' + '</span></a>');\n" +
                             "//                }\n" +
@@ -1814,13 +1805,13 @@ public class Hung {
 
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Long") &&tableInfo.columns.get(i).getInputType().equals("Combobox")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("String") && !tableInfo.columns.get(i).getInputType().equals("file")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String") && !tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                 fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
@@ -1828,7 +1819,7 @@ public class Hung {
         //file neu co
         if (checkfile == true){
             for (int i = 0;i<tableInfo.columns.size();i++){
-                if (tableInfo.columns.get(i).getInputType().equals("file")){
+                if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("//                if($('#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc').val() === '0'){\n" +
                             "                    $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(strFile);\n" +
                             "//                }\n" +
@@ -1841,7 +1832,7 @@ public class Hung {
         //+uncapitalize(tableInfo.tableName)+
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equals("Date")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
                 fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
@@ -1926,7 +1917,7 @@ public class Hung {
         //file neu co
         if (checkfile == true){
             for (int i = 0;i<tableInfo.columns.size();i++){
-                if (tableInfo.columns.get(i).getInputType().equals("file")){
+                if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append(uncapitalize(tableInfo.tableName)+"onClickBtnDeleteFile = function(){\n" +
                             "    var html = '';\n" +
                             "    html += '<input class=\"form-control\" placeholder=\"\" name=\""+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\" id=\""+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\" type=\"file\">';\n" +
