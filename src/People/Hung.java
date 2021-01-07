@@ -312,7 +312,7 @@ public class Hung {
 //        int count_date = 0;
 //        for (int i = 0; i < tableInfo.columns.size(); i++) {
 //            ColumnProperty colProp = tableInfo.columns.get(i);
-//            if (colProp.isSearch()) {                
+//            if (colProp.isSearch()) {
 //                if (colProp.getColType().equalsIgnoreCase("Long")) {
 //                    if (colProp.getInputType().equalsIgnoreCase("Combobox")) {
 //                        count_cb++;
@@ -328,7 +328,7 @@ public class Hung {
 //                }
 //            }
 //        }
-        
+
         //Combobox
         int t_cb = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
@@ -347,7 +347,7 @@ public class Hung {
                 fileWriter.append("    var string"+(t_date)+" = $('#"+tableInfo.columns.get(i).getColName()+"SearchTo').val();\n");
             }
         }
-        
+
         //long not cb
         int t_long = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
@@ -356,7 +356,7 @@ public class Hung {
                 fileWriter.append("    var long"+(t_long)+" = $('#"+tableInfo.columns.get(i).getColName()+"SearchCombobox').val();\n");
             }
         }
-        
+
         //double
         int t_db = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
@@ -365,8 +365,8 @@ public class Hung {
                 fileWriter.append("    var double"+(t_db)+" = $('#"+tableInfo.columns.get(i).getColName()+"SearchCombobox').val();\n");
             }
         }
-        
-        
+
+
         fileWriter.append(
 "    var url = \"getall"+tableInfo.tableName.toLowerCase()+".json\";\n" +
 "    url += \"?key=\" + keySearch;\n");
@@ -388,7 +388,7 @@ public class Hung {
                 fileWriter.append("    url += \"&string"+t_date1+"=\"+string"+t_date1+";\n");
             }
         }
-        
+
         //long not cb
         int t_long1 = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
@@ -397,7 +397,7 @@ public class Hung {
                 fileWriter.append("    url += \"&long"+t_long1+"=\"+long"+t_long1+";\n");
             }
         }
-        
+
         //double
         int t_db1 = 0;
         for (int i = 0;i<tableInfo.columns.size();i++){
@@ -406,17 +406,17 @@ public class Hung {
                 fileWriter.append("    url += \"&double"+t_db1+"=\"+double"+t_db1+";\n");
             }
         }
-        
-        
+
+
                 fileWriter.append("\n"+
 "    vt_datagrid.loadPageAgainRes(\"#dataTblDocumentType\", url);\n" +
 "    vt_sys.showBody();\n" +
 "    vt_loading.hideIconLoading();\n" +
 "    return false;\n" +
 "};\n");
-        
-        
-        
+
+
+
         /*********************************************************************************************
          *                                 var gridSetting
          *********************************************************************************************/
@@ -438,7 +438,7 @@ public class Hung {
 //                        "    return false;\n" +
 //                        "};\n\n"
 //        );
-        
+
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getColType().equalsIgnoreCase("Date")){
@@ -457,7 +457,7 @@ public class Hung {
                 );
             }
         }
-        
+
         for(int i = 0; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getColType().equalsIgnoreCase("Date")){
@@ -499,8 +499,8 @@ public class Hung {
                 fileWriter.append("\t\tvt_combobox.buildMultipleCombobox(\"cb" + colProp.getColName() + "Search\", \"" + colProp.getComboboxBuildPath() + "\", 0, \"" + colProp.getComboboxName() + "\", \"" + colProp.getComboboxValue() + "\", \"- Chọn " + colProp.getColDescription() + " -\", 0);\n");
             }
         }
-        
-        
+
+
         fileWriter.append("\t$(\"#btnSearch\").click(function () {\n" +
 "        doSearch();\n" +
 "    });\n");
@@ -689,14 +689,32 @@ public class Hung {
                  *********************************************************************************************/
                 "\tvalidateRule: {\n" +
                 "        rules: {\n");
+        int validateLast = 0;
+        for(int i = tableInfo.columns.size() - 1; i >= 0; i--){
+            if(tableInfo.columns.get(i).isValidate()){
+                validateLast = i;
+                break;
+            }
+        }
         for (int i = 0; i < tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
             if (columnProperty.isValidate())
             {
-                fileWriter.append("\t\t\t"+columnProperty.getColName()+": {\n" +
-                        "                required: true\n" +
-                        "            }");
-                if(i != tableInfo.columns.size() -1){
+                fileWriter.append("\t\t\t"+columnProperty.getColName()+": {\n");
+                if(columnProperty.getInputType().equalsIgnoreCase("Combobox")){
+                    fileWriter.append(
+                            "                number: true,\n" +
+                            "                min: 0\n" +
+                            "            }"
+                    );
+                }
+                else{
+                    fileWriter.append(
+                            "                required: true\n" +
+                            "            }"
+                    );
+                }
+                if(i != validateLast){
                     fileWriter.append(",");
                 }
                 fileWriter.append("\n");
@@ -711,10 +729,19 @@ public class Hung {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
             if (columnProperty.isValidate())
             {
-                fileWriter.append("\t\t\t"+columnProperty.getColName()+": {\n" +
+                fileWriter.append("\t\t\t"+columnProperty.getColName()+": {\n");
+                if(columnProperty.getInputType().equalsIgnoreCase("Combobox")){
+                    fileWriter.append(
+                            "                number: \""+columnProperty.getValidateMessage()+"\",\n" +
+                            "                min: \""+columnProperty.getValidateMessage()+"\"\n" +
+                            "            }");
+                }
+                else{
+                    fileWriter.append(
                         "                required: \""+columnProperty.getValidateMessage()+"\"\n" +
                         "            }");
-                if(i != tableInfo.columns.size() -1){
+                }
+                if(i != validateLast){
                     fileWriter.append(",");
                 }
                 fileWriter.append("\n");
@@ -967,7 +994,8 @@ public class Hung {
                             "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" class=\"text_hidden\"  />\n" +
                             "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
                             "\t\t\t\t</div>\n";
-                }else{
+                }
+                else{
                     res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                             "\t\t\t\t<div class=\"col-lg-2\">\n" +
                             "\t\t\t\t\t<div id=\"cb"+tenTruong+"\"></div> \n" +
@@ -975,7 +1003,8 @@ public class Hung {
                             "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
                             "\t\t\t\t</div>\n";
                 }
-            }else{
+            }
+            else{
                 if (isValidate){
                     res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
                             "\t\t\t\t<div class=\"col-lg-2\">\n" +
@@ -1874,7 +1903,7 @@ public class Hung {
         fileWriter.append("var "+uncapitalize(tableInfo.tableName)+"SubTable = {\n" +
                 "    validateRule: {\n" +
                 "        rules: {\n");
-        int validateLast = 0;
+        int validateLast= 0;
         for (int i = tableInfo.columns.size()-1;i>=0;i--){
             if (tableInfo.columns.get(i).isValidate() == true){
                 validateLast = i;
@@ -1883,37 +1912,57 @@ public class Hung {
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isValidate() == true){
-                if (i!= validateLast){
-                    fileWriter.append("\t\t\t"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+": {\n" +
-                            "                required: true\n" +
-                            "            },\n");
-                }else{
-                    fileWriter.append("\t\t\t"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+": {\n" +
-                            "                required: true\n" +
-                            "            }\n" +
-                            "        },\n");
+                ColumnProperty columnProperty = tableInfo.columns.get(i);
+                fileWriter.append("\t\t\t"+columnProperty.getColName()+": {\n");
+                if(columnProperty.getInputType().equalsIgnoreCase("Combobox")){
+                    fileWriter.append(
+                            "                number: true,\n" +
+                                    "                min: 0\n" +
+                                    "            }"
+                    );
                 }
+                else{
+                    fileWriter.append(
+                            "                required: true\n" +
+                            "            }"
+                    );
+                }
+                if(i != validateLast){
+                    fileWriter.append(",");
+                }
+                fileWriter.append("\n");
 
             }
         }
-        fileWriter.append("        messages: {\n");
+        fileWriter.append(
+                "\t\t}\n" +
+                "        messages: {\n");
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isValidate() == true){
-                if (i!= validateLast){
-                    fileWriter.append("\t\t\t"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+": {\n" +
-                            "                 required: \""+tableInfo.columns.get(i).getValidateMessage()+"\"" +
-                            "            \n\t\t\t},\n");
-                }else{
-                    fileWriter.append("\t\t\t"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+": {\n" +
-                            "                 required: \""+tableInfo.columns.get(i).getValidateMessage()+"\"" +
-                            "            \n\t\t\t}" +
-                            "           \n\t\t}\n"+
-                            "\t}\n"+
-                            "};\n"
-                    );
+                ColumnProperty columnProperty = tableInfo.columns.get(i);
+                fileWriter.append("\t\t\t"+columnProperty.getColName()+": {\n");
+                if(columnProperty.getInputType().equalsIgnoreCase("Combobox")){
+                    fileWriter.append(
+                            "                number: \""+columnProperty.getValidateMessage()+"\",\n" +
+                                    "                min: \""+columnProperty.getValidateMessage()+"\"\n" +
+                                    "            }");
                 }
+                else{
+                    fileWriter.append(
+                            "                required: \""+columnProperty.getValidateMessage()+"\"\n" +
+                                    "            }");
+                }
+                if(i != validateLast){
+                    fileWriter.append(",");
+                }
+                fileWriter.append("\n");
             }
         }
+        fileWriter.append(
+                "\t\t}\n" +
+                "\t}\n" +
+                "};"
+        );
         //file neu co
         if (checkfile == true){
             for (int i = 0;i<tableInfo.columns.size();i++){

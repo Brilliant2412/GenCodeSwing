@@ -582,7 +582,7 @@ public class Tung {
                     }
                 }
             }
-            
+
             k -= 3;
             countSearch -= 3;
             r = k / 4;
@@ -1254,7 +1254,7 @@ public class Tung {
                 String res = checkDang_sub(columns_except_file.get(i).getColName(),
                         columns_except_file.get(i).getColDescription(),
                         columns_except_file.get(i).getColType(),
-                        columns_except_file.get(i).getInputType().toLowerCase(),
+                        columns_except_file.get(i).getInputType(),
                         tableInfo.tableName
                 );
                 fileWriter.append(res);
@@ -1264,7 +1264,7 @@ public class Tung {
         int c_file = 0;
         for (int i = 0; i <tableInfo.columns.size(); i++) {
             ColumnProperty columnProperty = tableInfo.columns.get(i);
-            if(columnProperty.getInputType().toLowerCase().equals("file"))
+            if(columnProperty.getInputType().equalsIgnoreCase("file"))
             {
                 if (c_file==0) {
                     fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n" +

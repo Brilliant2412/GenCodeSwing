@@ -129,11 +129,17 @@ public class TableInfo {
                     colProp.setColType(row.getCell(3).toString().trim());
                     colProp.setColDescription(row.getCell(2).toString().trim());
                     if(row.getCell(4).toString().equals("")){
+                        colProp.setShow(false);
+                    }
+                    else{
+                        colProp.setShow(true);
+                    }
+                    if(row.getCell(5).toString().equals("")){
                         colProp.setValidate(false);                     
                     }
                     else{
                         colProp.setValidate(true);
-                        colProp.setValidateMessage(row.getCell(5).toString().trim());
+                        colProp.setValidateMessage(row.getCell(6).toString().trim());
                     }
 //                    if(row.getCell(5).toString().startsWith("mst")){
 //                        colProp.setJoinTableName("mst" + ++n_mst);
@@ -144,17 +150,18 @@ public class TableInfo {
 //                    else if(row.getCell(5).toString().startsWith("plan")){
 //                        colProp.setJoinTableName("pln" + ++n_plan);
 //                    }
-                    colProp.setInputType(row.getCell(6).toString());
-                    if (!row.getCell(7).equals("")) {
-                        colProp.setComboboxBuildPath(row.getCell(7).toString());
-                        colProp.setComboboxName(row.getCell(8).toString());
-                        colProp.setComboboxValue(row.getCell(9).toString());
+                    colProp.setInputType(row.getCell(7).toString());
+                    if (!row.getCell(8).equals("")) {
+                        colProp.setComboboxBuildPath(row.getCell(8).toString());
+                        colProp.setComboboxName(row.getCell(9).toString());
+                        colProp.setComboboxValue(row.getCell(10).toString());
                     }
                     try {
-                        colProp.setGroupCD((int) Double.parseDouble(row.getCell(10).toString()));
+                        colProp.setGroupCD((int) Double.parseDouble(row.getCell(11).toString()));
                     } catch (Exception e) {
                         colProp.setGroupCD(0);
                     }
+                    columns.add(colProp);
                 }
             }
             
@@ -217,7 +224,6 @@ public class TableInfo {
                         colProp.setShow(true);
                     }
                     colProp.setValidateMessage(row.getCell(13).toString());
-                    columns.add(colProp);
                     if (row.getCell(9).toString().trim().equals("")) {
                         colProp.setSearch(false);
                     } else {
@@ -229,6 +235,7 @@ public class TableInfo {
                     } catch (Exception e) {
                         colProp.setGroupCD(0);
                     }
+                    columns.add(colProp);
                 }
             }
        }
