@@ -103,11 +103,12 @@ public class Hung {
                 "                        <fieldset>\n");
 
         ArrayList<ColumnProperty> res_search = columns_search(tableInfo);
-        int k = res_search.size()-1;
+        int k = res_search.size();
         int r = k / 4;
         int q = k%4;
         int i = 0;
         int countSearch = 0;
+        System.out.println(k + "\t" + r + "\t" + q);
         if (r == 0) {
             fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
             fileWriter.append("\t\t\t\t\t\t\t\t\t<label class=\"col-lg-1 control-label\" style=\"padding:5px 4px\">Từ khóa</label>\n" +
@@ -136,20 +137,22 @@ public class Hung {
                     "                                    \t<input type=\"text\" class=\"form-control\" placeholder=\"Nhập từ khóa\" id=\"keySearch\">\n" +
                     "                                \t</div>\n");
             for (; i < res_search.size(); i++) {
+                if (i == 3) {
+                    fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
+                    break;
+                }
                 String res = resSearch(res_search.get(i).getColName(),
                         res_search.get(i).getColDescription(),
                         res_search.get(i).getColType(),
                         res_search.get(i).getInputType()
                 );
                 fileWriter.append(res);
-                if (i == 3) {
-                    fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
-                    break;
-                }
+
             }
             k -= 3;
             r = k / 4;
             q = k % 4;
+            System.out.println(k + "\t" + r + "\t" + q);
             //i++;
             if (r == 0) {
                 fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
@@ -193,11 +196,12 @@ public class Hung {
                 }
             }
         }
-        fileWriter.append("\t\t\t\t\t\t\t\t<label class=\"col-md-1 control-label\" ></label>\n" +
-                "                                <div class=\"col-lg-2 selectContainer\">\n" +
-                "                                    <button id=\"btnSearch\" class=\"btn btn-success\" type=\"button\" style=\"width: 100%;\">Tìm kiếm</button>\n" +
-                "                                </div>\n");
-
+        fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
+        fileWriter.append("\t\t\t\t\t\t\t\t\t<label class=\"col-md-1 control-label\" ></label>\n" +
+                "                                \t<div class=\"col-lg-2 selectContainer\">\n" +
+                "                                    \t<button id=\"btnSearch\" class=\"btn btn-success\" type=\"button\" style=\"width: 100%;\">Tìm kiếm</button>\n" +
+                "                                \t</div>\n");
+        fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
         fileWriter.append("                        </fieldset>\n" +
                 "                        \n" +
                 "                    </form>\n" +
