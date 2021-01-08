@@ -108,7 +108,6 @@ public class Hung {
         int q = k%4;
         int i = 0;
         int countSearch = 0;
-        System.out.println(k + "\t" + r + "\t" + q);
         if (r == 0) {
             fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
             fileWriter.append("\t\t\t\t\t\t\t\t\t<label class=\"col-lg-1 control-label\" style=\"padding:5px 4px\">Từ khóa</label>\n" +
@@ -152,7 +151,6 @@ public class Hung {
             k -= 3;
             r = k / 4;
             q = k % 4;
-            System.out.println(k + "\t" + r + "\t" + q);
             //i++;
             if (r == 0) {
                 fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
