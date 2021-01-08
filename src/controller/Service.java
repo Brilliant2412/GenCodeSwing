@@ -1149,33 +1149,34 @@ public class Service {
         FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "DAO.java");
         fileWriter.write(
                 "package com.tav.service.dao;\n" +
-                        "\n" +
-                        "import com.tav.service.base.db.dao.BaseFWDAOImpl;\n" +
-                        "import com.tav.service.bo." + tableInfo.tableName + "BO;\n" +
-                        "import com.tav.service.dto." + tableInfo.tableName + "DTO;\n" +
-                        "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
-                        "import com.tav.service.dto.ServiceResult;\n" +
-                        "import com.tav.service.common.StringUtil;\n" +
-                        "import java.text.ParseException;\n" +
-                        "import java.math.BigInteger;\n" +
-                        "import java.text.SimpleDateFormat;\n" +
-                        "import java.util.List;\n" +
-                        "import java.util.Date;\n" +
-                        "import org.hibernate.Criteria;\n" +
-                        "import org.hibernate.HibernateException;\n" +
-                        "import org.hibernate.Query;\n" +
-                        "import org.hibernate.Session;\n" +
-                        "import org.hibernate.exception.ConstraintViolationException;\n" +
-                        "import org.hibernate.exception.JDBCConnectionException;\n" +
-                        "import org.hibernate.transform.Transformers;\n" +
-                        "import org.hibernate.type.LongType;\n" +
-                        "import org.hibernate.type.StringType;\n" +
-                        "import org.springframework.stereotype.Repository;\n" +
-                        "import org.springframework.transaction.annotation.Transactional;\n" +
-                        "\n" +
-                        "@Repository(\"" + uncapitalize(tableInfo.tableName) + "DAO\")\n" +
-                        "public class " + tableInfo.tableName + "DAO extends BaseFWDAOImpl<" + tableInfo.tableName + "BO, Long>{\n" +
-                        "    \n");
+                "\n" +
+                "import com.tav.service.base.db.dao.BaseFWDAOImpl;\n" +
+                "import com.tav.service.bo." + tableInfo.tableName + "BO;\n" +
+                "import com.tav.service.dto." + tableInfo.tableName + "DTO;\n" +
+                "import com.tav.service.dto.SearchCommonFinalDTO;\n" +
+                "import com.tav.service.dto.ServiceResult;\n" +
+                "import com.tav.service.common.StringUtil;\n" +
+                "import java.text.ParseException;\n" +
+                "import java.math.BigInteger;\n" +
+                "import java.text.SimpleDateFormat;\n" +
+                "import java.util.List;\n" +
+                "import java.util.Date;\n" +
+                "import org.hibernate.Criteria;\n" +
+                "import org.hibernate.HibernateException;\n" +
+                "import org.hibernate.Query;\n" +
+                "import org.hibernate.Session;\n" +
+                "import org.hibernate.exception.ConstraintViolationException;\n" +
+                "import org.hibernate.exception.JDBCConnectionException;\n" +
+                "import org.hibernate.transform.Transformers;\n" +
+                "import org.hibernate.type.LongType;\n" +
+                "import org.hibernate.type.DoubleType;\n" +
+                "import org.hibernate.type.StringType;\n" +
+                "import org.springframework.stereotype.Repository;\n" +
+                "import org.springframework.transaction.annotation.Transactional;\n" +
+                "\n" +
+                "@Repository(\"" + uncapitalize(tableInfo.tableName) + "DAO\")\n" +
+                "public class " + tableInfo.tableName + "DAO extends BaseFWDAOImpl<" + tableInfo.tableName + "BO, Long>{\n" +
+                "    \n");
 
         /***************************************************************************************
          *                                     getAll()

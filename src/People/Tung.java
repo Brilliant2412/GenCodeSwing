@@ -1212,7 +1212,7 @@ public class Tung {
                 "            <legend class=\"fs-legend-head\" style=\"margin-bottom: 0px;\">\n" +
                 "                <span class=\"iconFS\"></span>\n" +
                 "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Bảng con</b></span>\n" +
-                "                <div class=\"col-md-5\" style=\"float:right;font-size: 12px;\">\n" +
+                "                <!--<div class=\"col-md-5\" style=\"float:right;font-size: 12px;\">\n" +
                 "                    <label class=\"col-md-2 control-label\">Người tạo</label>\n" +
                 "                    <div class=\"col-md-4\">\n" +
                 "                        <input class=\"form-control\" placeholder=\"\"  id=\"user_create1_subdoc\" type=\"text\" readonly=\"true\" />\n" +
@@ -1222,7 +1222,7 @@ public class Tung {
                 "                        <input class=\"form-control\" placeholder=\"\"  id=\"create_time111_subdoc\" type=\"text\" readonly=\"true\" />\n" +
                 "                        <span id=\"documentary_number_error\" class=\"note note-error\"></span>\n" +
                 "                    </div>\n" +
-                "                </div>\n" +
+                "                </div>-->\n" +
                 "            </legend>\n");
         ArrayList<ColumnProperty> columns_except_file = new ArrayList<>();
         for (int i = 0;i<tableInfo.columns.size();i++){
@@ -1332,7 +1332,15 @@ public class Tung {
                 "                }\n" +
                 "            }]\n" +
                 "    });\n" +
-                "</script>\n");
+                "</script>\n" +
+                "<style>\n" +
+                "    fieldset .control-label{\n" +
+                "        text-align: right;\n" +
+                "    }\n" +
+                "    .dialogAddEditMemberTopic" + uncapitalize(tableInfo.tableName) + "{\n" +
+                "        z-index: 1900 !important;\n" +
+                "    }\n" +
+                "</style>");
         fileWriter.close();
     }
     public static void genController(TableSet tableSet, String folder) throws IOException {

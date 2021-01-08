@@ -823,14 +823,15 @@ public class Hung {
                     "                                " + uncapitalize(subTableInfo.tableName) + "addNewDataToTable("+uncapitalize(subTableInfo.tableName)+"indexTopicMember, lst_" + subTableInfo.tableName + "[i].main_id, ");
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
-                if(colProp.getColType().equalsIgnoreCase("Long")){
+                if(colProp.getColType().equalsIgnoreCase("Long") && colProp.getInputType().equalsIgnoreCase("Combobox")){
                     fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
                     fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + "ST, ");
                 }
             }
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
-                if(colProp.getColType().equalsIgnoreCase("String")){
+                if(colProp.getColType().equalsIgnoreCase("String")
+                || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
                     fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
                 }
             }
@@ -1316,9 +1317,10 @@ public class Hung {
                     "\thtml += '<span id=\"filestTmpSubTable"+uncapitalize(tableInfo.tableName)+"_error\" class=\"note note-error\"></span>';\n" +
                     "\t$(\"#fileTopicFilesTmpSubTable"+uncapitalize(tableInfo.tableName)+"\").html(html);\n");
         }
-        //STRING
+        //STRING || LONG_NUMBER
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
+            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
                 fileWriter.append("\t$(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n");
             }
         }
@@ -1414,9 +1416,10 @@ public class Hung {
                         "                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Text = $(\"#cb"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Combobox>option:selected\").html();\n");
             }
         }
-        // STRING
+        // STRING || LONG_NUMBER
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
+            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
                 fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
@@ -1428,7 +1431,7 @@ public class Hung {
         }
         int demxuongdong = 0;
         fileWriter.append("\n                $(\"#"+uncapitalize(tableInfo.tableName)+"_dataDetailInfo\").append(\n" +
-                "                        "+uncapitalize(tableInfo.tableName)+"addNewDataToTable("+uncapitalize(tableInfo.tableName)+"indexTopicMember, gid, ");
+                "                    "+uncapitalize(tableInfo.tableName)+"addNewDataToTable("+uncapitalize(tableInfo.tableName)+"indexTopicMember, gid, ");
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 demxuongdong++;
@@ -1436,11 +1439,13 @@ public class Hung {
             }
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
+            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
                 demxuongdong++;
                 if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("result.name, ");
-                }else{
+                }
+                else{
                     fileWriter.append(uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+", ");
                 }
 
@@ -1455,7 +1460,7 @@ public class Hung {
             }
         }
         fileWriter.append("1)\n"+
-                "                        );\n"
+                "                );\n"
         );
         fileWriter.append("\n                "+uncapitalize(tableInfo.tableName)+"reloadMemberIndex();\n" +
                 "                "+uncapitalize(tableInfo.tableName)+"indexTopicMember++;\n" +
@@ -1494,9 +1499,10 @@ public class Hung {
             }
         }
 
-        // STRING
+        // STRING || LONG_NUMBER
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
+            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
                 fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n" +
                         "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n");
             }
@@ -1517,13 +1523,16 @@ public class Hung {
         demxuongdong = 0;
         fileWriter.append("\nfunction "+uncapitalize(tableInfo.tableName)+"addNewDataToTable(count, id, ");
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long")){
                 demxuongdong++;
-                fileWriter.append(tableInfo.columns.get(i).getColName()+", "+tableInfo.columns.get(i).getColName()+"Text, ");
+                if(tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
+                    fileWriter.append(tableInfo.columns.get(i).getColName()+", "+tableInfo.columns.get(i).getColName()+"Text, ");
+                }
             }
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
+            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
                 demxuongdong++;
                 fileWriter.append(tableInfo.columns.get(i).getColName()+", ");
                 if (demxuongdong == 11){
@@ -1543,9 +1552,9 @@ public class Hung {
                 fileWriter.append("    "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : \"\";\n");
             }
         }
-        // COMBOBOX
+        // LONG
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long")){
                 fileWriter.append("    "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : 0;\n");
             }
         }
@@ -1556,7 +1565,7 @@ public class Hung {
                 fileWriter.append("    "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : \"\";\n");
             }
         }
-        // COMBOBOX TEXT
+        // COMBOBOX TEXT, COMBOBOX LONG
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
                 fileWriter.append("\tvar txt"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" > 0 ? ("+tableInfo.columns.get(i).getColName()+"Text + '').trim() : \"\";\n");
@@ -1575,7 +1584,8 @@ public class Hung {
 
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isShow() == true){
-                if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")  && !tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
+                if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")  && !tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")
+                || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
                     if (countS %2 == 1){
                         fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
                     }else{
@@ -1616,7 +1626,8 @@ public class Hung {
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
+            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
                 fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";\n");
             }
         }
@@ -1659,7 +1670,8 @@ public class Hung {
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
+            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
                 fileWriter.append("    var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
@@ -1681,7 +1693,8 @@ public class Hung {
                 "    $(\"#user_create1_subdoc\").val($('#user_create1').val());\n");
         //String
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")) {
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
+            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))) {
                 if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("\n\tvar html = \"\";\n" +
                             "    if("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" !== null){\n" +
@@ -1780,7 +1793,8 @@ public class Hung {
         }
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
+            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
                 fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
@@ -1840,9 +1854,10 @@ public class Hung {
                 fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
-        // STRING
+        // STRING || LONG_NUMBER
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String") && !tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String") && !tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")
+            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
                 fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
@@ -1853,7 +1868,7 @@ public class Hung {
                 if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("//                if($('#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc').val() === '0'){\n" +
                             "                    $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(strFile);\n" +
-                            "//                }\n" +
+                            "//                s}\n" +
                             "//                else{\n" +
                             "//                    $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n" +
                             "//               }\n");
@@ -1919,8 +1934,8 @@ public class Hung {
                 if(columnProperty.getInputType().equalsIgnoreCase("Combobox")){
                     fileWriter.append(
                             "                number: true,\n" +
-                                    "                min: 0\n" +
-                                    "            }"
+                            "                min: 0\n" +
+                            "            }"
                     );
                 }
                 else{
@@ -1937,7 +1952,7 @@ public class Hung {
             }
         }
         fileWriter.append(
-                "\t\t}\n" +
+                "\t\t},\n" +
                 "        messages: {\n");
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isValidate() == true){
