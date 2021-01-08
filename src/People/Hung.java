@@ -830,8 +830,9 @@ public class Hung {
             }
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
-                if(colProp.getColType().equalsIgnoreCase("String")
-                || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
+                if (colProp.getColType().equalsIgnoreCase("String")) {
+                    fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
+                } else if (colProp.getColType().equalsIgnoreCase("Long") && !colProp.getInputType().equalsIgnoreCase("Combobox")){
                     fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
                 }
             }
