@@ -1606,8 +1606,10 @@ public class Hung {
                 }
             }
         }
+        if (checkfile == true){
+            fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML('');\n");
+        }
 
-        fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML('');\n");
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                 fileWriter.append("\n    if ("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" !== null && "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" !== \"\") {\n" +

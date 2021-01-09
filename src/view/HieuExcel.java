@@ -218,7 +218,7 @@ public class HieuExcel extends javax.swing.JFrame {
             else{
                 generator.GEN(numObj, numSubObjs, 2);
             }
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
             return;
         }
