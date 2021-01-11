@@ -1185,7 +1185,7 @@ public class Tung {
         }else if (kieuDL.equals("Date")){
             res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                     "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
-                    "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\"" + uncapitalize(tenbang) + tenTruong + "\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"text\"/>\n" +
+                    "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"\" name=\"" + uncapitalize(tenbang) + tenTruong + "\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"text\"/>\n" +
                     "\t\t\t\t\t<span id=\"" + uncapitalize(tenbang) + tenTruong + "_error\" class=\"note note-error\"></span>\n" +
                     "\t\t\t\t</div>\n";
         }
@@ -1211,7 +1211,7 @@ public class Tung {
                 "            <br/>\n" +
                 "            <legend class=\"fs-legend-head\" style=\"margin-bottom: 0px;\">\n" +
                 "                <span class=\"iconFS\"></span>\n" +
-                "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Bảng con</b></span>\n" +
+                "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Thông tin chung</b></span>\n" +
                 "                <!--<div class=\"col-md-5\" style=\"float:right;font-size: 12px;\">\n" +
                 "                    <label class=\"col-md-2 control-label\">Người tạo</label>\n" +
                 "                    <div class=\"col-md-4\">\n" +

@@ -508,7 +508,7 @@ public class Hung {
 "    });\n");
 
         /**********************************************************************************************
-         *                            edit
+         *                            onClickBtAdd
          **********************************************************************************************/
 //        for(int i = 1; i < tableInfo.columns.size(); i++){
 //            ColumnProperty colProp = tableInfo.columns.get(i);
@@ -527,6 +527,16 @@ public class Hung {
                 "        $(\"#isedit\").val(\"0\");\n" +
                 "        \n"
         );
+        for(int i = 0; i < tableInfo.columns.size(); i++){
+            if(tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
+                fileWriter.append(
+                        "        var html = '';\n" +
+                        "        html += '<input class=\"form-control valid\" placeholder=\"\" name=\"filestTmp\" id=\"filestTmp\" type=\"file\" aria-invalid=\"false\">'\n" +
+                        "        $(\"#fileTopicFilesTmp\").html(html);"
+                );
+                break;
+            }
+        }
         for(int i = 1; i < tableInfo.columns.size(); i++){
             ColumnProperty colProp = tableInfo.columns.get(i);
             if(colProp.getInputType().equalsIgnoreCase("Combobox")){
@@ -1028,13 +1038,13 @@ public class Hung {
             if (isValidate){
                 res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
                         "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
-                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
+                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
                         "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
                         "\t\t\t\t</div>\n";
             }else{
                 res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                         "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
-                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
+                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
                         "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
                         "\t\t\t\t</div>\n";
             }
@@ -1214,7 +1224,7 @@ public class Hung {
             fileWriter.append(
                     "\t\t\t<legend class=\"fs-legend-head\">\n" +
                             "                <span class=\"iconFS\"></span>\n" +
-                            "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>Bảng con</b></span>\n" +
+                            "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>" + subTableInfo.description + "</b></span>\n" +
                             "            </legend>\n" +
                             "            <div class=\"form-group-add row\">\n" +
                             "                <table id=\"" + uncapitalize(subTableInfo.tableName) + "_tblMstDivision\" class=\"table table-striped table-bordered table-hover smart-form dataTable no-footer\">\n" +
@@ -1354,7 +1364,7 @@ public class Hung {
 
         fileWriter.append("    $('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"').dialog('open');\n" +
                 "    $('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"').parent().addClass(\"dialogAddEditMemberTopic"+uncapitalize(tableInfo.tableName)+"\");\n" +
-                "    $('.dialogAddEditMemberTopic"+uncapitalize(tableInfo.tableName)+"').find('.ui-dialog-title').empty().append(\"Thêm mới bảng con "+uncapitalize(tableInfo.tableName)+" \");\n");
+                "    $('.dialogAddEditMemberTopic"+uncapitalize(tableInfo.tableName)+"').find('.ui-dialog-title').empty().append(\"Thêm mới " + tableInfo.description + " \");\n");
         fileWriter.append("\n}\n");
         /*********************************************************************************************
          *                                 on click remove
@@ -1750,7 +1760,7 @@ public class Hung {
                 "    $(\"#"+uncapitalize(tableInfo.tableName)+"isedit1\").val(id);\n" +
                 "    $('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"').dialog('open');\n" +
                 "    $('#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"').parent().addClass(\"dialogAddEditMemberTopic"+uncapitalize(tableInfo.tableName)+"\");\n" +
-                "    $('.dialogAddEditMemberTopic"+uncapitalize(tableInfo.tableName)+"').find('.ui-dialog-title').empty().append(\"Chỉnh sửa thông tin "+uncapitalize(tableInfo.tableName)+"\");\n" +
+                "    $('.dialogAddEditMemberTopic"+uncapitalize(tableInfo.tableName)+"').find('.ui-dialog-title').empty().append(\"Chỉnh sửa thông tin " + tableInfo.description + "\");\n" +
                 "    return false;\n" +
                 "});\n");
         /*********************************************************************************************
@@ -1933,7 +1943,7 @@ public class Hung {
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isValidate() == true){
                 ColumnProperty columnProperty = tableInfo.columns.get(i);
-                fileWriter.append("\t\t\t"+columnProperty.getColName()+": {\n");
+                fileWriter.append("\t\t\t" + uncapitalize(tableInfo.tableName) + columnProperty.getColName()+": {\n");
                 if(columnProperty.getInputType().equalsIgnoreCase("Combobox")){
                     fileWriter.append(
                             "                number: true,\n" +
@@ -1960,7 +1970,7 @@ public class Hung {
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isValidate() == true){
                 ColumnProperty columnProperty = tableInfo.columns.get(i);
-                fileWriter.append("\t\t\t"+columnProperty.getColName()+": {\n");
+                fileWriter.append("\t\t\t" + uncapitalize(tableInfo.tableName) + columnProperty.getColName()+": {\n");
                 if(columnProperty.getInputType().equalsIgnoreCase("Combobox")){
                     fileWriter.append(
                             "                number: \""+columnProperty.getValidateMessage()+"\",\n" +

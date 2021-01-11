@@ -74,13 +74,13 @@ public class Hieu {
             if (isValidate){
                 res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
                         "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
-                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
+                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
                         "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
                         "\t\t\t\t</div>\n";
             }else{
                 res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                         "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
-                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"Bắt đầu\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
+                        "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"\" name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"text\"/>\n" +
                         "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>\n" +
                         "\t\t\t\t</div>\n";
             }
