@@ -153,6 +153,7 @@ public class Hung {
             q = k % 4;
             //i++;
             if (r == 0) {
+                System.out.println(k + "\t" + r +"\t" + q);
                 fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
                 for (; i < res_search.size(); i++) {
                     String res = resSearch(res_search.get(i).getColName(),
@@ -164,6 +165,7 @@ public class Hung {
                 }
                 fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
             } else {
+                int check_four = 0;
                 for (int dem = 0; dem < r; dem++) {
                     fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
                     for (; i < res_search.size(); i++) {
@@ -173,8 +175,10 @@ public class Hung {
                                 res_search.get(i).getInputType()
                         );
                         fileWriter.append(res);
-                        if (i % 4 == 3 && i <= k) {
-                            fileWriter.append("\t\t\t\t\t\t\t\t/div>\n");
+                        check_four++;
+                        if (check_four % 4 == 0 && check_four <= k) {
+                            fileWriter.append("\t\t\t\t\t\t\t\t</div>\n");
+                            check_four = 0;
                         } else {
                             continue;
                         }
