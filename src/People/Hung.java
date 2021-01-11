@@ -151,9 +151,7 @@ public class Hung {
             k -= 3;
             r = k / 4;
             q = k % 4;
-            //i++;
             if (r == 0) {
-                System.out.println(k + "\t" + r +"\t" + q);
                 fileWriter.append("\t\t\t\t\t\t\t\t<div class=\"form-group has-feedback\">\n");
                 for (; i < res_search.size(); i++) {
                     String res = resSearch(res_search.get(i).getColName(),
