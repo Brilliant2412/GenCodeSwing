@@ -242,6 +242,9 @@ public class HieuExcel extends javax.swing.JFrame {
                 String sheetName;
                 panelObject.removeAll();
                 panelSubObject.removeAll();
+                objCheckBoxs.clear();
+                subObjCheckBoxs.clear();
+                numSubObjs.clear();
 //                scrollpaneObj.removeAll();
 //                scrollpaneSubObj.removeAll();
 //                JPanel panelObject = new JPanel();
