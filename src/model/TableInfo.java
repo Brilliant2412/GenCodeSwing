@@ -105,7 +105,7 @@ public class TableInfo {
 //        }
 //    }
 
-    public TableInfo(String exccelFile, int nSheet, int excelType) throws IOException {
+    public TableInfo(String exccelFile, int nSheet, int excelType) throws Exception {
         int n_mst = 0;
         int n_department = 0;
         int n_plan = 0;
@@ -116,6 +116,9 @@ public class TableInfo {
         XSSFSheet sheet = workbook.getSheetAt(nSheet);
         tableName = sheet.getSheetName();
         if (excelType == 2) {
+            if(sheet.getFirstRowNum() != 2){
+                throw new Exception("Wrong Excel Type");
+            }
             title = sheet.getRow(2).getCell(2).toString();
             description = sheet.getRow(3).getCell(2).toString();
             Iterator<Row> rowIterator = sheet.iterator();
@@ -168,6 +171,9 @@ public class TableInfo {
         }
 
        else if(excelType == 1){
+           if(sheet.getFirstRowNum() != 1){
+               throw new Exception("Wrong Excel Type");
+           }
            title = sheet.getRow(1).getCell(2).toString();
             description = sheet.getRow(2).getCell(2).toString();
             Iterator<Row> rowIterator = sheet.iterator();

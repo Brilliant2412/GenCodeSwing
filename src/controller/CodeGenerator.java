@@ -52,7 +52,7 @@ public class CodeGenerator {
         return s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 
-    public void GEN(int sheet, Vector<Integer> numSubObjs, int excelType) throws IOException {
+    public void GEN(int sheet, Vector<Integer> numSubObjs, int excelType) throws Exception {
         TableSet tableSet = new TableSet(url, sheet, numSubObjs, excelType);
         pathOne = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"service";
         pathTwo = pathString+"\\"+ tableSet.tableInfo.tableName+"\\"+"web";
