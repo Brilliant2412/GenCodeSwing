@@ -921,10 +921,15 @@ public class Hung {
         /*********************************************************************************************
          *                                 Viewjsp
          *********************************************************************************************/
+
         fileWriter.append("\n\tview: function(id) {\n" +
                 "        if (id !== null) {\n" +
                 "            vt_form.reset($('#"+uncapitalize(tableInfo.tableName)+"Form'));\n" +
-                "            vt_form.clearError();\n" +
+                "            vt_form.clearError();\n");
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append("            $(\"#"+uncapitalize(subTableInfo.tableName)+"_dataDetailInfoView\").html(\"\");\n");
+        };
+        fileWriter.append(
                 "            $.ajax({\n" +
                 "                async: false,\n" +
                 "                data: {gid: id},\n" +

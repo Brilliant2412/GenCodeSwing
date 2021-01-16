@@ -1102,7 +1102,7 @@ public class Web {
         int r = k / 4;
         int q = k % 4;
         for (int i = 0; i < r; i++) {
-            fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
+            fileWriter.append("\t\t\t<div class=\"form-group-add row\" style=\"margin-bottom: 5px;\" >\n");
             for (int j = 0; j <= 3; j++) {
                 String res = "\t\t\t\t<label class=\"col-md-1 control-label \">" + tableInfo.columns.get(4*i+j+1).getColDescription() + "</label>\n" +
                         "\t\t\t\t<div class=\"col-md-2\">\n" +
@@ -1113,7 +1113,7 @@ public class Web {
             fileWriter.append("\t\t\t</div>\n\n");
         }
         if (q != 0) {
-            fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
+            fileWriter.append("\t\t\t<div class=\"form-group-add row\" style=\"margin-bottom: 5px;\" >\n");
             for (int i = r * 4 + 1; i <= k; i++) {
                 String res = "\t\t\t\t<label class=\"col-md-1 control-label \">" + tableInfo.columns.get(i).getColDescription() + "</label>\n" +
                         "\t\t\t\t<div class=\"col-md-2\">\n" +
