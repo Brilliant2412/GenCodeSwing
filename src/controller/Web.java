@@ -1079,7 +1079,8 @@ public class Web {
         fileWriter.close();
     }
 
-    static void genView(TableInfo tableInfo, String folder) throws IOException {
+    static void genView(TableSet tableSet, String folder) throws IOException {
+        TableInfo tableInfo = tableSet.tableInfo;
         FileWriter fileWriter = new FileWriter(folder + "\\view.jsp");
         fileWriter.write("<%@ page contentType=\"text/html;charset=UTF-8\" %>\n" +
                 "<%@ taglib prefix=\"spring\" uri=\"http://www.springframework.org/tags\" %>\n" +
@@ -1122,6 +1123,40 @@ public class Web {
             }
             fileWriter.append("\t\t\t</div>\n\n");
         }
+
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append(
+                    "\t\t\t<legend class=\"fs-legend-head\">\n" +
+                            "                <span class=\"iconFS\"></span>\n" +
+                            "                <span class=\"titleFS\" style=\"color: #047fcd !important;\"><b>" + subTableInfo.description + "</b></span>\n" +
+                            "            </legend>\n" +
+                            "            <div class=\"form-group-add row\">\n" +
+                            "                <table id=\"" + uncapitalize(subTableInfo.tableName) + "_tblMstDivision\" class=\"table table-striped table-bordered table-hover smart-form dataTable no-footer\">\n" +
+                            "                    <thead>\n" +
+                            "                        <tr>\n" +
+                            "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">STT</th>\n");
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                if(subTableInfo.columns.get(i).isShow() && !subTableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
+                    fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + subTableInfo.columns.get(i).getColDescription() + "</th>\n");
+                }
+
+            }
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                if(subTableInfo.columns.get(i).isShow() && subTableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
+                    fileWriter.append("                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\">" + subTableInfo.columns.get(i).getColDescription() + "</th>\n");
+                }
+
+            }
+            fileWriter.append(
+                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\"><a style=\"cursor: pointer; color:white !important;\" class=\"fa fa-plus fa-lg src\" onclick=\"" + uncapitalize(subTableInfo.tableName) + "onClickAddData();\"></a></th>\n" +
+                            "                        </tr>\n" +
+                            "                    </thead>\n" +
+                            "                    <tbody id=\"" + uncapitalize(subTableInfo.tableName) + "_dataDetailInfoView\" >\n" +
+                            "                    </tbody>\n" +
+                            "                </table>\n" +
+                            "            </div>\n");
+        }
+
         fileWriter.append("\t\t</fieldset>\n" +
                 "\t</form:form>\n" +
                 "</div>\n" +
@@ -1415,7 +1450,7 @@ public class Web {
 //        Hieu.genDialogAdd(tableSet, dir2.getAbsolutePath());
         Hung.genDialogAdd(tableSet,dir2.getAbsolutePath());
         Hieu.genDTO_Web(tableSet, folder);
-        genView(tableInfo,dir2.getAbsolutePath());
+        genView(tableSet,dir2.getAbsolutePath());
         //genControllerSearch(tableInfo, folder);
         //Tung.genJsSearch(tableInfo,folder);
         Hung.genformSearch(tableInfo,dir2.getAbsolutePath());

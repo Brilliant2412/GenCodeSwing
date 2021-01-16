@@ -858,7 +858,7 @@ public class Hung {
                     "1)\n" +
                     "                        );\n" +
                     "                        " + uncapitalize(subTableInfo.tableName) + "indexTopicMember++;\n"+
-                    "                    }");
+                    "                    }\n");
         }
 
 
@@ -944,6 +944,47 @@ public class Hung {
             else fileWriter.append("\t\t\t\t\t$(\"#"+columnProperty.getColName()+"View"+"\").val(data."+columnProperty.getColName()+");\n");
 
         }
+
+        for(TableInfo subTableInfo : tableSet.subTables) {
+            fileWriter.append("                    " + uncapitalize(subTableInfo.tableName)+"indexTopicMember = 3;\n");
+        }
+
+        for(TableInfo subTableInfo : tableSet.subTables){
+            fileWriter.append(
+                    "                    var lst_" + subTableInfo.tableName + " = data." + uncapitalize(subTableInfo.tableName) + "_lstSubTable;\n" +
+                            "                    for(var i=0; i<lst_" + subTableInfo.tableName + ".length;i++){\n" +
+                            "                        $(\"#" + uncapitalize(subTableInfo.tableName) + "_dataDetailInfo\").append(\n" +
+                            "                                " + uncapitalize(subTableInfo.tableName) + "addNewDataToTable("+uncapitalize(subTableInfo.tableName)+"indexTopicMember, lst_" + subTableInfo.tableName + "[i].main_id, ");
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                ColumnProperty colProp = subTableInfo.columns.get(i);
+                if(colProp.getColType().equalsIgnoreCase("Long") && colProp.getInputType().equalsIgnoreCase("Combobox")){
+                    fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
+                    fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + "ST, ");
+                }
+            }
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                ColumnProperty colProp = subTableInfo.columns.get(i);
+                if (colProp.getColType().equalsIgnoreCase("String")
+                        || (colProp.getInputType().equalsIgnoreCase("Number")
+                        && (colProp.getColType().equalsIgnoreCase("Long") || colProp.getColType().equalsIgnoreCase("Double")))){
+                    fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
+                }
+            }
+            for(int i = 1; i < subTableInfo.columns.size(); i++){
+                ColumnProperty colProp = subTableInfo.columns.get(i);
+                if(colProp.getColType().equalsIgnoreCase("Date")){
+                    fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + "ST, ");
+                }
+            }
+            fileWriter.append(
+                    "0)\n" +
+                            "                        );\n" +
+                            "                        " + uncapitalize(subTableInfo.tableName) + "indexTopicMember++;\n"+
+                            "                    }\n");
+        }
+
+
+
         fileWriter.append("\n\t\t\t\t\t$('#dialog-formView').dialog({\n" +
                 "                        title: \"Xem " + tableInfo.description + "\"\n" +
                 "                    }).dialog('open');\n" +
