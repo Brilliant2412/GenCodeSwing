@@ -842,9 +842,9 @@ public class Hung {
             }
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
-                if (colProp.getColType().equalsIgnoreCase("String")) {
-                    fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
-                } else if (colProp.getColType().equalsIgnoreCase("Long") && !colProp.getInputType().equalsIgnoreCase("Combobox")){
+                if (colProp.getColType().equalsIgnoreCase("String")
+                        || (colProp.getInputType().equalsIgnoreCase("Number")
+                        && (colProp.getColType().equalsIgnoreCase("Long") || colProp.getColType().equalsIgnoreCase("Double")))){
                     fileWriter.append("lst_" + subTableInfo.tableName + "[i]." + colProp.getColName() + ", ");
                 }
             }
@@ -1024,13 +1024,13 @@ public class Hung {
                 if (isValidate){
                     res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"<span class=\"required-field\" style=\"color:red\">(*)</span></label>\n" +
                             "\t\t\t\t<div class=\"col-lg-2\">\n" +
-                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
+                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"number\" class=\"form-control\" style=\"text-align:right;\"/>\n" +
                             "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>                           \n" +
                             "\t\t\t\t</div>\n";
                 }else{
                     res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
                             "\t\t\t\t<div class=\"col-lg-2\">\n" +
-                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
+                            "\t\t\t\t\t<input name=\""+tenTruong+"\" id=\""+tenTruong+"\" type=\"number\" class=\"form-control\" style=\"text-align:right;\"/>\n" +
                             "\t\t\t\t\t<span id=\""+tenTruong+"_error\" class=\"note note-error\"></span>                           \n" +
                             "\t\t\t\t</div>\n";
                 }
@@ -1333,7 +1333,8 @@ public class Hung {
         //STRING || LONG_NUMBER
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
-            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
+                    || (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number")
+                    && (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")))){
                 fileWriter.append("\t$(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n");
             }
         }
@@ -1371,9 +1372,9 @@ public class Hung {
         /*********************************************************************************************
          *                                 on click remove
          *********************************************************************************************/
-        fileWriter.append("$(document).on(\"click\", \".remove-cha-bomb\", function () {\n" +
+        fileWriter.append("$(document).on(\"click\", \".remove-cha-bomb_" + tableInfo.tableName + "\", function () {\n" +
                 "    var id = $(this).attr(\"data-id\");\n" +
-                "    $(\"#dataChaBomb_\" + id).remove();\n" +
+                "    $(\"#dataChaBomb_" + tableInfo.tableName + "\" + id).remove();\n" +
                 "    "+uncapitalize(tableInfo.tableName)+"reloadSttMember();\n" +
                 "    "+uncapitalize(tableInfo.tableName)+"reloadMemberIndex();\n" +
                 "    "+uncapitalize(tableInfo.tableName)+"indexTopicMember--;\n" +
@@ -1429,10 +1430,11 @@ public class Hung {
                         "                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Text = $(\"#cb"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"Combobox>option:selected\").html();\n");
             }
         }
-        // STRING || LONG_NUMBER
+        // STRING || LONG_NUMBER || DOUBLE_NUMBER
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
-            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
+            || (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number")
+            && (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")))){
                 fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
@@ -1442,6 +1444,7 @@ public class Hung {
                 fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
+
         int demxuongdong = 0;
         fileWriter.append("\n                $(\"#"+uncapitalize(tableInfo.tableName)+"_dataDetailInfo\").append(\n" +
                 "                    "+uncapitalize(tableInfo.tableName)+"addNewDataToTable("+uncapitalize(tableInfo.tableName)+"indexTopicMember, gid, ");
@@ -1453,7 +1456,8 @@ public class Hung {
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
-            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
+                    || (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number")
+                    && (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")))){
                 demxuongdong++;
                 if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("result.name, ");
@@ -1501,7 +1505,7 @@ public class Hung {
          *********************************************************************************************/
         fileWriter.append("function "+uncapitalize(tableInfo.tableName)+"reloadMemberIndex() {\n" +
                 "    var count = 2;\n" +
-                "    $('.dataChaBomb-child').each(function (i, obj) {\n" +
+                "    $('.dataChaBomb-child_" + tableInfo.tableName + "').each(function (i, obj) {\n" +
                 "        count++;\n");
 
         // COMBOBOX
@@ -1515,7 +1519,8 @@ public class Hung {
         // STRING || LONG_NUMBER
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
-            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
+                    || (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number")
+                    && (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")))){
                 fileWriter.append("        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"name\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n" +
                         "        $(this).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").attr(\"id\", \""+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"\");\n");
             }
@@ -1545,7 +1550,8 @@ public class Hung {
         }
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
-            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
+                    || (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number")
+                    && (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")))){
                 demxuongdong++;
                 fileWriter.append(tableInfo.columns.get(i).getColName()+", ");
                 if (demxuongdong == 11){
@@ -1559,9 +1565,10 @@ public class Hung {
             }
         }
         fileWriter.append("isEdit) {\n");
-        // STRING
+        // STRING || DOUBLE
         for (int i = 0;i<tableInfo.columns.size();i++){
-            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")){
+            if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
+            || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")){
                 fileWriter.append("    "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = "+tableInfo.columns.get(i).getColName()+" !== null ? "+tableInfo.columns.get(i).getColName()+" : \"\";\n");
             }
         }
@@ -1585,7 +1592,7 @@ public class Hung {
             }
         }
         // html + nhung thang hien ra
-        fileWriter.append("\n\tvar html = \"<tr class='dataChaBomb-child' id='dataChaBomb_\" + count + \"'>\";\n" +
+        fileWriter.append("\n\tvar html = \"<tr class='dataChaBomb-child_" + tableInfo.tableName + "' id='dataChaBomb_" + tableInfo.tableName + "\" + count + \"'>\";\n" +
                 "    html += \"<td align='center' valign='middle'>\" + (count - 2) + \"</td>\";\n");
         //string
         int countS = dem(tableInfo);
@@ -1597,8 +1604,9 @@ public class Hung {
 
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).isShow() == true){
-                if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")  && !tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")
-                || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
+                if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String") && !tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")
+                        || (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number")
+                        && (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")))){
                     if (countS %2 == 1){
                         fileWriter.append("    html += \"<td align='left' valign='middle'>\" + vt_util.escapeHTML("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+") + \"</td>\";\n");
                     }else{
@@ -1642,7 +1650,8 @@ public class Hung {
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
-            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
+                    || (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number")
+                    && (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")))){
                 fileWriter.append("    html += \"<input type='hidden' class='"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"' value='\" + "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" + \"' name='"+uncapitalize(tableInfo.tableName)+"_lstSubTable[\" + (count - 1) + \"]." + tableInfo.columns.get(i).getColName()+"' />\";\n");
             }
         }
@@ -1653,7 +1662,7 @@ public class Hung {
             }
         }
         fileWriter.append("\n    if (isEdit === 1) {\n" +
-                "        html += '<td align=\"center\"><a data-id=\"' + count + '\" class=\"remove-cha-bomb\" style=\"cursor:pointer;\"><span title=\"Xóa\" class=\"fa fa-trash-o  fa-lg\"></span></a> |';\n" +
+                "        html += '<td align=\"center\"><a data-id=\"' + count + '\" class=\"remove-cha-bomb_" + tableInfo.tableName + "\" style=\"cursor:pointer;\"><span title=\"Xóa\" class=\"fa fa-trash-o  fa-lg\"></span></a> |';\n" +
                 "        html += '<a data-id=\"' + count + '\" class=\"" + uncapitalize(tableInfo.tableName) + "_edit-cha-bomb\" style=\"cursor:pointer;\"><span title=\"Chỉnh sửa\" class=\"fa fa-edit fa-lg\"></span></a>';\n" +
                 "        html += \"</td>\";\n" +
                 "    }\n" +
@@ -1686,7 +1695,8 @@ public class Hung {
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
-            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
+                    || (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number")
+                    && (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")))){
                 fileWriter.append("    var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(this).closest(\"tr\").find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
@@ -1709,7 +1719,8 @@ public class Hung {
         //String
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
-            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))) {
+                    || (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number")
+                    && (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")))){
                 if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("\n\tvar html = \"\";\n" +
                             "    if("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" !== null){\n" +
@@ -1809,7 +1820,8 @@ public class Hung {
         // STRING
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String")
-            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
+                    || (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number")
+                    && (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")))){
                 fileWriter.append("                var "+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+" = $(\"#"+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val();\n");
             }
         }
@@ -1837,14 +1849,15 @@ public class Hung {
         int nth_child = 2;
         ArrayList<ColumnProperty> table_isshow_notfile = columns_isshow_notfile(tableInfo);
         for (int i = 0;i<table_isshow_notfile.size();i++){
-            if (table_isshow_notfile.get(i).getColType().equalsIgnoreCase("String")){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
+            if (table_isshow_notfile.get(i).getColType().equalsIgnoreCase("String")
+            || (table_isshow_notfile.get(i).getInputType().equalsIgnoreCase("Number"))){
+                fileWriter.append("                $(\"#dataChaBomb_" + tableInfo.tableName + "\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
 
             }else if (table_isshow_notfile.get(i).getColType().equalsIgnoreCase("Date")){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
+                fileWriter.append("                $(\"#dataChaBomb_" + tableInfo.tableName + "\" + id).find(\"td:nth-child("+nth_child+")\").html("+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
             }
             else if (table_isshow_notfile.get(i).getInputType().equalsIgnoreCase("Combobox") && table_isshow_notfile.get(i).getColType().equalsIgnoreCase("Long")){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html(txt"+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
+                fileWriter.append("                $(\"#dataChaBomb_" + tableInfo.tableName + "\" + id).find(\"td:nth-child("+nth_child+")\").html(txt"+uncapitalize(tableInfo.tableName)+table_isshow_notfile.get(i).getColName()+");\n");
             }
             nth_child++;
         }
@@ -1854,10 +1867,10 @@ public class Hung {
             for (int i = 0;i<tableInfo.columns.size();i++){
                 if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("//                if($('#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc').val() === '0'){\n" +
-                            "                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + id + '\\')\"  style=\"cursor:pointer; color: blue;\"><span >' + (strFile + '').substring(0, 30) + '...' + '</span></a>');\n" +
+                            "                    $(\"#dataChaBomb_" + tableInfo.tableName + "\" + id).find(\"td:nth-child("+nth_child+")\").html('<a href=\"javascript:void(0)\" onclick=\"downloadFileDocument1(\\'' + id + '\\')\"  style=\"cursor:pointer; color: blue;\"><span >' + (strFile + '').substring(0, 30) + '...' + '</span></a>');\n" +
                             "//                }\n" +
                             "//                else{\n" +
-                            "//                    $(\"#dataChaBomb_\" + id).find(\"td:nth-child("+nth_child+")\").html('');\n" +
+                            "//                    $(\"#dataChaBomb_" + tableInfo.tableName + "\" + id).find(\"td:nth-child("+nth_child+")\").html('');\n" +
                             "//                }\n");
                 }
             }
@@ -1866,14 +1879,15 @@ public class Hung {
         // COMBOBOX
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") &&tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Combobox")){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
+                fileWriter.append("                $(\"#dataChaBomb_" + tableInfo.tableName + "\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
         // STRING || LONG_NUMBER
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("String") && !tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")
-            || (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") && tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number"))){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
+                    || (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("Number")
+                    && (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Long") || tableInfo.columns.get(i).getColType().equalsIgnoreCase("Double")))){
+                fileWriter.append("                $(\"#dataChaBomb_" + tableInfo.tableName + "\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
 
@@ -1882,10 +1896,10 @@ public class Hung {
             for (int i = 0;i<tableInfo.columns.size();i++){
                 if (tableInfo.columns.get(i).getInputType().equalsIgnoreCase("file")){
                     fileWriter.append("//                if($('#"+uncapitalize(tableInfo.tableName)+"isDeleteFile_subdoc').val() === '0'){\n" +
-                            "                    $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(strFile);\n" +
+                            "                    $(\"#dataChaBomb_" + tableInfo.tableName + "\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(strFile);\n" +
                             "//                s}\n" +
                             "//                else{\n" +
-                            "//                    $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n" +
+                            "//                    $(\"#dataChaBomb_" + tableInfo.tableName + "\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val(\"\");\n" +
                             "//               }\n");
                 }
             }
@@ -1894,7 +1908,7 @@ public class Hung {
         //DATE
         for (int i = 0;i<tableInfo.columns.size();i++){
             if (tableInfo.columns.get(i).getColType().equalsIgnoreCase("Date")){
-                fileWriter.append("                $(\"#dataChaBomb_\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
+                fileWriter.append("                $(\"#dataChaBomb_" + tableInfo.tableName + "\" + id).find(\"."+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+"\").val("+uncapitalize(tableInfo.tableName)+tableInfo.columns.get(i).getColName()+");\n");
             }
         }
 

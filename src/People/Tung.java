@@ -1159,31 +1159,47 @@ public class Tung {
                 "}");
         fileWriter.close();
     }
-    public static String checkDang_sub(String tenTruong, String moTa, String kieuDL, String kieuNhap,String tenbang){
+    public static String checkDang_sub(String tenTruong, String moTa, String kieuDL, String kieuNhap, boolean isValidate, String tenbang){
         String res = "";
         if (kieuDL.equals("String")){
-            res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+            res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa;
+            if(isValidate){
+                res += "<span class=\"required-field\" style=\"color:red\">(*)</span>";
+            }
+            res += "</label>\n" +
                     "\t\t\t\t<div class=\"col-lg-2\">\n"+
                     "\t\t\t\t\t<input name=\"" + uncapitalize(tenbang) + tenTruong + "\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"text\" class=\"form-control\"/>\n" +
                     "\t\t\t\t\t<span id=\"" + uncapitalize(tenbang) + tenTruong + "_error\" class=\"note note-error\"></span>\n" +
                     "\t\t\t\t</div>\n";
         }else if (kieuDL.equals("Long") || kieuDL.equals("Double")){
             if (kieuNhap.equals("Combobox")){
-                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa;
+                if(isValidate){
+                    res += "<span class=\"required-field\" style=\"color:red\">(*)</span>";
+                }
+                res += "</label>\n" +
                         "\t\t\t\t<div class=\"col-lg-2\">\n" +
                         "\t\t\t\t\t<div id=\"cb" + uncapitalize(tenbang) + tenTruong + "\"></div> \n" +
                         "\t\t\t\t\t<input name=\"" + uncapitalize(tenbang) + tenTruong + "\" id=\""+uncapitalize(tenbang)+tenTruong+"\" class=\"text_hidden\"  />\n" +
                         "\t\t\t\t\t<span id=\"" + uncapitalize(tenbang) + tenTruong + "_error\" class=\"note note-error\"></span>\n" +
                         "\t\t\t\t</div>\n";
             }else{
-                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+                res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa;
+                if(isValidate){
+                    res += "<span class=\"required-field\" style=\"color:red\">(*)</span>";
+                }
+                res += "</label>\n" +
                         "\t\t\t\t<div class=\"col-lg-2\">\n" +
-                        "\t\t\t\t\t<input name=\"" + uncapitalize(tenbang) + tenTruong + "\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"number\" class=\"form-control\"/>\n" +
+                        "\t\t\t\t\t<input name=\"" + uncapitalize(tenbang) + tenTruong + "\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"number\" class=\"form-control\" style=\"text-align:right;\"/>\n" +
                         "\t\t\t\t\t<span id=\"" + uncapitalize(tenbang) + tenTruong + "_error\" class=\"note note-error\"></span>                           \n" +
                         "\t\t\t\t</div>\n";
             }
         }else if (kieuDL.equals("Date")){
-            res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa+"</label>\n" +
+            res = "\t\t\t\t<label class=\"col-lg-1 control-label  lb_input\">"+moTa;
+            if(isValidate){
+                res += "<span class=\"required-field\" style=\"color:red\">(*)</span>";
+            }
+            res += "</label>\n" +
                     "\t\t\t\t<div class=\"col-md-2\" input-group>\n"+
                     "\t\t\t\t<input class=\"dateCalendar\" placeholder=\"\" name=\"" + uncapitalize(tenbang) + tenTruong + "\" id=\""+uncapitalize(tenbang)+tenTruong+"\" type=\"text\"/>\n" +
                     "\t\t\t\t\t<span id=\"" + uncapitalize(tenbang) + tenTruong + "_error\" class=\"note note-error\"></span>\n" +
@@ -1233,15 +1249,16 @@ public class Tung {
             }
         }
         int k = columns_except_file.size()-1;
-        int r = k/4;
-        int q = k%4;
+        int r = k/2;
+        int q = k%2;
         for (int i = 0;i<r;i++){
             fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
-            for (int j =0;j<=3;j++){
-                String res = checkDang_sub(columns_except_file.get(4*i+j+1).getColName(),
-                        columns_except_file.get(4*i+j+1).getColDescription(),
-                        columns_except_file.get(4*i+j+1).getColType(),
-                        columns_except_file.get(4*i+j+1).getInputType(),
+            for (int j =0;j<=1;j++){
+                String res = checkDang_sub(columns_except_file.get(2*i+j+1).getColName(),
+                        columns_except_file.get(2*i+j+1).getColDescription(),
+                        columns_except_file.get(2*i+j+1).getColType(),
+                        columns_except_file.get(2*i+j+1).getInputType(),
+                        columns_except_file.get(2*i+j+1).isValidate(),
                         tableInfo.tableName
                 );
                 fileWriter.append(res);
@@ -1250,11 +1267,12 @@ public class Tung {
         }
         if (q != 0){
             fileWriter.append("\t\t\t<div class=\"form-group-add row\">\n");
-            for (int i = r*4+1;i<=k;i++){
+            for (int i = r*2+1;i<=k;i++){
                 String res = checkDang_sub(columns_except_file.get(i).getColName(),
                         columns_except_file.get(i).getColDescription(),
                         columns_except_file.get(i).getColType(),
                         columns_except_file.get(i).getInputType(),
+                        columns_except_file.get(i).isValidate(),
                         tableInfo.tableName
                 );
                 fileWriter.append(res);
@@ -1295,11 +1313,11 @@ public class Tung {
                 "</div>\n" +
                 "<script type=\"text/javascript\">\n" +
                 "    $(\"#dialog-formAddTopicMember"+uncapitalize(tableInfo.tableName)+"\").dialog({\n" +
-                "        width: isMobile.any() ? $(window).width() : ($(window).width() / 20 * 19),\n" +
-                "        height: $(window).height() / 5 * 5 - 80,\n" +
+                "        width: isMobile.any() ? $(window).width() : ($(window).width() / 5 * 4),\n" +
+                "        height: $(window).height() / 5 * 4,\n" +
                 "        autoOpen: false,\n" +
                 "        modal: true,\n" +
-                "        position: [($(window).width() / 80 * 2.5), 20],\n" +
+                "        position: [($(window).width() / 10 ), 55],\n" +
                 "        close: function () {\n" +
                 "            $('.ui-widget-overlay1').removeClass('ui-widget-overlay');\n" +
                 "            $('.ui-widget-overlay1').removeClass('custom-overlay');\n" +
@@ -1343,6 +1361,7 @@ public class Tung {
                 "</style>");
         fileWriter.close();
     }
+
     public static void genController(TableSet tableSet, String folder) throws IOException {
         TableInfo tableInfo = tableSet.tableInfo;
         FileWriter fileWriter = new FileWriter(folder + "\\" + tableInfo.tableName + "Controller.java");

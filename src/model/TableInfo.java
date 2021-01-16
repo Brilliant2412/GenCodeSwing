@@ -116,7 +116,7 @@ public class TableInfo {
         XSSFSheet sheet = workbook.getSheetAt(nSheet);
         tableName = sheet.getSheetName();
         if (excelType == 2) {
-            if(sheet.getFirstRowNum() != 2){
+            if(sheet.getFirstRowNum() != 2 || sheet.getRow(4).getCell(11) != null){
                 throw new Exception("Wrong Excel Type");
             }
             title = sheet.getRow(2).getCell(2).toString();
@@ -171,7 +171,7 @@ public class TableInfo {
         }
 
        else if(excelType == 1){
-           if(sheet.getFirstRowNum() != 1){
+           if(sheet.getFirstRowNum() != 1 || sheet.getRow(4).getCell(17) == null){
                throw new Exception("Wrong Excel Type");
            }
            title = sheet.getRow(1).getCell(2).toString();
