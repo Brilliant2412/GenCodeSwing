@@ -996,7 +996,12 @@ public class Hung {
                 "            });\n" +
                 "        }\n" +
                 "    }\n" +
-                "}");
+                "}\n");
+
+        fileWriter.append("$(document).on(\"dblclick\", \"#dataTblDocumentType td:not(.custom-td-style,.dataTables_empty,.checkbox-td)\", function () {\n" +
+                "    var id = $(this).closest(\"tr\").find(\"input[name='gid']\").val();\n" +
+                "    objTblDocumentType.view(id);\n" +
+                "});");
         fileWriter.close();
     }
 
@@ -1191,12 +1196,9 @@ public class Hung {
                     "\t\t\t}\n" +
                     "\t\t]\n" +
                     "\t});\n" +
-                    "</script>\n");
+                    "</script>");
 
-            fileWriter.append("$(document).on(\"dblclick\", \"#dataTblDocumentType td:not(.custom-td-style,.dataTables_empty,.checkbox-td)\", function () {\n" +
-                    "    var id = $(this).closest(\"tr\").find(\"input[name='gid']\").val();\n" +
-                    "    objTblDocumentType.view(id);\n" +
-                    "});");
+
             fileWriter.close();
     
     }
