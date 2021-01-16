@@ -953,7 +953,7 @@ public class Hung {
             fileWriter.append(
                     "                    var lst_" + subTableInfo.tableName + " = data." + uncapitalize(subTableInfo.tableName) + "_lstSubTable;\n" +
                             "                    for(var i=0; i<lst_" + subTableInfo.tableName + ".length;i++){\n" +
-                            "                        $(\"#" + uncapitalize(subTableInfo.tableName) + "_dataDetailInfo\").append(\n" +
+                            "                        $(\"#" + uncapitalize(subTableInfo.tableName) + "_dataDetailInfoView\").append(\n" +
                             "                                " + uncapitalize(subTableInfo.tableName) + "addNewDataToTable("+uncapitalize(subTableInfo.tableName)+"indexTopicMember, lst_" + subTableInfo.tableName + "[i].main_id, ");
             for(int i = 1; i < subTableInfo.columns.size(); i++){
                 ColumnProperty colProp = subTableInfo.columns.get(i);
@@ -1191,7 +1191,12 @@ public class Hung {
                     "\t\t\t}\n" +
                     "\t\t]\n" +
                     "\t});\n" +
-                    "</script>");
+                    "</script>\n");
+
+            fileWriter.append("$(document).on(\"dblclick\", \"#dataTblDocumentType td:not(.custom-td-style,.dataTables_empty,.checkbox-td)\", function () {\n" +
+                    "    var id = $(this).closest(\"tr\").find(\"input[name='gid']\").val();\n" +
+                    "    objTblDocumentType.view(id);\n" +
+                    "});");
             fileWriter.close();
     
     }

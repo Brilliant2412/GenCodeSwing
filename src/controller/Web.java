@@ -1148,7 +1148,6 @@ public class Web {
 
             }
             fileWriter.append(
-                    "                            <th class=\"thtableresponsive tlb_class_center sorting_disabled\"><a style=\"cursor: pointer; color:white !important;\" class=\"fa fa-plus fa-lg src\" onclick=\"" + uncapitalize(subTableInfo.tableName) + "onClickAddData();\"></a></th>\n" +
                             "                        </tr>\n" +
                             "                    </thead>\n" +
                             "                    <tbody id=\"" + uncapitalize(subTableInfo.tableName) + "_dataDetailInfoView\" >\n" +
