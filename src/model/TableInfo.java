@@ -5,6 +5,7 @@
  */
 package model;
 
+import exceptions.WrongExcelTypeException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -105,7 +106,7 @@ public class TableInfo {
 //        }
 //    }
 
-    public TableInfo(String exccelFile, int nSheet, int excelType) throws Exception {
+    public TableInfo(String exccelFile, int nSheet, int excelType) throws IOException, WrongExcelTypeException {
         int n_mst = 0;
         int n_department = 0;
         int n_plan = 0;
@@ -117,7 +118,7 @@ public class TableInfo {
         tableName = sheet.getSheetName();
         if (excelType == 2) {
             if(sheet.getFirstRowNum() != 2 || sheet.getRow(4).getCell(11) != null){
-                throw new Exception("Wrong Excel Type");
+                throw new WrongExcelTypeException();
             }
             title = sheet.getRow(2).getCell(2).toString();
             description = sheet.getRow(3).getCell(2).toString();
@@ -172,7 +173,7 @@ public class TableInfo {
 
        else if(excelType == 1){
            if(sheet.getFirstRowNum() != 1 || sheet.getRow(4).getCell(17) == null){
-               throw new Exception("Wrong Excel Type");
+               throw new WrongExcelTypeException();
            }
            title = sheet.getRow(1).getCell(2).toString();
             description = sheet.getRow(2).getCell(2).toString();

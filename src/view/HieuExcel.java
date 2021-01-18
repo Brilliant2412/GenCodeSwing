@@ -21,6 +21,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import exceptions.WrongExcelTypeException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -33,7 +35,7 @@ public class HieuExcel extends javax.swing.JFrame {
     //private final ArrayList<String> listSheet;
     private final ArrayList<JCheckBox> objCheckBoxs;
     private final ArrayList<JCheckBox> subObjCheckBoxs;
-    private int numObj = -1;
+    private int numObj;
     private Vector<Integer> numSubObjs;
     
     private String path;
@@ -53,6 +55,7 @@ public class HieuExcel extends javax.swing.JFrame {
         //listSheet = new ArrayList<>();
         objCheckBoxs = new ArrayList<>();
         subObjCheckBoxs = new ArrayList<>();
+        numObj = -1;
         numSubObjs = new Vector<>();
         cbbExcelType.removeAllItems();
         cbbExcelType.addItem("Excel 1");
@@ -197,6 +200,7 @@ public class HieuExcel extends javax.swing.JFrame {
 
     private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
         // TODO add your handling code here:
+        numSubObjs.clear();
         if(tfieldBrowseFile.getText().equals("")){
             JOptionPane.showMessageDialog(this, "Please browse an Excel file");
             return;
@@ -218,8 +222,11 @@ public class HieuExcel extends javax.swing.JFrame {
             else{
                 generator.GEN(numObj, numSubObjs, 2);
             }
-        } catch (Exception ex) {
+        } catch (IOException | WrongExcelTypeException ex) {
             JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            return;
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(this, "Sai cấu trúc file excel");
             return;
         }
         JOptionPane.showMessageDialog(this, "Code has been generated successfully");

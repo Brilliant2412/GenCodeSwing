@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.WrongExcelTypeException;
+
 import java.io.IOException;
 import java.util.Vector;
 
@@ -7,7 +9,7 @@ public class TableSet {
     public TableInfo tableInfo;
     public Vector<TableInfo> subTables;
 
-    public TableSet(String url, int sheet, Vector<Integer> numSubObjs, int excelType) throws Exception {
+    public TableSet(String url, int sheet, Vector<Integer> numSubObjs, int excelType) throws IOException, WrongExcelTypeException {
         subTables = new Vector<>();
         tableInfo = new TableInfo(url, sheet, 1);
         for(int i = 0; i < numSubObjs.size(); i++){
