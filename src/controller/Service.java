@@ -26,7 +26,7 @@ public class Service {
             }
             else {
                 fileWriter.append("tbl." + colProp.getColName() + " as " + colProp.getColName());
-                if(i != tableInfo.columns.size() - 1){
+                if(i != tableInfo.columns.size() - 1 || !colProp.getFKTable().equals("")){
                     fileWriter.append(",");
                 }
                 fileWriter.append(" \");\n");
